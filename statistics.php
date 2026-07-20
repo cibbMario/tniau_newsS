@@ -95,11 +95,11 @@ foreach ($mediaData as $row) {
         <!-- Top Navbar -->
         <div class="top-navbar">
             <div class="top-navbar-left">
-                <button class="hamburger-btn">☰</button>
+                <button class="hamburger-btn">Menu</button>
                 <span style="font-weight:600; font-size:14px; color:var(--text);">Statistik Monitoring</span>
             </div>
             <div class="top-navbar-right">
-                <button class="top-action-btn" style="font-weight:600;">👤 <?= e($user['full_name']) ?> ▾</button>
+                <button class="top-action-btn" style="font-weight:600;">User <?= e($user['full_name']) ?></button>
             </div>
         </div>
 

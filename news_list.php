@@ -74,14 +74,14 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
         <!-- TOP NAVBAR -->
         <div class="top-navbar">
             <div class="top-navbar-left">
-                <button class="hamburger-btn" title="Menu">☰</button>
+                <button class="hamburger-btn" title="Menu">Menu</button>
                 <div class="media-tabs">
                     <?php
                     $tabs = [
-                        'Semua'        => '🌐 Semua Sumber',
-                        'Wilayah'      => '🏛️ Berita Wilayah',
-                        'Media Online' => '📰 Media Online',
-                        'Media Sosial' => '📱 Media Sosial',
+                        'Semua'        => 'Semua Sumber',
+                        'Wilayah'      => 'Berita Wilayah',
+                        'Media Online' => 'Media Online',
+                        'Media Sosial' => 'Media Sosial',
                     ];
                     foreach ($tabs as $key => $label): ?>
                         <a href="<?= BASE_URL ?>/news_list.php?media=<?= urlencode($key) ?>"
@@ -90,17 +90,17 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                         </a>
                     <?php endforeach; ?>
                     <div class="nav-divider" style="width:1px;height:20px;background:#e2e8f0;margin:0 10px;"></div>
-                    <a href="<?= BASE_URL ?>/statistics.php" class="media-tab-item">📈 Statistik</a>
-                    <a href="<?= BASE_URL ?>/gallery.php" class="media-tab-item">🖼️ Galeri Media</a>
+                    <a href="<?= BASE_URL ?>/statistics.php" class="media-tab-item">Statistik</a>
+                    <a href="<?= BASE_URL ?>/gallery.php" class="media-tab-item">Galeri Media</a>
                 </div>
             </div>
             <div class="top-navbar-right">
                 <form method="GET" style="display:flex;gap:6px">
                     <input type="hidden" name="media" value="<?= e($mediaFilter) ?>">
                     <input type="text" name="q" class="form-input" placeholder="Cari berita..." value="<?= e($search) ?>" style="width:180px;height:32px;font-size:12px">
-                    <button type="submit" class="top-action-btn">🔍</button>
+                    <button type="submit" class="top-action-btn">Cari</button>
                 </form>
-                <span class="top-action-btn">📅 <?= date('d M Y') ?></span>
+                <span class="top-action-btn">Tanggal <?= date('d M Y') ?></span>
             </div>
         </div>
 
@@ -119,12 +119,12 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
             <div class="action-bar">
                 <div class="action-bar-left">
                     <?php if ($user['role'] === 'A'): ?>
-                        <a href="<?= BASE_URL ?>/news_create.php" class="btn-entry-new">✏️ Buat Berita Baru</a>
+                        <a href="<?= BASE_URL ?>/news_create.php" class="btn-entry-new">Buat Berita Baru</a>
                     <?php endif; ?>
                     <span class="pagination-info"><?= $total ?> berita ditemukan</span>
                 </div>
                 <div class="action-bar-right">
-                    <a href="<?= BASE_URL ?>/news_list.php?media=<?= urlencode($mediaFilter) ?>" class="btn-refresh">🔄 Refresh</a>
+                    <a href="<?= BASE_URL ?>/news_list.php?media=<?= urlencode($mediaFilter) ?>" class="btn-refresh">Refresh</a>
                 </div>
             </div>
 
@@ -219,7 +219,7 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                                 </td>
                                 <td>
                                     <?php if ($user['role'] === 'A' && $row['created_by'] === $user['id'] && in_array($row['status'], ['draft','pending_b','revision_b','revision_c'])): ?>
-                                        <a href="<?= BASE_URL ?>/news_edit.php?id=<?= $row['id'] ?>" class="btn btn-primary btn-sm">✏️ Edit</a>
+                                        <a href="<?= BASE_URL ?>/news_edit.php?id=<?= $row['id'] ?>" class="btn btn-primary btn-sm">Edit</a>
                                     <?php else: ?>
                                         -
                                     <?php endif; ?>

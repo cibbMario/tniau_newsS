@@ -430,18 +430,18 @@ $gallery = $images->fetchAll();
         <!-- TOP NAVBAR MATCHING SCREENSHOT -->
         <div class="top-navbar" style="height:56px">
             <div class="top-navbar-left">
-                <button class="hamburger-btn">☰</button>
+                <button class="hamburger-btn">Menu</button>
                 <div class="media-tabs">
-                    <span class="media-tab-item"><span style="margin-right:6px">⚏</span> Berita Wilayah</span>
+                    <span class="media-tab-item">Berita Wilayah</span>
                     <span class="media-tab-item text-muted">Media Online</span>
                     <span class="media-tab-item text-muted">Media Sosial</span>
                     <span class="media-tab-item text-muted">Semua Sumber</span>
                 </div>
             </div>
             <div class="top-navbar-right">
-                <span class="top-action-btn">📅 Hari Ini</span>
-                <span class="top-action-btn">▼ Filter</span>
-                <span class="top-action-btn" style="border:none;background:transparent"><?= e(explode(' ',$user['full_name'])[0]) ?> ▼</span>
+                <span class="top-action-btn">Hari Ini</span>
+                <span class="top-action-btn">Filter</span>
+                <span class="top-action-btn" style="border:none;background:transparent"><?= e(explode(' ',$user['full_name'])[0]) ?></span>
             </div>
         </div>
 
@@ -455,10 +455,10 @@ $gallery = $images->fetchAll();
         <div class="page-container" style="padding:24px 32px">
             
             <?php if ($error): ?>
-                <div style="background:#fceae8;color:#c0392b;padding:12px 16px;border-radius:6px;margin-bottom:16px;border:1px solid rgba(192,57,43,.15)">⚠️ <?= e($error) ?></div>
+                <div style="background:#fceae8;color:#c0392b;padding:12px 16px;border-radius:6px;margin-bottom:16px;border:1px solid rgba(192,57,43,.15)">Peringatan: <?= e($error) ?></div>
             <?php endif; ?>
             <?php if ($success): ?>
-                <div style="background:#eafaf1;color:#27ae60;padding:12px 16px;border-radius:6px;margin-bottom:16px;border:1px solid rgba(39,174,96,.15)">✅ <?= e($success) ?></div>
+                <div style="background:#eafaf1;color:#27ae60;padding:12px 16px;border-radius:6px;margin-bottom:16px;border:1px solid rgba(39,174,96,.15)">Berhasil: <?= e($success) ?></div>
             <?php endif; ?>
 
             <form method="POST" enctype="multipart/form-data" id="editForm">
@@ -472,9 +472,9 @@ $gallery = $images->fetchAll();
                         <div class="edit-header-row">
                             <h2>Edit Berita</h2>
                             <div class="meta-info-row">
-                                <span>📅 <?= $news['published_at'] ? date('d-m-Y H:i', strtotime($news['published_at'])) : date('d-m-Y H:i', strtotime($news['created_at'])) ?></span>
-                                <span>🏛️ <?= e($news['wilayah']) ?></span>
-                                <span>👤 <?= e($news['author_label'] ?? $news['author_name'] ?? 'pen ats') ?></span>
+                                <span><?= $news['published_at'] ? date('d-m-Y H:i', strtotime($news['published_at'])) : date('d-m-Y H:i', strtotime($news['created_at'])) ?></span>
+                                <span><?= e($news['wilayah']) ?></span>
+                                <span><?= e($news['author_label'] ?? $news['author_name'] ?? 'pen ats') ?></span>
                             </div>
                         </div>
 
@@ -500,8 +500,8 @@ $gallery = $images->fetchAll();
                         </div>
 
                         <div class="content-tabs">
-                            <div class="content-tab active">📄 Isi</div>
-                            <div class="content-tab">📍 Tempat</div>
+                            <div class="content-tab active">Isi</div>
+                            <div class="content-tab">Tempat</div>
                         </div>
 
                         <div class="rich-editor-container">
@@ -522,12 +522,12 @@ $gallery = $images->fetchAll();
                                 </select>
                                 <div class="toolbar-divider"></div>
                                 <button type="button" class="rich-editor-btn" style="color:var(--gold-dark)"><strong>A</strong>▼</button>
-                                <button type="button" class="rich-editor-btn">🔗</button>
-                                <button type="button" class="rich-editor-btn">🖼️</button>
+                                <button type="button" class="rich-editor-btn">Link</button>
+                                <button type="button" class="rich-editor-btn">Gambar</button>
                                 <div class="toolbar-divider"></div>
-                                <button type="button" class="rich-editor-btn">☰</button>
-                                <button type="button" class="rich-editor-btn">≣</button>
-                                <button type="button" class="rich-editor-btn">☷</button>
+                                <button type="button" class="rich-editor-btn">Menu</button>
+                                <button type="button" class="rich-editor-btn">Daftar</button>
+                                <button type="button" class="rich-editor-btn">Tabel</button>
                                 <div class="toolbar-divider"></div>
                                 <button type="button" class="rich-editor-btn">T↕</button>
                             </div>

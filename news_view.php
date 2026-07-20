@@ -52,15 +52,15 @@ $commentsList = $comments->fetchAll();
     <main class="main-content">
         <div class="top-navbar">
             <div class="top-navbar-left">
-                <button class="hamburger-btn" title="Menu">☰</button>
+                <button class="hamburger-btn" title="Menu">Menu</button>
                 <div class="media-tabs">
-                    <span class="media-tab-item active">👁️ Detail Berita</span>
+                    <span class="media-tab-item active">Detail Berita</span>
                 </div>
             </div>
             <div class="top-navbar-right">
                 <a href="<?= BASE_URL ?>/news_list.php" class="top-action-btn">← Kembali</a>
                 <?php if ($user['role'] === 'A' && in_array($news['status'], ['draft','pending_b','revision_b','revision_c'])): ?>
-                    <a href="<?= BASE_URL ?>/news_edit.php?id=<?= $id ?>" class="btn btn-primary btn-sm">✏️ Edit Berita</a>
+                    <a href="<?= BASE_URL ?>/news_edit.php?id=<?= $id ?>" class="btn btn-primary btn-sm">Edit Berita</a>
                 <?php endif; ?>
             </div>
         </div>
@@ -78,20 +78,20 @@ $commentsList = $comments->fetchAll();
                                 <span class="badge badge-gray">Prioritas: <?= e($news['priority']) ?></span>
                             </div>
                             <div class="detail-toolbar-right">
-                                <button class="btn-share" onclick="window.print()" title="Cetak">🖨️</button>
+                                <button class="btn-share" onclick="window.print()" title="Cetak">Cetak</button>
                             </div>
                         </div>
 
                         <h1 class="detail-title"><?= e($news['title']) ?></h1>
                         
                         <div class="detail-meta">
-                            <span>👤 <?= e($news['author_label'] ?? $news['author_name']) ?></span>
-                            <span>🏛️ <?= e($news['wilayah'] ?: '-') ?></span>
-                            <span>📰 <?= e($news['media'] ?: '-') ?></span>
+                            <span><?= e($news['author_label'] ?? $news['author_name']) ?></span>
+                            <span><?= e($news['wilayah'] ?: '-') ?></span>
+                            <span><?= e($news['media'] ?: '-') ?></span>
                             <?php if ($news['published_at']): ?>
-                                <span>📅 Terbit: <?= formatTanggal($news['published_at']) ?></span>
+                                <span>Terbit: <?= formatTanggal($news['published_at']) ?></span>
                             <?php else: ?>
-                                <span>📅 Dibuat: <?= formatTanggal($news['created_at']) ?></span>
+                                <span>Dibuat: <?= formatTanggal($news['created_at']) ?></span>
                             <?php endif; ?>
                         </div>
 
@@ -188,8 +188,8 @@ $commentsList = $comments->fetchAll();
                         <p>Silakan tinjau berita ini. Jika sudah sesuai, setujui. Jika perlu perbaikan, kembalikan ke Reporter.</p>
                         <form action="<?= BASE_URL ?>/review_action.php" method="POST" style="display:flex;flex-direction:column;gap:8px">
                             <input type="hidden" name="news_id" value="<?= $id ?>">
-                            <button type="submit" name="action" value="approve" class="btn btn-success btn-block">✅ Setujui &amp; Lanjutkan</button>
-                            <button type="submit" name="action" value="reject" class="btn btn-danger btn-block" onclick="return confirm('Kembalikan ke Reporter untuk direvisi?')">❌ Minta Revisi</button>
+                            <button type="submit" name="action" value="approve" class="btn btn-success btn-block">Setujui &amp; Lanjutkan</button>
+                            <button type="submit" name="action" value="reject" class="btn btn-danger btn-block" onclick="return confirm('Kembalikan ke Reporter untuk direvisi?')">Minta Revisi</button>
                         </form>
                     </div>
                     <?php endif; ?>
@@ -200,7 +200,7 @@ $commentsList = $comments->fetchAll();
                         <p>Turunkan berita ini dari publikasi jika ada kesalahan fatal.</p>
                         <form action="<?= BASE_URL ?>/review_action.php" method="POST">
                             <input type="hidden" name="news_id" value="<?= $id ?>">
-                            <button type="submit" name="action" value="unpublish" class="btn btn-outline btn-block" onclick="return confirm('Yakin ingin menurunkan berita ini?')" style="color:var(--red);border-color:var(--red)">⬇️ Unpublish</button>
+                            <button type="submit" name="action" value="unpublish" class="btn btn-outline btn-block" onclick="return confirm('Yakin ingin menurunkan berita ini?')" style="color:var(--red);border-color:var(--red)">Unpublish</button>
                         </form>
                     </div>
                     <?php endif; ?>

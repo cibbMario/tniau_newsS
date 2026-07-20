@@ -30,14 +30,14 @@ $recent = $pdo->query("SELECT * FROM news ORDER BY created_at DESC LIMIT 5")->fe
     <main class="main-content">
         <div class="top-navbar">
             <div class="top-navbar-left">
-                <button class="hamburger-btn" title="Menu">☰</button>
+                <button class="hamburger-btn" title="Menu">Menu</button>
                 <div class="media-tabs">
-                    <span class="media-tab-item active">📊 Dashboard Utama</span>
+                    <span class="media-tab-item active">Dashboard Utama</span>
                 </div>
             </div>
             <div class="top-navbar-right">
-                <span class="top-action-btn">📅 <?= date('d M Y') ?></span>
-                <span class="top-action-btn">👤 <?= e($user['full_name']) ?></span>
+                <span class="top-action-btn">Tanggal <?= date('d M Y') ?></span>
+                <span class="top-action-btn">User <?= e($user['full_name']) ?></span>
             </div>
         </div>
 
@@ -50,14 +50,14 @@ $recent = $pdo->query("SELECT * FROM news ORDER BY created_at DESC LIMIT 5")->fe
                         <span class="dash-card-label">Total Berita</span>
                         <span class="dash-card-value"><?= $stats['total'] ?></span>
                     </div>
-                    <div class="dash-card-icon" style="color:var(--blue)">📄</div>
+                    <div class="dash-card-icon" style="color:var(--blue)">Dokumen</div>
                 </div>
                 <div class="dash-card">
                     <div class="dash-card-info">
                         <span class="dash-card-label">Dipublikasikan</span>
                         <span class="dash-card-value"><?= $stats['published'] ?></span>
                     </div>
-                    <div class="dash-card-icon" style="color:var(--green)">✅</div>
+                    <div class="dash-card-icon" style="color:var(--green)">Selesai</div>
                 </div>
                 <div class="dash-card">
                     <div class="dash-card-info">

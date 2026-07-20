@@ -48,7 +48,7 @@ if ($q !== '') {
         </div>
 
         <form class="search-box" action="<?= BASE_URL ?>/search.php" method="GET" style="width:100%; max-width:480px; margin-bottom:20px;">
-            <span>🔍</span>
+            <span>Cari</span>
             <input type="text" name="q" value="<?= e($q) ?>" placeholder="Ketik judul atau isi berita..." autofocus>
         </form>
 

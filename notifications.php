@@ -27,9 +27,9 @@ $notifs = getNotifications($user['id']);
     <main class="main-content" style="background: radial-gradient(circle at top right, #e2e8f0, #f8f9fa); min-height: 100vh;">
         <div class="top-navbar">
             <div class="top-navbar-left">
-                <button class="hamburger-btn" title="Menu">☰</button>
+                <button class="hamburger-btn" title="Menu">Menu</button>
                 <div class="media-tabs">
-                    <span class="media-tab-item active">🔔 Notifikasi</span>
+                    <span class="media-tab-item active">Notifikasi</span>
                 </div>
             </div>
             <div class="top-navbar-right">
@@ -47,7 +47,7 @@ $notifs = getNotifications($user['id']);
                 <div class="glass-body">
                     <?php if (empty($notifs)): ?>
                         <div class="glass-empty">
-                            <span class="empty-icon">📭</span>
+                            <span class="empty-icon">Info</span>
                             <p>Belum ada notifikasi baru.</p>
                         </div>
                     <?php endif; ?>
