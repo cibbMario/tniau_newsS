@@ -211,14 +211,14 @@ input, button, select, textarea { font: inherit; }
     opacity: 0.4;
 }
 .sidebar-brand img.logo {
-    width: 64px; height: 64px; object-fit: contain; flex-shrink: 0;
-    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+    width: 86px; height: 86px; object-fit: contain; flex-shrink: 0;
+    filter: drop-shadow(0 2px 12px rgba(0,0,0,0.55));
     transition: transform var(--transition);
 }
-.sidebar-brand img.logo:hover { transform: scale(1.06) rotate(-3deg); }
+.sidebar-brand img.logo:hover { transform: scale(1.08) rotate(-3deg); }
 .sidebar-brand .brand-text {
-    font-size: 13.5px; font-weight: 700; letter-spacing: 1.2px;
-    line-height: 1.45; color: var(--gold); text-transform: uppercase;
+    font-size: 16.5px; font-weight: 700; letter-spacing: 1.2px;
+    line-height: 1.2; color: var(--gold); text-transform: uppercase;
 }
 
 /* User Block */
@@ -581,7 +581,9 @@ input, button, select, textarea { font: inherit; }
 .news-table tr:last-child td { border-bottom: none; }
 .news-table tr:hover td { background: rgba(235, 244, 255, 0.65); }
 
-.news-table .col-subject { font-weight: 600; color: var(--text); line-height: 1.45; max-width: 400px; }
+.news-table .col-subject { color: var(--text); line-height: 1.45; max-width: 400px; }
+.news-table .col-subject.subject-approved { font-weight: 600; }
+.news-table .col-subject.subject-unapproved { font-weight: 400; }
 .news-table .col-subject a { color: var(--text); transition: color var(--transition-fast); }
 .news-table .col-subject a:hover { color: var(--blue); }
 .news-table .col-muted { color: var(--text-sec); }
@@ -865,7 +867,7 @@ input, button, select, textarea { font: inherit; }
 /* ============================================================
    CREATE NEWS
    ============================================================ */
-.create-wrapper { max-width: 720px; margin: 24px auto; }
+.create-wrapper { max-width: 1140px; margin: 24px auto; }
 .create-heading { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 16px; }
 .create-card {
     background: rgba(255, 255, 255, 0.88);
@@ -874,6 +876,39 @@ input, button, select, textarea { font: inherit; }
     box-shadow: var(--shadow-sm);
     backdrop-filter: blur(16px);
 }
+.create-layout-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 24px;
+    align-items: start;
+}
+.create-main {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+.create-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+.sidebar-card {
+    background: rgba(255,255,255,0.94);
+    border: 1px solid rgba(30, 111, 191, 0.12);
+    border-radius: var(--radius);
+    padding: 22px;
+    box-shadow: var(--shadow-sm);
+}
+.sidebar-card-title {
+    font-size: 14px; font-weight: 700; margin-bottom: 14px; color: var(--navy);
+}
+.sidebar-card-row {
+    display: flex; justify-content: space-between; gap: 12px;
+    margin-bottom: 12px; font-size: 13px; color: var(--text-sec);
+}
+.sidebar-card-row strong { color: var(--text); }
+.sidebar-card ul { margin: 0; padding-left: 18px; color: var(--text-sec); font-size: 13px; line-height: 1.7; }
+.sidebar-card ul li { margin-bottom: 10px; }
 
 /* Rich Editor */
 .editor-wrap {
