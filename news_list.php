@@ -23,7 +23,7 @@ if (!in_array($mediaFilter, $validMedia)) $mediaFilter = 'Semua';
 $search = trim($_GET['q'] ?? '');
 
 // Query
-$sql = "SELECT n.*, u.full_name AS author_name
+$sql = "SELECT n.*, u.full_name AS author_name, n.created_by
         FROM news n JOIN users u ON n.created_by = u.id";
 $where = [];
 $params = [];

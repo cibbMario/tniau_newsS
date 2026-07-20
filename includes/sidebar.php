@@ -30,7 +30,7 @@ $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['ro
             <span class="icon"></span><span class="label">Statistik</span>
         </a>
         <a href="<?= BASE_URL ?>/gallery.php" class="<?= $current==='gallery' ? 'active' : '' ?>">
-            <span class="icon"></span><span class="label">Galeri Martua</span>
+            <span class="icon"></span><span class="label">Galeri Media</span>
         </a>
         <?php if ($user['role'] === 'A'): ?>
         <a href="<?= BASE_URL ?>/news_create.php" class="<?= $current==='create' ? 'active' : '' ?>">

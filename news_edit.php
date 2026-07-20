@@ -48,14 +48,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_news'])) {
         $error = "Judul dan isi berita wajib diisi.";
     } else {
         try {
-            $imagePath = $news['image'];
+            $imagePath = $news['image_path'] ?? null;
             if (!empty($_FILES['image']['name'])) {
                 $imagePath = uploadNewsImage('image');
             }
 
             $stmt = $pdo->prepare("
                 UPDATE news SET 
-                    title=?, content=?, image=?, sentiment=?, priority=?, 
+                    title=?, content=?, image_path=?, sentiment=?, priority=?, 
                     classification=?, wilayah=?, tempat=?, media=?, aktor=?, 
                     tag=?, topik=?, keyword=?, published_at=?
                 WHERE id=?
@@ -536,9 +536,9 @@ $gallery = $images->fetchAll();
                         </div>
 
                         <div class="gallery-grid-row">
-                            <?php if ($news['image']): ?>
+                            <?php if (!empty($news['image_path'])): ?>
                                 <div class="gallery-thumb">
-                                    <img src="<?= UPLOAD_URL . e($news['image']) ?>" alt="Cover">
+                                    <img src="<?= UPLOAD_URL . e($news['image_path']) ?>" alt="Cover">
                                     <div class="gallery-thumb-info">cover_image.jpg<br>Utama</div>
                                 </div>
                             <?php endif; ?>
@@ -648,8 +648,19 @@ function fmt(cmd, val) {
     document.getElementById('editorBody').focus();
 }
 function prepareSubmit() {
-    document.getElementById('hiddenContent').value = document.getElementById('editorBody').innerHTML;
+    var editor = document.getElementById('editorBody');
+    var hidden = document.getElementById('hiddenContent');
+    if (editor && hidden) {
+        hidden.value = editor.innerHTML;
+    }
+    return true;
 }
+document.addEventListener('DOMContentLoaded', function() {
+    var editForm = document.getElementById('editForm');
+    if (editForm) {
+        editForm.addEventListener('submit', prepareSubmit);
+    }
+});
 </script>
 </body>
 </html>

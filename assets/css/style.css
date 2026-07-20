@@ -359,6 +359,8 @@ input,button,select,textarea{font:inherit}
 .news-table .col-muted{color:var(--text-sec)}
 .news-table .col-author{font-weight:500}
 .news-table .col-time{color:var(--text-sec);font-size:11.5px}
+.news-table td .btn{position:relative;z-index:1}
+.news-table td .btn:hover{filter:brightness(.95)}
 
 /* Sentiment Pill */
 .pill{
