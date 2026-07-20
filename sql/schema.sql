@@ -103,3 +103,62 @@ CREATE TABLE news_history (
 -- di browser untuk membuat 3 akun contoh dengan password ter-hash
 -- yang benar oleh PHP (password_hash). Hapus file itu setelah dipakai.
 -- ---------------------------------------------------------
+
+-- ---------------------------------------------------------
+-- TABEL STATISTIK
+-- ---------------------------------------------------------
+CREATE TABLE statistik (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    date DATE NOT NULL UNIQUE,
+    views_count INT DEFAULT 0,
+    visitors_count INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------
+-- TABEL GALERI MEDIA
+-- ---------------------------------------------------------
+CREATE TABLE galeri_media (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    image_path VARCHAR(255) NOT NULL,
+    uploaded_by INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_galeri_user FOREIGN KEY (uploaded_by) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------
+-- TABEL BERITA WILAYAH
+-- ---------------------------------------------------------
+CREATE TABLE berita_wilayah (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    wilayah VARCHAR(100) NOT NULL,
+    created_by INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_berita_wil_user FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------
+-- TABEL MEDIA ONLINE
+-- ---------------------------------------------------------
+CREATE TABLE media_online (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    platform_name VARCHAR(100) NOT NULL,
+    url VARCHAR(255) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------
+-- TABEL MEDIA SOSIAL
+-- ---------------------------------------------------------
+CREATE TABLE media_sosial (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    platform_name VARCHAR(100) NOT NULL,
+    url VARCHAR(255) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;

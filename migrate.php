@@ -64,6 +64,53 @@ try {
         ) ENGINE=InnoDB;
     ");
     echo "Table <strong>news_images</strong> checked/created.<br>";
+    // 3b. Create new requested tables
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS statistik (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            date DATE NOT NULL UNIQUE,
+            views_count INT DEFAULT 0,
+            visitors_count INT DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB;
+        
+        CREATE TABLE IF NOT EXISTS galeri_media (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            description TEXT,
+            image_path VARCHAR(255) NOT NULL,
+            uploaded_by INT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            CONSTRAINT fk_galeri_user FOREIGN KEY (uploaded_by) REFERENCES users(id) ON DELETE SET NULL
+        ) ENGINE=InnoDB;
+        
+        CREATE TABLE IF NOT EXISTS berita_wilayah (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            content TEXT NOT NULL,
+            wilayah VARCHAR(100) NOT NULL,
+            created_by INT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            CONSTRAINT fk_berita_wil_user FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+        ) ENGINE=InnoDB;
+        
+        CREATE TABLE IF NOT EXISTS media_online (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            platform_name VARCHAR(100) NOT NULL,
+            url VARCHAR(255) NOT NULL,
+            description TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB;
+        
+        CREATE TABLE IF NOT EXISTS media_sosial (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            platform_name VARCHAR(100) NOT NULL,
+            url VARCHAR(255) NOT NULL,
+            description TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB;
+    ");
+    echo "New tables (statistik, galeri_media, berita_wilayah, media_online, media_sosial) checked/created.<br>";
 
     // 4. Seed default users: gilang, budi, chandra
     $defaultPassword = 'password123';
