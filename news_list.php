@@ -178,18 +178,19 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                 <table class="news-table">
                     <thead>
                         <tr>
-                            <th style="width:40%">Subjek</th>
+                            <th style="width:30%">Subjek</th>
                             <th>Media</th>
                             <th>Author</th>
                             <th>Wilayah</th>
                             <th>Waktu Terbit</th>
                             <th>Status</th>
                             <th>Sentimen</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if (empty($newsList)): ?>
-                            <tr><td colspan="7" class="empty-state">Belum ada berita yang tersedia.</td></tr>
+                            <tr><td colspan="8" class="empty-state">Belum ada berita yang tersedia.</td></tr>
                         <?php else: ?>
                             <?php foreach ($newsList as $row): ?>
                             <tr>
@@ -215,6 +216,13 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                                     $cls = match($s) { 'positif'=>'pill-positif', 'negatif'=>'pill-negatif', default=>'pill-netral' };
                                     ?>
                                     <span class="pill <?= $cls ?>"><?= e($row['sentiment'] ?? 'Netral') ?></span>
+                                </td>
+                                <td>
+                                    <?php if ($user['role'] === 'A' && $row['created_by'] === $user['id'] && in_array($row['status'], ['draft','pending_b','revision_b','revision_c'])): ?>
+                                        <a href="<?= BASE_URL ?>/news_edit.php?id=<?= $row['id'] ?>" class="btn btn-primary btn-sm">✏️ Edit</a>
+                                    <?php else: ?>
+                                        -
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
