@@ -25,22 +25,6 @@ $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['ro
             <span class="icon"></span><span class="label">Buat Berita</span>
         </a>
         <?php endif; ?>
-        <a href="<?= BASE_URL ?>/statistics.php" class="<?= $current==='statistics' ? 'active' : '' ?>">
-            <span class="icon"></span><span class="label">Statistik</span>
-        </a>
-        <div class="nav-divider"></div>
-        <a href="<?= BASE_URL ?>/gallery.php" class="<?= $current==='gallery' ? 'active' : '' ?>">
-            <span class="icon"></span><span class="label">Galeri Media</span>
-        </a>
-        <a href="<?= BASE_URL ?>/berita_wilayah.php" class="<?= $current==='berita_wilayah' ? 'active' : '' ?>">
-            <span class="icon"></span><span class="label">Berita Wilayah</span>
-        </a>
-        <a href="<?= BASE_URL ?>/media_online.php" class="<?= $current==='media_online' ? 'active' : '' ?>">
-            <span class="icon"></span><span class="label">Media Online</span>
-        </a>
-        <a href="<?= BASE_URL ?>/media_sosial.php" class="<?= $current==='media_sosial' ? 'active' : '' ?>">
-            <span class="icon"></span><span class="label">Media Sosial</span>
-        </a>
         <a href="<?= BASE_URL ?>/report.php" class="<?= $current==='report' ? 'active' : '' ?>">
             <span class="icon"></span><span class="label">Laporan</span>
         </a>

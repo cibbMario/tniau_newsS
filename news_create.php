@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $stmt = $pdo->prepare("
                 INSERT INTO news (
-                    title, slug, content, image, status, sentiment, priority,
+                    title, slug, content, image_path, status, sentiment, priority,
                     classification, wilayah, tempat, media, author_label,
                     created_by, created_at, published_at
                 ) VALUES (

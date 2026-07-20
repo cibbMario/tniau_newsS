@@ -89,6 +89,9 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                             <?= $label ?>
                         </a>
                     <?php endforeach; ?>
+                    <div class="nav-divider" style="width:1px;height:20px;background:#e2e8f0;margin:0 10px;"></div>
+                    <a href="<?= BASE_URL ?>/statistics.php" class="media-tab-item">📈 Statistik</a>
+                    <a href="<?= BASE_URL ?>/gallery.php" class="media-tab-item">🖼️ Galeri Media</a>
                 </div>
             </div>
             <div class="top-navbar-right">
