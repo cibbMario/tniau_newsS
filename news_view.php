@@ -18,6 +18,12 @@ if (!$news) {
     die("Berita tidak ditemukan.");
 }
 
+// Tandai notifikasi terkait sebagai terbaca jika dilihat melalui tautan notifikasi
+if (!empty($_GET['mark_read'])) {
+    $notifId = (int)$_GET['mark_read'];
+    markNotificationRead($notifId, $user['id']);
+}
+
 // Role restriction
 if ($user['role'] !== 'A' && $news['status'] === 'draft') {
     die("Berita ini masih dalam bentuk draft.");
@@ -53,7 +59,7 @@ $commentsList = $comments->fetchAll();
             </div>
             <div class="top-navbar-right">
                 <a href="<?= BASE_URL ?>/news_list.php" class="top-action-btn">← Kembali</a>
-                <?php if ($user['role'] === 'A' && in_array($news['status'], ['draft','revision_b','revision_c'])): ?>
+                <?php if ($user['role'] === 'A' && in_array($news['status'], ['draft','pending_b','revision_b','revision_c'])): ?>
                     <a href="<?= BASE_URL ?>/news_edit.php?id=<?= $id ?>" class="btn btn-primary btn-sm">✏️ Edit Berita</a>
                 <?php endif; ?>
             </div>

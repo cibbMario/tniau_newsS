@@ -26,6 +26,12 @@ $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['ro
         <a href="<?= BASE_URL ?>/dashboard.php" class="<?= $current==='dashboard' ? 'active' : '' ?>">
             <span class="icon"></span><span class="label">Dashboard</span>
         </a>
+        <a href="<?= BASE_URL ?>/statistics.php" class="<?= $current==='statistics' ? 'active' : '' ?>">
+            <span class="icon"></span><span class="label">Statistik</span>
+        </a>
+        <a href="<?= BASE_URL ?>/gallery.php" class="<?= $current==='gallery' ? 'active' : '' ?>">
+            <span class="icon"></span><span class="label">Galeri Martua</span>
+        </a>
         <?php if ($user['role'] === 'A'): ?>
         <a href="<?= BASE_URL ?>/news_create.php" class="<?= $current==='create' ? 'active' : '' ?>">
             <span class="icon"></span><span class="label">Buat Berita</span>

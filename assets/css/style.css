@@ -18,6 +18,7 @@
     
     --text: #1d1d1f;
     --text-sec: #86868b;
+    --text-muted: rgba(29, 29, 31, 0.65);
     
     --border: #E2E8F0;
     --border-light: #F1F5F9;
@@ -27,9 +28,11 @@
     --yellow: #F59E0B;
     --red: #EF4444;
     
-    --shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 94, 0, 0.05);
-    --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(255, 94, 0, 0.2);
-    --glow: 0 0 15px rgba(255, 94, 0, 0.4), 0 0 30px rgba(255, 94, 0, 0.2);
+    --shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 12px 35px rgba(0, 0, 0, 0.10);
+    --shadow-hover: 0 8px 22px rgba(0, 0, 0, 0.12), 0 0 20px rgba(212, 168, 67, 0.08);
+    --glow: 0 0 12px rgba(212, 168, 67, 0.18), 0 0 24px rgba(212, 168, 67, 0.08);
     
     --radius: 12px;
     --transition: 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
@@ -48,7 +51,7 @@ a{text-decoration:none;color:inherit}
 ul,ol{list-style:none}
 input,button,select,textarea{font:inherit}
 
-/* ============================================================
+/* ===================  =========================================
    LAYOUT
    ============================================================ */
 .app-layout{display:flex;min-height:100vh;overflow-x:hidden}
@@ -59,7 +62,7 @@ input,button,select,textarea{font:inherit}
     background:linear-gradient(180deg,#091422 0%,var(--navy) 100%);
     color:#fff;display:flex;flex-direction:column;
     position:fixed;top:0;left:0;bottom:0;z-index:100;
-    box-shadow:2px 0 12px rgba(0,0,0,.15);
+    box-shadow:2px 0 10px rgba(0,0,0,.08);
     overflow-y:auto;
     transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1), width 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
 }

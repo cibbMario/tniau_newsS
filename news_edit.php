@@ -22,7 +22,7 @@ if ($user['role'] !== 'A') {
     die("Anda tidak memiliki akses untuk mengedit berita ini.");
 }
 
-if (!in_array($news['status'], ['draft', 'revision_b', 'revision_c'])) {
+if (!in_array($news['status'], ['draft', 'pending_b', 'revision_b', 'revision_c'])) {
     die("Berita yang sedang di-review atau sudah diterbitkan tidak dapat diedit.");
 }
 

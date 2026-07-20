@@ -49,11 +49,13 @@ foreach ($galleryImages as $img) {
             margin-top: 16px;
         }
         .gallery-card {
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.80);
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: var(--shadow);
+            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             transition: transform 0.2s;
         }
         .gallery-card:hover {
