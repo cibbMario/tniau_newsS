@@ -510,26 +510,42 @@ $gallery = $images->fetchAll();
                                 <button type="button" class="rich-editor-btn" onclick="fmt('italic')"><em>I</em></button>
                                 <button type="button" class="rich-editor-btn" onclick="fmt('underline')"><u>U</u></button>
                                 <div class="toolbar-divider"></div>
-                                <select class="rich-editor-select" onchange="fmt('fontName', this.value)">
+                                <select class="rich-editor-select" id="fontFamilySelect" onchange="applyFont(this.value)" title="Font">
+                                    <option value="Poppins">Poppins</option>
                                     <option value="Arial">Arial</option>
                                     <option value="Times New Roman">Times New Roman</option>
                                     <option value="Verdana">Verdana</option>
+                                    <option value="Georgia">Georgia</option>
+                                    <option value="Courier New">Courier New</option>
+                                    <option value="Trebuchet MS">Trebuchet MS</option>
+                                    <option value="Tahoma">Tahoma</option>
+                                    <option value="Impact">Impact</option>
+                                    <option value="Comic Sans MS">Comic Sans MS</option>
+                                    <option value="Palatino">Palatino</option>
+                                    <option value="Garamond">Garamond</option>
                                 </select>
-                                <select class="rich-editor-select" onchange="fmt('fontSize', this.value)">
-                                    <option value="3">12</option>
+                                <select class="rich-editor-select" onchange="fmt('fontSize', this.value)" title="Ukuran Font">
+                                    <option value="1">8</option>
+                                    <option value="2">10</option>
+                                    <option value="3" selected>12</option>
                                     <option value="4">14</option>
-                                    <option value="5">16</option>
+                                    <option value="5">18</option>
+                                    <option value="6">24</option>
+                                    <option value="7">36</option>
                                 </select>
                                 <div class="toolbar-divider"></div>
-                                <button type="button" class="rich-editor-btn" style="color:var(--gold-dark)"><strong>A</strong>▼</button>
-                                <button type="button" class="rich-editor-btn">Link</button>
-                                <button type="button" class="rich-editor-btn">Gambar</button>
+                                <input type="color" id="txtColorPicker" title="Warna Teks" style="width:28px;height:28px;border:1px solid #ced4da;border-radius:4px;padding:2px;cursor:pointer;background:#fff" onchange="fmt('foreColor', this.value)">
+                                <button type="button" class="rich-editor-btn" onclick="insertLink()" title="Sisipkan Link">🔗 Link</button>
+                                <button type="button" class="rich-editor-btn" onclick="document.getElementById('editorImageInput').click()" title="Sisipkan Gambar">🖼️ Gambar</button>
+                                <input type="file" id="editorImageInput" accept="image/*" hidden onchange="insertImageFile(this)">
                                 <div class="toolbar-divider"></div>
-                                <button type="button" class="rich-editor-btn">Menu</button>
-                                <button type="button" class="rich-editor-btn">Daftar</button>
-                                <button type="button" class="rich-editor-btn">Tabel</button>
+                                <button type="button" class="rich-editor-btn" onclick="fmt('insertUnorderedList')" title="Bullet List">• Daftar</button>
+                                <button type="button" class="rich-editor-btn" onclick="fmt('insertOrderedList')" title="Numbered List">1. Urutan</button>
+                                <button type="button" class="rich-editor-btn" onclick="insertTable()" title="Sisipkan Tabel">⊞ Tabel</button>
                                 <div class="toolbar-divider"></div>
-                                <button type="button" class="rich-editor-btn">T↕</button>
+                                <button type="button" class="rich-editor-btn" onclick="fmt('justifyLeft')" title="Kiri">⬅</button>
+                                <button type="button" class="rich-editor-btn" onclick="fmt('justifyCenter')" title="Tengah">≡</button>
+                                <button type="button" class="rich-editor-btn" onclick="fmt('justifyRight')" title="Kanan">➡</button>
                             </div>
                             <div class="rich-editor-body" id="editorBody" contenteditable="true"><?= $news['content'] ?></div>
                             <textarea name="content" id="hiddenContent" hidden></textarea>
@@ -600,39 +616,39 @@ $gallery = $images->fetchAll();
 
                             <!-- CHIP INPUTS -->
                             <div class="chip-input-container">
-                                <?php if($news['aktor']): ?>
+                                <?php if(!empty($news['aktor'])): ?>
                                     <div class="chip-item">
                                         <?= e($news['aktor']) ?> <span class="chip-close">×</span>
                                     </div>
                                 <?php endif; ?>
-                                <input type="text" name="aktor" class="chip-input-field" placeholder="Aktor" value="<?= e($news['aktor']) ?>">
+                                <input type="text" name="aktor" class="chip-input-field" placeholder="Aktor" value="<?= e($news['aktor'] ?? '') ?>">
                             </div>
 
                             <div class="chip-input-container">
-                                <?php if($news['tag']): ?>
+                                <?php if(!empty($news['tag'])): ?>
                                     <div class="chip-item">
                                         <?= e($news['tag']) ?> <span class="chip-close">×</span>
                                     </div>
                                 <?php endif; ?>
-                                <input type="text" name="tag" class="chip-input-field" placeholder="Tag" value="<?= e($news['tag']) ?>">
+                                <input type="text" name="tag" class="chip-input-field" placeholder="Tag" value="<?= e($news['tag'] ?? '') ?>">
                             </div>
 
                             <div class="chip-input-container">
-                                <?php if($news['topik']): ?>
+                                <?php if(!empty($news['topik'])): ?>
                                     <div class="chip-item">
                                         <?= e($news['topik']) ?> <span class="chip-close">×</span>
                                     </div>
                                 <?php endif; ?>
-                                <input type="text" name="topik" class="chip-input-field" placeholder="Topik" value="<?= e($news['topik']) ?>">
+                                <input type="text" name="topik" class="chip-input-field" placeholder="Topik" value="<?= e($news['topik'] ?? '') ?>">
                             </div>
 
                             <div class="chip-input-container">
-                                <?php if($news['keyword']): ?>
+                                <?php if(!empty($news['keyword'])): ?>
                                     <div class="chip-item">
                                         <?= e($news['keyword']) ?> <span class="chip-close">×</span>
                                     </div>
                                 <?php endif; ?>
-                                <input type="text" name="keyword" class="chip-input-field" placeholder="Keyword" value="<?= e($news['keyword']) ?>">
+                                <input type="text" name="keyword" class="chip-input-field" placeholder="Keyword" value="<?= e($news['keyword'] ?? '') ?>">
                             </div>
 
                             <button type="submit" class="btn-save-blue" onclick="prepareSubmit()">
@@ -649,9 +665,52 @@ $gallery = $images->fetchAll();
 
 <script>
 function fmt(cmd, val) {
-    document.execCommand(cmd, false, val || null);
     document.getElementById('editorBody').focus();
+    document.execCommand(cmd, false, val !== undefined ? val : null);
 }
+
+function applyFont(font) {
+    document.getElementById('editorBody').focus();
+    document.execCommand('fontName', false, font);
+}
+
+function insertLink() {
+    var url = prompt('Masukkan URL link:', 'https://');
+    if (url) {
+        document.getElementById('editorBody').focus();
+        document.execCommand('createLink', false, url);
+    }
+}
+
+function insertTable() {
+    var rows = parseInt(prompt('Jumlah baris:', '3'));
+    var cols = parseInt(prompt('Jumlah kolom:', '3'));
+    if (!rows || !cols || rows < 1 || cols < 1) return;
+    var html = '<table border="1" style="border-collapse:collapse;width:100%;margin:8px 0">';
+    for (var r = 0; r < rows; r++) {
+        html += '<tr>';
+        for (var c = 0; c < cols; c++) {
+            html += '<td style="border:1px solid #ced4da;padding:8px;min-width:60px">&nbsp;</td>';
+        }
+        html += '</tr>';
+    }
+    html += '</table><br>';
+    document.getElementById('editorBody').focus();
+    document.execCommand('insertHTML', false, html);
+}
+
+function insertImageFile(input) {
+    var file = input.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        document.getElementById('editorBody').focus();
+        document.execCommand('insertImage', false, e.target.result);
+    };
+    reader.readAsDataURL(file);
+    input.value = '';
+}
+
 function prepareSubmit() {
     var editor = document.getElementById('editorBody');
     var hidden = document.getElementById('hiddenContent');
@@ -663,7 +722,9 @@ function prepareSubmit() {
 document.addEventListener('DOMContentLoaded', function() {
     var editForm = document.getElementById('editForm');
     if (editForm) {
-        editForm.addEventListener('submit', prepareSubmit);
+        editForm.addEventListener('submit', function(e) {
+            prepareSubmit();
+        });
     }
 });
 </script>

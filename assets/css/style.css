@@ -645,6 +645,13 @@ input,button,select,textarea{font:inherit}
     line-height:1.65;outline:none;overflow-y:auto;
 }
 .editor-body:focus{box-shadow:inset 0 0 0 2px rgba(212,168,67,.15)}
+.editor-select{
+    border:1px solid #ced4da;border-radius:4px;
+    padding:4px 6px;font-size:12px;
+    background:#fff;cursor:pointer;color:var(--text);
+    height:28px;
+}
+.editor-select:hover{border-color:rgba(212,168,67,0.45)}
 
 /* ============================================================
    FORMS

@@ -174,10 +174,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <button type="button" class="editor-btn" onclick="fmt('bold')" title="Bold"><strong>B</strong></button>
                                 <button type="button" class="editor-btn" onclick="fmt('italic')" title="Italic"><em>I</em></button>
                                 <button type="button" class="editor-btn" onclick="fmt('underline')" title="Underline"><u>U</u></button>
+                                <div style="width:1px;height:20px;background:#ced4da;margin:0 4px;"></div>
+                                <select class="editor-select" id="createFontFamily" onchange="applyFont(this.value)" title="Font">
+                                    <option value="Poppins">Poppins</option>
+                                    <option value="Arial">Arial</option>
+                                    <option value="Times New Roman">Times New Roman</option>
+                                    <option value="Verdana">Verdana</option>
+                                    <option value="Georgia">Georgia</option>
+                                    <option value="Courier New">Courier New</option>
+                                    <option value="Trebuchet MS">Trebuchet MS</option>
+                                    <option value="Tahoma">Tahoma</option>
+                                    <option value="Impact">Impact</option>
+                                    <option value="Comic Sans MS">Comic Sans MS</option>
+                                    <option value="Palatino">Palatino</option>
+                                    <option value="Garamond">Garamond</option>
+                                </select>
+                                <select class="editor-select" onchange="fmt('fontSize', this.value)" title="Ukuran">
+                                    <option value="1">8</option>
+                                    <option value="2">10</option>
+                                    <option value="3" selected>12</option>
+                                    <option value="4">14</option>
+                                    <option value="5">18</option>
+                                    <option value="6">24</option>
+                                    <option value="7">36</option>
+                                </select>
+                                <div style="width:1px;height:20px;background:#ced4da;margin:0 4px;"></div>
+                                <input type="color" title="Warna Teks" style="width:28px;height:28px;border:1px solid #ced4da;border-radius:4px;padding:2px;cursor:pointer" onchange="fmt('foreColor', this.value)">
+                                <div style="width:1px;height:20px;background:#ced4da;margin:0 4px;"></div>
                                 <button type="button" class="editor-btn" onclick="fmt('insertUnorderedList')" title="Bullet List">• List</button>
                                 <button type="button" class="editor-btn" onclick="fmt('insertOrderedList')" title="Numbered List">1. List</button>
                                 <button type="button" class="editor-btn" onclick="fmt('formatBlock','h3')" title="Heading">H3</button>
                                 <button type="button" class="editor-btn" onclick="fmt('formatBlock','blockquote')" title="Quote">❝</button>
+                                <div style="width:1px;height:20px;background:#ced4da;margin:0 4px;"></div>
+                                <button type="button" class="editor-btn" onclick="insertLinkCreate()" title="Link">🔗 Link</button>
+                                <button type="button" class="editor-btn" onclick="insertTableCreate()" title="Tabel">⊞ Tabel</button>
+                                <div style="width:1px;height:20px;background:#ced4da;margin:0 4px;"></div>
+                                <button type="button" class="editor-btn" onclick="fmt('justifyLeft')" title="Kiri">⬅</button>
+                                <button type="button" class="editor-btn" onclick="fmt('justifyCenter')" title="Tengah">≡</button>
+                                <button type="button" class="editor-btn" onclick="fmt('justifyRight')" title="Kanan">➡</button>
                             </div>
                             <div class="editor-body" id="editorBody" contenteditable="true" data-placeholder="Tulis isi berita di sini..."><?= e($_POST['content'] ?? '') ?></div>
                         </div>
@@ -200,8 +234,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <script>
 function fmt(cmd, val) {
-    document.execCommand(cmd, false, val || null);
     document.getElementById('editorBody').focus();
+    document.execCommand(cmd, false, val !== undefined ? val : null);
+}
+function applyFont(font) {
+    document.getElementById('editorBody').focus();
+    document.execCommand('fontName', false, font);
+}
+function insertLinkCreate() {
+    var url = prompt('Masukkan URL link:', 'https://');
+    if (url) {
+        document.getElementById('editorBody').focus();
+        document.execCommand('createLink', false, url);
+    }
+}
+function insertTableCreate() {
+    var rows = parseInt(prompt('Jumlah baris:', '3'));
+    var cols = parseInt(prompt('Jumlah kolom:', '3'));
+    if (!rows || !cols || rows < 1 || cols < 1) return;
+    var html = '<table border="1" style="border-collapse:collapse;width:100%;margin:8px 0">';
+    for (var r = 0; r < rows; r++) {
+        html += '<tr>';
+        for (var c = 0; c < cols; c++) {
+            html += '<td style="border:1px solid #ced4da;padding:8px;min-width:60px">&nbsp;</td>';
+        }
+        html += '</tr>';
+    }
+    html += '</table><br>';
+    document.getElementById('editorBody').focus();
+    document.execCommand('insertHTML', false, html);
 }
 function prepareSubmit() {
     document.getElementById('hiddenContent').value = document.getElementById('editorBody').innerHTML;
