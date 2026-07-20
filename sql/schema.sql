@@ -47,7 +47,8 @@ CREATE TABLE news (
     CONSTRAINT fk_news_creator FOREIGN KEY (created_by) REFERENCES users(id)
 ) ENGINE=InnoDB;
 
-FULLTEXT INDEX ft_news_search (title, content);
+ALTER TABLE news
+ADD FULLTEXT INDEX ft_news_search (title, content);
 
 -- ---------------------------------------------------------
 -- TABEL COMMENTS
