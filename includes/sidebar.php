@@ -42,7 +42,7 @@ $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['ro
     </nav>
     <div class="sidebar-footer">
         <a href="<?= BASE_URL ?>/logout.php"><span class="icon"></span> Keluar</a>
-        <div class="onebox">onebox●</div>
+        <div class="onebox">DISPEN - TNIAU</div>
     </div>
 </aside>
 
