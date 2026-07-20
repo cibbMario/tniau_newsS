@@ -74,7 +74,7 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
         <!-- TOP NAVBAR -->
         <div class="top-navbar">
             <div class="top-navbar-left">
-                <button class="hamburger-btn" title="Menu">Menu</button>
+                <button class="hamburger-btn" title="Toggle Menu">☰ Menu</button>
                 <div class="media-tabs">
                     <?php
                     $tabs = [
@@ -89,18 +89,18 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                             <?= $label ?>
                         </a>
                     <?php endforeach; ?>
-                    <div class="nav-divider" style="width:1px;height:20px;background:#e2e8f0;margin:0 10px;"></div>
+                    <span class="media-tab-divider"></span>
                     <a href="<?= BASE_URL ?>/statistics.php" class="media-tab-item">Statistik</a>
                     <a href="<?= BASE_URL ?>/gallery.php" class="media-tab-item">Galeri Media</a>
                 </div>
             </div>
             <div class="top-navbar-right">
-                <form method="GET" style="display:flex;gap:6px">
+                <form method="GET" style="display:flex;gap:6px;align-items:center">
                     <input type="hidden" name="media" value="<?= e($mediaFilter) ?>">
-                    <input type="text" name="q" class="form-input" placeholder="Cari berita..." value="<?= e($search) ?>" style="width:180px;height:32px;font-size:12px">
+                    <input type="text" name="q" class="form-input" placeholder="🔍 Cari berita..." value="<?= e($search) ?>" style="width:190px;height:34px;font-size:12px;border-radius:20px">
                     <button type="submit" class="top-action-btn">Cari</button>
                 </form>
-                <span class="top-action-btn">Tanggal <?= date('d M Y') ?></span>
+                <span class="top-action-btn">📅 <?= date('d M Y') ?></span>
             </div>
         </div>
 
@@ -108,7 +108,7 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
         <div class="workspace-tabs-row">
             <div class="workspace-tab active">
                 <span><?= $mediaFilter === 'Semua' ? 'Semua Sumber' : e($mediaFilter) ?></span>
-                <span class="close-tab">×</span>
+                <span class="close-tab" title="Tutup tab">×</span>
             </div>
         </div>
 

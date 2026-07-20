@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <main class="main-content">
         <div class="top-navbar">
             <div class="top-navbar-left">
-                <button class="hamburger-btn" title="Menu">Menu</button>
+                <button class="hamburger-btn" title="Toggle Menu">&#9776; Menu</button>
                 <div class="media-tabs">
                     <span class="media-tab-item active">Buat Berita Baru</span>
                 </div>

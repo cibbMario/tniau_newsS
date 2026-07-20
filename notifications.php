@@ -27,7 +27,7 @@ $notifs = getNotifications($user['id']);
     <main class="main-content" style="background: radial-gradient(circle at top right, #e2e8f0, #f8f9fa); min-height: 100vh;">
         <div class="top-navbar">
             <div class="top-navbar-left">
-                <button class="hamburger-btn" title="Menu">Menu</button>
+                <button class="hamburger-btn" title="Toggle Menu">&#9776; Menu</button>
                 <div class="media-tabs">
                     <span class="media-tab-item active">Notifikasi</span>
                 </div>

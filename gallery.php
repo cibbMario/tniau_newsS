@@ -97,7 +97,7 @@ foreach ($galleryImages as $img) {
     <main class="main-content">
         <div class="top-navbar">
             <div class="top-navbar-left">
-                <button class="hamburger-btn">Menu</button>
+                <button class="hamburger-btn" title="Toggle Menu">&#9776; Menu</button>
                 <span style="font-weight:600; font-size:14px; color:var(--text);">Galeri Berita</span>
             </div>
             <div class="top-navbar-right">

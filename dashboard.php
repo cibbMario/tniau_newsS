@@ -30,14 +30,14 @@ $recent = $pdo->query("SELECT * FROM news ORDER BY created_at DESC LIMIT 5")->fe
     <main class="main-content">
         <div class="top-navbar">
             <div class="top-navbar-left">
-                <button class="hamburger-btn" title="Menu">Menu</button>
+                <button class="hamburger-btn" title="Toggle Menu">☰ Menu</button>
                 <div class="media-tabs">
-                    <span class="media-tab-item active">Dashboard Utama</span>
+                    <span class="media-tab-item active">🏠 Dashboard Utama</span>
                 </div>
             </div>
             <div class="top-navbar-right">
-                <span class="top-action-btn">Tanggal <?= date('d M Y') ?></span>
-                <span class="top-action-btn">User <?= e($user['full_name']) ?></span>
+                <span class="top-action-btn">📅 <?= date('d M Y') ?></span>
+                <span class="top-action-btn">👤 <?= e($user['full_name']) ?></span>
             </div>
         </div>
 
