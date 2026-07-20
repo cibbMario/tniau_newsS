@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-define('BASE_URL', '/tniau-news');
+define('BASE_URL', '/tniau_newsS');
 define('UPLOAD_DIR', __DIR__ . '/../uploads/');
 define('UPLOAD_URL', BASE_URL . '/uploads/');
 
