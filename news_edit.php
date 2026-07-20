@@ -430,7 +430,7 @@ $gallery = $images->fetchAll();
         <!-- TOP NAVBAR MATCHING SCREENSHOT -->
         <div class="top-navbar" style="height:56px">
             <div class="top-navbar-left">
-                <button class="hamburger-btn">Menu</button>
+                <button class="hamburger-btn" title="Toggle Menu">&#9776; Menu</button>
                 <div class="media-tabs">
                     <span class="media-tab-item">Berita Wilayah</span>
                     <span class="media-tab-item text-muted">Media Online</span>

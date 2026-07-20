@@ -170,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!-- TOP NAVBAR MATCHING SCREENSHOT -->
         <div class="top-navbar" style="height:56px">
             <div class="top-navbar-left">
-                <button class="hamburger-btn">Menu</button>
+                <button class="hamburger-btn" title="Toggle Menu">&#9776; Menu</button>
                 <div class="media-tabs">
                     <span class="media-tab-item active" style="border:none">Profil Pengguna</span>
                 </div>

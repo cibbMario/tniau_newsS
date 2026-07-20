@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="login-bg">
     <div class="login-box">
         <img src="<?= BASE_URL ?>/assets/img/logo-new.png" alt="TNI AU" class="login-logo" onerror="this.src='<?= BASE_URL ?>/assets/img/logo-tniau.png'">
-        <h2>Portal Berita TNI AU</h2>
+        <h1>Portal Berita TNI AU</h1>
         <p class="sub">Sistem Monitoring &amp; Manajemen Berita<br>TNI Angkatan Udara — <em>Swa Bhuwana Paksa</em></p>
 
         <?php if ($error): ?>
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
 
         <div class="credits">
-            Dibuat oleh <strong>onebox</strong> — &copy; <?= date('Y') ?> TNI Angkatan Udara
+            Dibuat oleh <strong>Dispen</strong> — &copy; <?= date('Y') ?> TNI Angkatan Udara
         </div>
     </div>
 </div>

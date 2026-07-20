@@ -5,9 +5,20 @@ $current = $current ?? '';
 $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['role']] ?? '';
 ?>
 
-<!-- Global Loader Screen -->
+<!-- ==========================================
+     GLOBAL LOADER — TNI AU Animated Screen
+     ========================================== -->
 <div id="global-loader">
-    <div class="loader-spinner"></div>
+    <div class="loader-ring">
+        <div class="loader-emblem">✈</div>
+    </div>
+    <div class="loader-brand">
+        <div class="title">Portal Berita</div>
+        <div class="sub">TNI Angkatan Udara · DISPEN</div>
+    </div>
+    <div class="loader-progress">
+        <div class="loader-bar"></div>
+    </div>
 </div>
 
 <aside class="sidebar">
@@ -26,7 +37,7 @@ $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['ro
         <a href="<?= BASE_URL ?>/dashboard.php" class="<?= $current==='dashboard' ? 'active' : '' ?>">
             <span class="icon"></span><span class="label">Dashboard</span>
         </a>
-                <a href="<?= BASE_URL ?>/statistics.php" class="<?= $current==='statistics' ? 'active' : '' ?>">
+        <a href="<?= BASE_URL ?>/statistics.php" class="<?= $current==='statistics' ? 'active' : '' ?>">
             <span class="icon"></span><span class="label">Statistik</span>
         </a>
         <a href="<?= BASE_URL ?>/gallery.php" class="<?= $current==='gallery' ? 'active' : '' ?>">
@@ -49,37 +60,53 @@ $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['ro
             <span class="icon"></span><span class="label">Profil</span>
         </a>
         <a href="<?= BASE_URL ?>/support.php" class="<?= $current==='support' ? 'active' : '' ?>">
-            <span class="icon"></span><span class="label">Bantuan</span>
+            <span class="icon"> </span><span class="label">Bantuan</span>
         </a>
     </nav>
     <div class="sidebar-footer">
-        <a href="<?= BASE_URL ?>/logout.php"><span class="icon"></span> Keluar</a>
-        <div class="onebox">DISPEN - TNIAU</div>
+        <a href="<?= BASE_URL ?>/logout.php"><span class="icon">🚪</span> <span>Keluar</span></a>
+        <div class="onebox">DISPEN · TNIAU</div>
     </div>
 </aside>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+    /* ── Hamburger toggle ── */
     const hamburgerBtns = document.querySelectorAll('.hamburger-btn');
-    const sidebar = document.querySelector('.sidebar');
-    const mainContent = document.querySelector('.main-content');
-    
+    const sidebar       = document.querySelector('.sidebar');
+    const mainContent   = document.querySelector('.main-content');
+
     hamburgerBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             sidebar.classList.toggle('collapsed');
             mainContent.classList.toggle('expanded');
         });
     });
+
+    /* ── Sidebar nav: hover micro-animation ── */
+    document.querySelectorAll('.sidebar-nav a').forEach(link => {
+        link.addEventListener('mouseenter', function () {
+            this.style.transition = 'all 0.28s cubic-bezier(0.34,1.56,0.64,1)';
+        });
+    });
+
+    /* ── Workspace tab close button (non-functional UI decoration) ── */
+    document.querySelectorAll('.close-tab').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            // Tabs are static; just visual feedback
+        });
+    });
 });
 
-window.addEventListener('load', function() {
+/* ── Page Loader: hide on load ── */
+window.addEventListener('load', function () {
     const loader = document.getElementById('global-loader');
-    if(loader) {
-        loader.style.opacity = '0';
+    if (loader) {
+        // Small extra delay for the progress bar animation to finish gracefully
         setTimeout(() => {
-            loader.style.visibility = 'hidden';
-            loader.style.display = 'none';
-        }, 500);
+            loader.classList.add('hidden');
+        }, 400);
     }
 });
 </script>

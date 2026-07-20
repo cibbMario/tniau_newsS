@@ -117,7 +117,7 @@ $user = currentUser();
     <main class="main-content">
         <div class="top-navbar" style="height:56px">
             <div class="top-navbar-left">
-                <button class="hamburger-btn">Menu</button>
+                <button class="hamburger-btn" title="Toggle Menu">&#9776; Menu</button>
                 <div class="media-tabs">
                     <span class="media-tab-item active" style="border:none">Bantuan & Dukungan</span>
                 </div>

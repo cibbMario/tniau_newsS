@@ -9,9 +9,9 @@ require_once __DIR__ . '/config/db.php';
 $defaultPassword = 'password123'; // ganti setelah login pertama kali
 
 $users = [
-    ['username' => 'reporter1', 'full_name' => 'Andi (Reporter)',    'role' => 'A'],
-    ['username' => 'editor1',   'full_name' => 'Budi (Editor)',      'role' => 'B'],
-    ['username' => 'approver1', 'full_name' => 'Chandra (Petinggi)', 'role' => 'C'],
+    ['username' => 'reporter1', 'full_name' => 'Mario',    'role' => 'A'],
+    ['username' => 'editor1',   'full_name' => 'saksak',      'role' => 'B'],
+    ['username' => 'approver1', 'full_name' => 'kadis', 'role' => 'C'],
 ];
 
 $hash = password_hash($defaultPassword, PASSWORD_DEFAULT);

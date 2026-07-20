@@ -36,6 +36,18 @@ $gallery = $images->fetchAll();
 $comments = $pdo->prepare("SELECT c.*, u.full_name FROM comments c JOIN users u ON c.user_id = u.id WHERE c.news_id = ? ORDER BY c.created_at ASC");
 $comments->execute([$id]);
 $commentsList = $comments->fetchAll();
+
+// Helper waktu relatif (lokal, aman jika belum ada di functions.php)
+if (!function_exists('timeAgo')) {
+    function timeAgo($datetime) {
+        $diff = time() - strtotime($datetime);
+        if ($diff < 60)     return 'Baru saja';
+        if ($diff < 3600)   return floor($diff / 60) . ' menit lalu';
+        if ($diff < 86400)  return floor($diff / 3600) . ' jam lalu';
+        if ($diff < 604800) return floor($diff / 86400) . ' hari lalu';
+        return formatTanggal($datetime);
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -52,7 +64,7 @@ $commentsList = $comments->fetchAll();
     <main class="main-content">
         <div class="top-navbar">
             <div class="top-navbar-left">
-                <button class="hamburger-btn" title="Menu">Menu</button>
+                <button class="hamburger-btn" title="Toggle Menu">&#9776; Menu</button>
                 <div class="media-tabs">
                     <span class="media-tab-item active">Detail Berita</span>
                 </div>
@@ -95,7 +107,7 @@ $commentsList = $comments->fetchAll();
                             <?php endif; ?>
                         </div>
 
-                        <?php if ($news['image']): ?>
+                        <?php if (!empty($news['image'] ?? '')): ?>
                             <img src="<?= UPLOAD_URL . e($news['image']) ?>" alt="Gambar Berita" class="detail-img">
                         <?php endif; ?>
 
@@ -117,8 +129,8 @@ $commentsList = $comments->fetchAll();
                         <div class="info-grid">
                             <div class="info-col">
                                 <div class="info-row"><div class="info-label">Klasifikasi</div><div class="info-value"><?= e($news['classification']) ?></div></div>
-                                <div class="info-row"><div class="info-label">Tempat</div><div class="info-value"><?= e($news['tempat'] ?: '-') ?></div></div>
-                                <div class="info-row"><div class="info-label">Aktor</div><div class="info-value"><?= e($news['aktor'] ?: '-') ?></div></div>
+                                <div class="info-row"><div class="info-label">Tempat</div><div class="info-value"><?= e($news['tempat'] ?? '-') ?></div></div>
+                                <div class="info-row"><div class="info-label">Aktor</div><div class="info-value"><?= e($news['aktor'] ?? '-') ?></div></div>
                             </div>
                             <div class="info-col">
                                 <div class="info-row"><div class="info-label">Tag</div>
@@ -130,8 +142,8 @@ $commentsList = $comments->fetchAll();
                                         </div>
                                     </div>
                                 </div>
-                                <div class="info-row"><div class="info-label">Topik</div><div class="info-value"><?= e($news['topik'] ?: '-') ?></div></div>
-                                <div class="info-row"><div class="info-label">Keyword</div><div class="info-value"><?= e($news['keyword'] ?: '-') ?></div></div>
+                                <div class="info-row"><div class="info-label">Topik</div><div class="info-value"><?= e($news['topik'] ?? '-') ?></div></div>
+                                <div class="info-row"><div class="info-label">Keyword</div><div class="info-value"><?= e($news['keyword'] ?? '-') ?></div></div>
                             </div>
                         </div>
                     </div>
