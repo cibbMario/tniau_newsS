@@ -170,14 +170,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!-- TOP NAVBAR MATCHING SCREENSHOT -->
         <div class="top-navbar" style="height:56px">
             <div class="top-navbar-left">
-                <button class="hamburger-btn">☰</button>
+                <button class="hamburger-btn">Menu</button>
                 <div class="media-tabs">
                     <span class="media-tab-item active" style="border:none">Profil Pengguna</span>
                 </div>
             </div>
             <div class="top-navbar-right">
                 <div class="user-dropdown-btn">
-                    👤 <?= e($user['full_name']) ?> ▼
+                    <?= e($user['full_name']) ?>
                 </div>
             </div>
         </div>
@@ -186,10 +186,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="profile-page-container">
                 
                 <?php if ($error): ?>
-                    <div style="background:#fceae8;color:#c0392b;padding:12px 16px;border-radius:6px;margin-bottom:16px;border:1px solid rgba(192,57,43,.15);width:100%;max-width:500px">⚠️ <?= e($error) ?></div>
+                    <div style="background:#fceae8;color:#c0392b;padding:12px 16px;border-radius:6px;margin-bottom:16px;border:1px solid rgba(192,57,43,.15);width:100%;max-width:500px">Peringatan: <?= e($error) ?></div>
                 <?php endif; ?>
                 <?php if ($success): ?>
-                    <div style="background:#eafaf1;color:#27ae60;padding:12px 16px;border-radius:6px;margin-bottom:16px;border:1px solid rgba(39,174,96,.15);width:100%;max-width:500px">✅ <?= e($success) ?></div>
+                    <div style="background:#eafaf1;color:#27ae60;padding:12px 16px;border-radius:6px;margin-bottom:16px;border:1px solid rgba(39,174,96,.15);width:100%;max-width:500px">Berhasil: <?= e($success) ?></div>
                 <?php endif; ?>
 
                 <div class="profile-header">

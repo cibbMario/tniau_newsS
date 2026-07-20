@@ -90,14 +90,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <main class="main-content">
         <div class="top-navbar">
             <div class="top-navbar-left">
-                <button class="hamburger-btn" title="Menu">☰</button>
+                <button class="hamburger-btn" title="Menu">Menu</button>
                 <div class="media-tabs">
-                    <span class="media-tab-item active">✏️ Buat Berita Baru</span>
+                    <span class="media-tab-item active">Buat Berita Baru</span>
                 </div>
             </div>
             <div class="top-navbar-right">
                 <a href="<?= BASE_URL ?>/news_list.php" class="top-action-btn">← Kembali</a>
-                <span class="top-action-btn">📅 <?= date('d M Y') ?></span>
+                <span class="top-action-btn">Tanggal <?= date('d M Y') ?></span>
             </div>
         </div>
 
@@ -108,12 +108,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="page-container">
             <div class="create-wrapper">
-                <h2 class="create-heading">📝 Buat Berita Baru</h2>
+                    <h2 class="create-heading">Buat Berita Baru</h2>
 
-                <?php if ($error): ?>
-                    <div style="background:#fceae8;border:1px solid rgba(192,57,43,.15);color:#c0392b;padding:12px 16px;border-radius:6px;font-size:13px;font-weight:500;margin-bottom:16px">
-                        ⚠️ <?= e($error) ?>
-                    </div>
+                    <?php if ($error): ?>
+                        <div style="background:#fceae8;border:1px solid rgba(192,57,43,.15);color:#c0392b;padding:12px 16px;border-radius:6px;font-size:13px;font-weight:500;margin-bottom:16px">
+                            Peringatan: <?= e($error) ?>
                 <?php endif; ?>
 
                 <form method="POST" enctype="multipart/form-data" id="createForm" class="create-card">
@@ -153,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group">
                         <label>Gambar Utama Berita</label>
                         <div class="upload-dropzone" onclick="document.getElementById('imageInput').click()">
-                            <span class="plus-icon">📷</span>
+                            <span class="plus-icon">Upload</span>
                             <span id="fileLabel">Klik untuk memilih gambar (JPG, PNG, WEBP, maks 5MB)</span>
                             <input type="file" id="imageInput" name="image" accept="image/*" hidden onchange="document.getElementById('fileLabel').textContent = this.files[0]?.name || 'Pilih gambar...'">
                         </div>
@@ -162,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group">
                         <label>Gambar Pendukung (Galeri)</label>
                         <div class="upload-dropzone" onclick="document.getElementById('galleryInput').click()">
-                            <span class="plus-icon">🖼️</span>
+                            <span class="plus-icon">Gambar</span>
                             <span id="galleryLabel">Pilih beberapa gambar sekaligus (opsional)</span>
                             <input type="file" id="galleryInput" name="gallery[]" accept="image/*" multiple hidden onchange="document.getElementById('galleryLabel').textContent = this.files.length + ' gambar dipilih'">
                         </div>
@@ -187,10 +186,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid #e2e6ea">
                         <button type="submit" name="action" value="draft" class="btn btn-outline" onclick="prepareSubmit()">
-                            📋 Simpan sebagai Draft
+                            Simpan sebagai Draft
                         </button>
                         <button type="submit" name="action" value="submit" class="btn btn-primary" onclick="prepareSubmit()">
-                            🚀 Ajukan untuk Review →
+                            Ajukan untuk Review
                         </button>
                     </div>
                 </form>

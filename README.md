@@ -86,15 +86,15 @@ tniau-news/
 
 | Fitur                          | User A | User B | User C |
 |--------------------------------|:------:|:------:|:------:|
-| Buat berita baru                | ✅     | ❌     | ❌     |
-| Edit berita (saat draft/revisi) | ✅     | ❌     | ❌     |
-| Simpan draft                    | ✅     | ❌     | ❌     |
-| Ajukan / ajukan ulang review    | ✅     | ❌     | ❌     |
-| Lihat berita yang diajukan      | ✅ (miliknya) | ✅ | ✅ |
-| Comment                         | ✅     | ✅     | ✅     |
-| Correction (koreksi kata)       | ❌     | ✅     | ✅     |
-| Tombol Oke / Tidak Oke          | ❌     | ✅ (saat pending_b) | ✅ (saat pending_c) |
-| Terima notifikasi status        | ✅     | ✅ (berita baru masuk) | ✅ (lolos dari B) |
+| Buat berita baru                | Ya     | Tidak  | Tidak  |
+| Edit berita (saat draft/revisi) | Ya     | Tidak  | Tidak  |
+| Simpan draft                    | Ya     | Tidak  | Tidak  |
+| Ajukan / ajukan ulang review    | Ya     | Tidak  | Tidak  |
+| Lihat berita yang diajukan      | Ya (miliknya) | Ya | Ya |
+| Comment                         | Ya     | Ya | Ya |
+| Correction (koreksi kata)       | Tidak  | Ya     | Ya     |
+| Tombol Oke / Tidak Oke          | Tidak  | Ya (saat pending_b) | Ya (saat pending_c) |
+| Terima notifikasi status        | Ya     | Ya (berita baru masuk) | Ya (lolos dari B) |
 
 ## 5. Catatan Keamanan Minimal yang Sudah Diterapkan
 

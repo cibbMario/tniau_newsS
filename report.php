@@ -117,14 +117,14 @@ $user = currentUser();
         <!-- TOP NAVBAR MATCHING SCREENSHOT -->
         <div class="top-navbar" style="height:56px">
             <div class="top-navbar-left">
-                <button class="hamburger-btn">☰</button>
+                <button class="hamburger-btn">Menu</button>
                 <div class="media-tabs">
                     <span class="media-tab-item active" style="border:none">Ekspor Laporan</span>
                 </div>
             </div>
             <div class="top-navbar-right">
                 <div class="user-dropdown-btn">
-                    👤 <?= e($user['full_name']) ?> (<?= e(['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi'][$user['role']]) ?>) ▼
+                    <?= e($user['full_name']) ?> (<?= e(['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi'][$user['role']]) ?>)
                 </div>
             </div>
         </div>
