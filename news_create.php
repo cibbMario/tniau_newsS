@@ -108,48 +108,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="page-container">
             <div class="create-wrapper">
-                    <h2 class="create-heading">Buat Berita Baru</h2>
+                <h2 class="create-heading">Buat Berita Baru</h2>
 
-                    <?php if ($error): ?>
-                        <div style="background:#fceae8;border:1px solid rgba(192,57,43,.15);color:#c0392b;padding:12px 16px;border-radius:6px;font-size:13px;font-weight:500;margin-bottom:16px">
-                            Peringatan: <?= e($error) ?>
+                <?php if ($error): ?>
+                    <div style="background:#fceae8;border:1px solid rgba(192,57,43,.15);color:#c0392b;padding:12px 16px;border-radius:6px;font-size:13px;font-weight:500;margin-bottom:16px">
+                        Peringatan: <?= e($error) ?>
+                    </div>
                 <?php endif; ?>
 
                 <form method="POST" enctype="multipart/form-data" id="createForm" class="create-card">
-                    <div class="form-group">
-                        <label for="title">Judul Berita <span style="color:#c0392b">*</span></label>
-                        <input type="text" id="title" name="title" class="form-input" placeholder="Masukkan judul berita..." required value="<?= e($_POST['title'] ?? '') ?>" style="font-size:15px;font-weight:600;padding:12px 14px">
-                    </div>
+                    <div class="create-layout-grid">
+                        <div class="create-main">
+                            <div class="form-group">
+                                <label for="title">Judul Berita <span style="color:#c0392b">*</span></label>
+                                <input type="text" id="title" name="title" class="form-input" placeholder="Masukkan judul berita..." required value="<?= e($_POST['title'] ?? '') ?>" style="font-size:15px;font-weight:600;padding:12px 14px">
+                            </div>
 
-                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
-                        <div class="form-group">
-                            <label for="wilayah">Wilayah / Satuan</label>
-                            <select id="wilayah" name="wilayah" class="form-input">
-                                <option value="Lanud Atang Sendjaja">Lanud Atang Sendjaja</option>
-                                <option value="Lanud Halim Perdanakusuma">Lanud Halim Perdanakusuma</option>
-                                <option value="Lanud Husein Sastranegara">Lanud Husein Sastranegara</option>
-                                <option value="Lanud Iswahjudi">Lanud Iswahjudi</option>
-                                <option value="Lanud Supadio">Lanud Supadio</option>
-                                <option value="Lanud Sultan Hasanuddin">Lanud Sultan Hasanuddin</option>
-                                <option value="Lanud Dhomber">Lanud Dhomber</option>
-                                <option value="Mabes TNI AU">Mabes TNI AU</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="media">Sumber Media</label>
-                            <select id="media" name="media" class="form-input">
-                                <option value="Wilayah">Berita Wilayah</option>
-                                <option value="Media Online">Media Online</option>
-                                <option value="Media Sosial">Media Sosial</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="published_at">Waktu Terbit (Opsional)</label>
-                            <input type="datetime-local" id="published_at" name="published_at" class="form-input" value="<?= e($_POST['published_at'] ?? '') ?>">
-                        </div>
-                    </div>
+                                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+                                <div class="form-group">
+                                    <label for="wilayah">Wilayah / Satuan</label>
+                                    <select id="wilayah" name="wilayah" class="form-input">
+                                        <option value="Lanud Atang Sendjaja">Lanud Atang Sendjaja</option>
+                                        <option value="Lanud Halim Perdanakusuma">Lanud Halim Perdanakusuma</option>
+                                        <option value="Lanud Husein Sastranegara">Lanud Husein Sastranegara</option>
+                                        <option value="Lanud Iswahjudi">Lanud Iswahjudi</option>
+                                        <option value="Lanud Supadio">Lanud Supadio</option>
+                                        <option value="Lanud Sultan Hasanuddin">Lanud Sultan Hasanuddin</option>
+                                        <option value="Lanud Dhomber">Lanud Dhomber</option>
+                                        <option value="Mabes TNI AU">Mabes TNI AU</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="media">Sumber Media</label>
+                                    <select id="media" name="media" class="form-input">
+                                        <option value="Wilayah">Berita Wilayah</option>
+                                        <option value="Media Online">Media Online</option>
+                                        <option value="Media Sosial">Media Sosial</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="published_at">Waktu Terbit (Opsional)</label>
+                                    <input type="datetime-local" id="published_at" name="published_at" class="form-input" value="<?= e($_POST['published_at'] ?? '') ?>">
+                                </div>
+                            </div>
 
-                    <div class="form-group">
+                            <div class="form-group">
                         <label>Gambar Utama Berita</label>
                         <div class="upload-dropzone" onclick="document.getElementById('imageInput').click()">
                             <span class="plus-icon">Upload</span>
@@ -158,16 +161,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>Gambar Pendukung (Galeri)</label>
-                        <div class="upload-dropzone" onclick="document.getElementById('galleryInput').click()">
-                            <span class="plus-icon">Gambar</span>
-                            <span id="galleryLabel">Pilih beberapa gambar sekaligus (opsional)</span>
-                            <input type="file" id="galleryInput" name="gallery[]" accept="image/*" multiple hidden onchange="document.getElementById('galleryLabel').textContent = this.files.length + ' gambar dipilih'">
-                        </div>
-                    </div>
+                            <div class="form-group">
+                                <label>Gambar Pendukung (Galeri)</label>
+                                <div class="upload-dropzone" onclick="document.getElementById('galleryInput').click()">
+                                    <span class="plus-icon">Gambar</span>
+                                    <span id="galleryLabel">Pilih beberapa gambar sekaligus (opsional)</span>
+                                    <input type="file" id="galleryInput" name="gallery[]" accept="image/*" multiple hidden onchange="document.getElementById('galleryLabel').textContent = this.files.length + ' gambar dipilih'">
+                                </div>
+                            </div>
 
-                    <div class="form-group">
+                            <div class="form-group">
                         <label for="content">Isi Berita <span style="color:#c0392b">*</span></label>
                         <div class="editor-wrap">
                             <div class="editor-toolbar">
@@ -218,13 +221,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <textarea name="content" id="hiddenContent" hidden></textarea>
                     </div>
 
-                    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid #e2e6ea">
-                        <button type="submit" name="action" value="draft" class="btn btn-outline" onclick="prepareSubmit()">
-                            Simpan sebagai Draft
-                        </button>
-                        <button type="submit" name="action" value="submit" class="btn btn-primary" onclick="prepareSubmit()">
-                            Ajukan untuk Review
-                        </button>
+                            <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid #e2e6ea">
+                                <button type="submit" name="action" value="draft" class="btn btn-outline" onclick="prepareSubmit()">
+                                    Simpan sebagai Draft
+                                </button>
+                                <button type="submit" name="action" value="submit" class="btn btn-primary" onclick="prepareSubmit()">
+                                    Ajukan untuk Review
+                                </button>
+                            </div>
+                        </div>
+
+                        <aside class="create-sidebar">
+                            <div class="sidebar-card">
+                                <div class="sidebar-card-title">Detail Berita</div>
+                                <div class="form-group">
+                                    <label>Sentimen</label>
+                                    <select name="sentiment" class="form-input">
+                                        <option value="Positif" <?= (($_POST['sentiment'] ?? 'Positif') === 'Positif') ? 'selected' : '' ?>>Positif</option>
+                                        <option value="Negatif" <?= (($_POST['sentiment'] ?? '') === 'Negatif') ? 'selected' : '' ?>>Negatif</option>
+                                        <option value="Netral" <?= (($_POST['sentiment'] ?? '') === 'Netral') ? 'selected' : '' ?>>Netral</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Prioritas</label>
+                                    <select name="priority" class="form-input">
+                                        <option value="High" <?= (($_POST['priority'] ?? '') === 'High') ? 'selected' : '' ?>>High</option>
+                                        <option value="Medium" <?= (($_POST['priority'] ?? 'Medium') === 'Medium') ? 'selected' : '' ?>>Medium</option>
+                                        <option value="Low" <?= (($_POST['priority'] ?? '') === 'Low') ? 'selected' : '' ?>>Low</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Klasifikasi</label>
+                                    <select name="classification" class="form-input">
+                                        <option value="9. Tni au" <?= (($_POST['classification'] ?? '9. Tni au') === '9. Tni au') ? 'selected' : '' ?>>9. Tni au</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Tempat</label>
+                                    <input type="text" name="tempat" class="form-input" value="<?= e($_POST['tempat'] ?? '') ?>">
+                                </div>
+                            </div>
+
+                            <div class="sidebar-card">
+                                <div class="sidebar-card-title">Meta Tambahan</div>
+                                <div class="form-group">
+                                    <label>Aktor</label>
+                                    <input type="text" name="aktor" class="form-input" value="<?= e($_POST['aktor'] ?? '') ?>">
+                                </div>
+                                <div class="form-group">
+                                    <label>Tag</label>
+                                    <input type="text" name="tag" class="form-input" value="<?= e($_POST['tag'] ?? '') ?>">
+                                </div>
+                                <div class="form-group">
+                                    <label>Topik</label>
+                                    <input type="text" name="topik" class="form-input" value="<?= e($_POST['topik'] ?? '') ?>">
+                                </div>
+                                <div class="form-group">
+                                    <label>Keyword</label>
+                                    <input type="text" name="keyword" class="form-input" value="<?= e($_POST['keyword'] ?? '') ?>">
+                                </div>
+                            </div>
+                        </aside>
                     </div>
                 </form>
             </div>

@@ -193,8 +193,9 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                             <tr><td colspan="8" class="empty-state">Belum ada berita yang tersedia.</td></tr>
                         <?php else: ?>
                             <?php foreach ($newsList as $row): ?>
+                            <?php $isPublished = $row['status'] === 'published'; ?>
                             <tr>
-                                <td class="col-subject">
+                                <td class="col-subject <?= $isPublished ? 'subject-approved' : 'subject-unapproved' ?>">
                                     <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>">
                                         <?= e($row['title']) ?>
                                     </a>
@@ -218,8 +219,16 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                                     <span class="pill <?= $cls ?>"><?= e($row['sentiment'] ?? 'Netral') ?></span>
                                 </td>
                                 <td>
-                                    <?php if ($user['role'] === 'A' && $row['created_by'] === $user['id'] && in_array($row['status'], ['draft','pending_b','revision_b','revision_c'])): ?>
-                                        <a href="<?= BASE_URL ?>/news_edit.php?id=<?= $row['id'] ?>" class="btn btn-primary btn-sm">Edit</a>
+                                    <?php if (in_array($user['role'], ['A','B','C'])): ?>
+                                        <div style="display:inline-flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                                            <?php if ($user['role'] === 'A' && $row['created_by'] === $user['id'] && in_array($row['status'], ['draft','pending_b','revision_b','revision_c'])): ?>
+                                                <a href="<?= BASE_URL ?>/news_edit.php?id=<?= $row['id'] ?>" class="btn btn-primary btn-sm">Edit</a>
+                                            <?php endif; ?>
+                                            <form method="POST" action="<?= BASE_URL ?>/news_delete.php" onsubmit="return confirm('Yakin ingin menghapus berita ini?');" style="display:inline;margin:0;">
+                                                <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                                                <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                            </form>
+                                        </div>
                                     <?php else: ?>
                                         -
                                     <?php endif; ?>

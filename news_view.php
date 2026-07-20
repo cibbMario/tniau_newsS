@@ -74,6 +74,12 @@ if (!function_exists('timeAgo')) {
                 <?php if ($user['role'] === 'A' && in_array($news['status'], ['draft','pending_b','revision_b','revision_c'])): ?>
                     <a href="<?= BASE_URL ?>/news_edit.php?id=<?= $id ?>" class="btn btn-primary btn-sm">Edit Berita</a>
                 <?php endif; ?>
+                <?php if (in_array($user['role'], ['A','B','C'])): ?>
+                    <form method="POST" action="<?= BASE_URL ?>/news_delete.php" onsubmit="return confirm('Yakin ingin menghapus berita ini?');" style="display:inline;margin:0 0 0 8px;">
+                        <input type="hidden" name="id" value="<?= $id ?>">
+                        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                    </form>
+                <?php endif; ?>
             </div>
         </div>
 
