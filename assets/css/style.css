@@ -75,101 +75,6 @@ a { text-decoration: none; color: inherit; }
 ul, ol { list-style: none; }
 input, button, select, textarea { font: inherit; }
 
-/* ============================================================
-   GLOBAL PAGE LOADER — Animated TNI AU
-   ============================================================ */
-#global-loader {
-    position: fixed; inset: 0; z-index: 9999;
-    background: linear-gradient(135deg, #071628 0%, var(--navy) 55%, var(--navy-mid) 100%);
-    display: flex; align-items: center; justify-content: center;
-    flex-direction: column; gap: 0;
-    transition: opacity 0.6s ease, visibility 0.6s ease;
-}
-#global-loader.hidden {
-    opacity: 0; visibility: hidden; pointer-events: none;
-}
-
-/* Loader Ring */
-.loader-ring {
-    position: relative;
-    width: 100px; height: 100px;
-    margin-bottom: 24px;
-}
-.loader-ring::before,
-.loader-ring::after {
-    content: '';
-    position: absolute; inset: 0;
-    border-radius: 50%;
-    border: 3px solid transparent;
-    animation: ring-spin 1.4s linear infinite;
-}
-.loader-ring::before {
-    border-top-color: var(--gold);
-    border-right-color: var(--gold-shine);
-    animation-duration: 1.4s;
-}
-.loader-ring::after {
-    border-bottom-color: rgba(201, 162, 39, 0.35);
-    border-left-color: rgba(201, 162, 39, 0.35);
-    animation-direction: reverse;
-    animation-duration: 2.1s;
-    inset: 10px;
-}
-.loader-emblem {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 36px;
-    animation: emblem-pulse 2s ease-in-out infinite;
-}
-@keyframes ring-spin {
-    to { transform: rotate(360deg); }
-}
-@keyframes emblem-pulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(0.92); opacity: 0.8; }
-}
-
-.loader-brand {
-    text-align: center;
-    animation: fade-up 0.8s ease 0.2s both;
-}
-.loader-brand .title {
-    font-size: 15px; font-weight: 700;
-    color: var(--white); letter-spacing: 1.5px;
-    text-transform: uppercase; margin-bottom: 4px;
-}
-.loader-brand .sub {
-    font-size: 11px; color: rgba(255,255,255,0.55);
-    letter-spacing: 0.5px;
-}
-
-/* Gold bar progress */
-.loader-progress {
-    width: 180px; height: 3px;
-    background: rgba(255,255,255,0.12);
-    border-radius: 2px; overflow: hidden;
-    margin-top: 20px;
-    animation: fade-up 0.8s ease 0.3s both;
-}
-.loader-bar {
-    height: 100%;
-    background: linear-gradient(90deg, var(--gold), var(--gold-shine), var(--gold));
-    background-size: 200% 100%;
-    border-radius: 2px;
-    animation: bar-wave 1.4s linear infinite, bar-grow 1.8s ease-in-out forwards;
-}
-@keyframes bar-wave {
-    0% { background-position: 200% center; }
-    100% { background-position: -200% center; }
-}
-@keyframes bar-grow {
-    from { width: 0; }
-    to { width: 100%; }
-}
-@keyframes fade-up {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-}
 
 /* ============================================================
    LAYOUT
@@ -1171,12 +1076,15 @@ textarea.form-input { resize: vertical; min-height: 80px; }
    GLASSMORPHISM PANELS (Notifications)
    ============================================================ */
 .glass-panel {
-    background: rgba(255, 255, 255, 0.65);
+    width: 100%;
+    max-width: 1120px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.80);
     backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.82);
     border-radius: 24px;
     box-shadow: 0 10px 40px rgba(11, 37, 69, 0.07), inset 0 0 0 1px rgba(255,255,255,0.55);
-    overflow: hidden; padding: 24px;
+    overflow: hidden; padding: 28px;
     animation: card-enter 0.5s var(--transition) both;
 }
 .glass-header {

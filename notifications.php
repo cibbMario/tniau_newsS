@@ -37,8 +37,8 @@ $notifs = getNotifications($user['id']);
             </div>
         </div>
 
-        <div class="page-container" style="max-width: 720px; margin: 0 auto; padding-top: 30px;">
-            <div class="glass-panel">
+        <div class="page-container" style="width: 100%; max-width: 1160px; margin: 10px auto; padding-top: 30px;">
+            <div class="glass-panel" style="width: 100%;">
                 <div class="glass-header">
                     <h2>Notifikasi Anda</h2>
                     <span class="glass-badge"><?= count(array_filter($notifs, fn($n) => !$n['is_read'])) ?> Baru</span>

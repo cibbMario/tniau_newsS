@@ -5,22 +5,6 @@ $current = $current ?? '';
 $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['role']] ?? '';
 ?>
 
-<!-- ==========================================
-     GLOBAL LOADER — TNI AU Animated Screen
-     ========================================== -->
-<div id="global-loader">
-    <div class="loader-ring">
-        <div class="loader-emblem">✈</div>
-    </div>
-    <div class="loader-brand">
-        <div class="title">Portal Berita</div>
-        <div class="sub">TNI Angkatan Udara · DISPEN</div>
-    </div>
-    <div class="loader-progress">
-        <div class="loader-bar"></div>
-    </div>
-</div>
-
 <aside class="sidebar">
     <div class="sidebar-brand">
         <img src="<?= BASE_URL ?>/assets/img/logo-new.png" alt="TNI AU" class="logo" onerror="this.src='<?= BASE_URL ?>/assets/img/logo-tniau.png'">
@@ -99,14 +83,4 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-/* ── Page Loader: hide on load ── */
-window.addEventListener('load', function () {
-    const loader = document.getElementById('global-loader');
-    if (loader) {
-        // Small extra delay for the progress bar animation to finish gracefully
-        setTimeout(() => {
-            loader.classList.add('hidden');
-        }, 400);
-    }
-});
 </script>
