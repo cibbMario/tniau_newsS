@@ -4,6 +4,12 @@ $unread = countUnreadNotifications($user['id']);
 $current = $current ?? '';
 $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['role']] ?? '';
 ?>
+
+<!-- Global Loader Screen -->
+<div id="global-loader">
+    <div class="loader-spinner"></div>
+</div>
+
 <aside class="sidebar">
     <div class="sidebar-brand">
         <img src="<?= BASE_URL ?>/assets/img/logo-new.png" alt="TNI AU" class="logo" onerror="this.src='<?= BASE_URL ?>/assets/img/logo-tniau.png'">
@@ -58,5 +64,16 @@ document.addEventListener('DOMContentLoaded', function() {
             mainContent.classList.toggle('expanded');
         });
     });
+});
+
+window.addEventListener('load', function() {
+    const loader = document.getElementById('global-loader');
+    if(loader) {
+        loader.style.opacity = '0';
+        setTimeout(() => {
+            loader.style.visibility = 'hidden';
+            loader.style.display = 'none';
+        }, 500);
+    }
 });
 </script>

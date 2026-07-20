@@ -27,11 +27,12 @@
     --yellow: #F59E0B;
     --red: #EF4444;
     
-    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 94, 0, 0.05);
+    --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(255, 94, 0, 0.2);
+    --glow: 0 0 15px rgba(255, 94, 0, 0.4), 0 0 30px rgba(255, 94, 0, 0.2);
     
     --radius: 12px;
-    --transition: 0.3s ease;
+    --transition: 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 /* ---- RESET ---- */
