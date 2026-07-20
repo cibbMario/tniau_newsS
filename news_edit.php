@@ -536,13 +536,17 @@ $gallery = $images->fetchAll();
                         </div>
 
                         <div class="gallery-grid-row">
-                            <?php if (!empty($news['image_path'])): ?>
-                                <div class="gallery-thumb">
-                                    <img src="<?= UPLOAD_URL . e($news['image_path']) ?>" alt="Cover">
-                                    <div class="gallery-thumb-info">cover_image.jpg<br>Utama</div>
-                                </div>
-                            <?php endif; ?>
-                            
+                            <div class="gallery-thumb" style="width:100%;max-width:360px;padding:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                                <?php if (!empty($news['image_path'])): ?>
+                                    <img src="<?= UPLOAD_URL . e($news['image_path']) ?>" alt="Cover" style="width:100%;height:180px;object-fit:cover;border-radius:4px;margin-bottom:12px;">
+                                <?php else: ?>
+                                    <div style="width:100%;height:180px;border:1px dashed #ced4da;border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--text-sec);margin-bottom:12px;">
+                                        Tidak ada gambar cover saat ini
+                                    </div>
+                                <?php endif; ?>
+                                <button type="button" class="btn btn-outline" onclick="document.getElementById('imageInput').click()">📷 Unggah Gambar Cover</button>
+                            </div>
+
                             <?php foreach($gallery as $img): ?>
                                 <div class="gallery-thumb">
                                     <img src="<?= UPLOAD_URL . e($img['image_path']) ?>" alt="galeri">
@@ -553,9 +557,10 @@ $gallery = $images->fetchAll();
                             <div class="gallery-add-box" onclick="document.getElementById('galleryInput').click()">
                                 <span style="font-size:24px;font-weight:300;margin-bottom:8px">+</span>
                                 Seret Dan Lepas atau Klik Untuk Menambahkan File
-                                <input type="file" id="galleryInput" name="gallery[]" accept="image/*" multiple hidden>
                             </div>
                         </div>
+                        <input type="file" id="imageInput" name="image" accept="image/*" hidden>
+                        <input type="file" id="galleryInput" name="gallery[]" accept="image/*" multiple hidden>
 
                     </div>
 
