@@ -62,25 +62,28 @@ if (!function_exists('timeAgo')) {
     <?php include __DIR__ . '/includes/sidebar.php'; ?>
 
     <main class="main-content">
-        <div class="top-navbar">
+        <!-- TOP NAVBAR MATCHING SCREENSHOT -->
+        <div class="top-navbar" style="height:56px">
             <div class="top-navbar-left">
-                <button class="hamburger-btn" title="Toggle Menu">&#9776; Menu</button>
+                <button class="hamburger-btn" title="Toggle Menu">&#9776;</button>
                 <div class="media-tabs">
-                    <span class="media-tab-item active">Detail Berita</span>
+                    <span class="media-tab-item active" style="color: #4A89DC; border-bottom: 2px solid #4A89DC;"><span class="icon" style="margin-right:5px">📰</span>Berita Wilayah</span>
+                    <span class="media-tab-item text-muted">Media Online</span>
+                    <span class="media-tab-item text-muted">Media Sosial</span>
+                    <span class="media-tab-item text-muted">Semua Sumber</span>
                 </div>
             </div>
             <div class="top-navbar-right">
-                <a href="<?= BASE_URL ?>/news_list.php" class="top-action-btn">← Kembali</a>
-                <?php if ($user['role'] === 'A' && in_array($news['status'], ['draft','pending_b','revision_b','revision_c'])): ?>
-                    <a href="<?= BASE_URL ?>/news_edit.php?id=<?= $id ?>" class="btn btn-primary btn-sm">Edit Berita</a>
-                <?php endif; ?>
-                <?php if (in_array($user['role'], ['A','B','C'])): ?>
-                    <form method="POST" action="<?= BASE_URL ?>/news_delete.php" onsubmit="return confirm('Yakin ingin menghapus berita ini?');" style="display:inline;margin:0 0 0 8px;">
-                        <input type="hidden" name="id" value="<?= $id ?>">
-                        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                    </form>
-                <?php endif; ?>
+                <span class="top-action-btn">📅 Hari Ini <span>▼</span></span>
+                <span class="top-action-btn">⚙️ Filter</span>
+                <span class="top-action-btn" style="border:none;background:transparent;color:var(--text-sec)"><?= e(explode(' ',$user['full_name'])[0]) ?> <span>➔</span></span>
             </div>
+        </div>
+
+        <!-- WORKSPACE TABS MATCHING SCREENSHOT -->
+        <div class="workspace-tabs-row" style="padding-top:10px;background:#fff;border-bottom:1px solid #ced4da;">
+            <div class="workspace-tab text-muted" style="background:transparent;border:none;border-right:1px solid #eee;">Berita Wilayah <span class="close-tab" style="margin-left:8px;opacity:0.5;">×</span></div>
+            <div class="workspace-tab active" style="border:none;border-bottom:2px solid transparent;background:#fff;color:var(--text);font-weight:600;">Penerban... <span class="close-tab" style="margin-left:8px;">×</span></div>
         </div>
 
         <div class="page-container">
@@ -89,15 +92,25 @@ if (!function_exists('timeAgo')) {
                 <!-- MAIN CONTENT -->
                 <div class="detail-main">
                     <div class="detail-card">
-                        <div class="detail-toolbar">
+                        <div class="detail-toolbar" style="border:none; margin-bottom:8px;">
                             <div class="detail-toolbar-left">
-                                <span class="badge <?= statusBadgeClass($news['status']) ?>"><?= statusLabel($news['status']) ?></span>
-                                <span class="pill pill-<?= strtolower($news['sentiment'] ?? 'netral') ?>"><?= e($news['sentiment']) ?></span>
-                                <span class="badge badge-gray">Prioritas: <?= e($news['priority']) ?></span>
+                                <span class="btn-tool" style="border-radius:4px;"><span class="icon">📢</span> Ubah Ke Berita Utama</span>
+                                <?php if ($user['role'] === 'A' && in_array($news['status'], ['draft','pending_b','revision_b','revision_c'])): ?>
+                                <a href="<?= BASE_URL ?>/news_edit.php?id=<?= $id ?>" class="btn-tool" style="border-radius:4px;"><span class="icon">✏️</span> Edit</a>
+                                <?php endif; ?>
+                                <span class="btn-tool" style="border-radius:4px;"><span class="icon">👁️</span> Review</span>
+                                <span class="btn-tool" style="border-radius:4px;"><span class="icon">🏷️</span> Ditandai Sebagai ▼</span>
+                                <span class="btn-tool active" style="border-radius:4px;background:#4A89DC;color:#fff;border-color:#4A89DC">Riwayat Catatan</span>
                             </div>
                             <div class="detail-toolbar-right">
-                                <button class="btn-share" onclick="window.print()" title="Cetak">Cetak</button>
+                                <button class="btn-tool" style="border-radius:4px;color:#4A89DC;background:rgba(74,137,220,0.1);border-color:transparent;"><span class="icon">🔗</span></button>
                             </div>
+                        </div>
+                        
+                        <div class="detail-toolbar-left" style="margin-bottom: 12px; gap:8px;">
+                            <span class="badge" style="border-radius:20px; border:1px solid #ced4da; background:#fff; color:#333; font-weight:600; padding:2px 10px; font-size:10px;">Medium</span>
+                            <span class="badge" style="border-radius:20px; border:1px solid #27ae60; background:rgba(39,174,96,0.1); color:#27ae60; font-weight:700; padding:2px 10px; font-size:10px;">POSITIF</span>
+                            <span class="badge" style="border-radius:20px; background:#4A89DC; color:#fff; font-weight:700; padding:2px 10px; font-size:10px;">Publish</span>
                         </div>
 
                         <h1 class="detail-title"><?= e($news['title']) ?></h1>
@@ -223,21 +236,26 @@ if (!function_exists('timeAgo')) {
                     </div>
                     <?php endif; ?>
 
-                    <div class="accordion">
-                        <div class="accordion-head">Riwayat Perubahan</div>
-                        <div class="accordion-body">
-                            <?php
-                            $hist = $pdo->prepare("SELECT h.*, u.full_name FROM news_history h JOIN users u ON h.user_id = u.id WHERE h.news_id = ? ORDER BY h.created_at DESC LIMIT 5");
-                            $hist->execute([$id]);
-                            $histories = $hist->fetchAll();
-                            foreach($histories as $h):
-                            ?>
-                            <div style="font-size:11.5px;margin-bottom:10px;border-bottom:1px solid #eee;padding-bottom:10px">
-                                <strong><?= e($h['full_name']) ?></strong><br>
-                                <span style="color:var(--text-sec)"><?= formatTanggal($h['created_at']) ?></span><br>
-                                Mengubah status ke: <em><?= statusLabel($h['status_to']) ?></em>
-                            </div>
-                            <?php endforeach; ?>
+                    <div style="font-size:14px; font-weight:700; color:var(--text); margin-bottom:16px;">Informasi Relevan</div>
+                    
+                    <div class="accordion" style="box-shadow:none; border:none; border-bottom:1px solid #eee; border-radius:0;">
+                        <div class="accordion-head" style="background:transparent; padding:12px 0; border:none; color:var(--text-sec); font-weight:500;">
+                            <span>◎ Subjek yang terkait</span>
+                            <span class="chevron">▼</span>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion" style="box-shadow:none; border:none; border-bottom:1px solid #eee; border-radius:0;">
+                        <div class="accordion-head" style="background:transparent; padding:12px 0; border:none; color:var(--text-sec); font-weight:500;">
+                            <span>👤 Aktor yang sama</span>
+                            <span class="chevron">▼</span>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion" style="box-shadow:none; border:none; border-bottom:1px solid #eee; border-radius:0;">
+                        <div class="accordion-head" style="background:transparent; padding:12px 0; border:none; color:var(--text-sec); font-weight:500;">
+                            <span># Tag yang sama</span>
+                            <span class="chevron">▼</span>
                         </div>
                     </div>
                 </div>

@@ -404,7 +404,7 @@ $gallery = $images->fetchAll();
         }
 
         .btn-save-blue {
-            background: #2b55b9;
+            background: #4A89DC;
             color: #fff;
             border: none;
             border-radius: 4px;
@@ -415,10 +415,52 @@ $gallery = $images->fetchAll();
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: background var(--transition);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
         .btn-save-blue:hover {
-            background: #204090;
+            background: #3b6eb0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 137, 220, 0.3);
+        }
+        
+        /* Smooth animations */
+        .form-input, .sidebar-select, .chip-input-container {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .form-input:focus, .sidebar-select:focus, .chip-input-container:focus-within {
+            border-color: #4A89DC;
+            box-shadow: 0 0 0 3px rgba(74, 137, 220, 0.15);
+            transform: translateY(-1px);
+        }
+        .chip-item {
+            transition: all 0.3s ease;
+        }
+        .chip-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 2px 6px rgba(41, 128, 185, 0.15);
+        }
+        .rich-editor-btn {
+            transition: all 0.2s ease;
+        }
+        .rich-editor-btn:hover {
+            background: #e2e6ea;
+            transform: translateY(-1px);
+        }
+        .gallery-add-box {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .gallery-add-box:hover {
+            background: #f0f4f8;
+            border-color: #4A89DC;
+            color: #4A89DC;
+            transform: scale(1.02);
+        }
+        .gallery-thumb {
+            transition: all 0.3s ease;
+        }
+        .gallery-thumb:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
     </style>
 </head>
@@ -430,27 +472,28 @@ $gallery = $images->fetchAll();
         <!-- TOP NAVBAR MATCHING SCREENSHOT -->
         <div class="top-navbar" style="height:56px">
             <div class="top-navbar-left">
-                <button class="hamburger-btn" title="Toggle Menu">&#9776; Menu</button>
+                <button class="hamburger-btn" title="Toggle Menu">&#9776;</button>
                 <div class="media-tabs">
-                    <span class="media-tab-item">Berita Wilayah</span>
+                    <span class="media-tab-item active" style="color: #4A89DC; border-bottom: 2px solid #4A89DC;"><span class="icon" style="margin-right:5px">📰</span>Berita Wilayah</span>
                     <span class="media-tab-item text-muted">Media Online</span>
                     <span class="media-tab-item text-muted">Media Sosial</span>
                     <span class="media-tab-item text-muted">Semua Sumber</span>
                 </div>
             </div>
             <div class="top-navbar-right">
-                <span class="top-action-btn">Hari Ini</span>
-                <span class="top-action-btn">Filter</span>
-                <span class="top-action-btn" style="border:none;background:transparent"><?= e(explode(' ',$user['full_name'])[0]) ?></span>
+                <span class="top-action-btn">📅 Hari Ini <span>▼</span></span>
+                <span class="top-action-btn">⚙️ Filter</span>
+                <span class="top-action-btn" style="border:none;background:transparent;color:var(--text-sec)"><?= e(explode(' ',$user['full_name'])[0]) ?> <span>➔</span></span>
             </div>
         </div>
 
         <!-- WORKSPACE TABS MATCHING SCREENSHOT -->
-        <div class="workspace-tabs-row" style="padding-top:8px;background:#f9fbfc">
-            <div class="workspace-tab text-muted" style="background:transparent;border:none">Berita Wilayah <span class="close-tab">×</span></div>
-            <div class="workspace-tab text-muted" style="background:transparent;border:none">Danlanud Atang... <span class="close-tab">×</span></div>
-            <div class="workspace-tab active" style="border-top-color:#ced4da;color:var(--text)">Edit - Danlanud... <span class="close-tab">×</span></div>
+        <div class="workspace-tabs-row" style="padding-top:10px;background:#fff;border-bottom:1px solid #ced4da;">
+            <div class="workspace-tab text-muted" style="background:transparent;border:none;border-right:1px solid #eee;">Berita Wilayah <span class="close-tab" style="margin-left:8px;opacity:0.5;">×</span></div>
+            <div class="workspace-tab text-muted" style="background:transparent;border:none;border-right:1px solid #eee;">Penerban... <span class="close-tab" style="margin-left:8px;opacity:0.5;">×</span></div>
+            <div class="workspace-tab active" style="border:none;border-bottom:2px solid transparent;background:#fff;color:var(--text);font-weight:600;">Edit - Pen... <span class="close-tab" style="margin-left:8px;">×</span></div>
         </div>
+
 
         <div class="page-container" style="padding:24px 32px">
             
