@@ -37,8 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_news'])) {
     $classification = trim($_POST['classification'] ?? '');
     $wilayah        = trim($_POST['wilayah'] ?? '');
     $tempat         = trim($_POST['tempat'] ?? '');
-    $media          = trim($_POST['media'] ?? '');
-    $aktor          = trim($_POST['aktor'] ?? '');
+    $media          = trim($_POST['media'] ?? '');                      
+    $aktor          = trim($_POST['aktor'] ?? '');                                                                                                                                  
     $tag            = trim($_POST['tag'] ?? '');
     $topik          = trim($_POST['topik'] ?? '');
     $keyword        = trim($_POST['keyword'] ?? '');

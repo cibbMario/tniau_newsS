@@ -16,13 +16,13 @@ $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['ro
     </div>
     <nav class="sidebar-nav">
         <a href="<?= BASE_URL ?>/news_list.php" class="<?= in_array($current,['list','draft','view','edit']) ? 'active' : '' ?>">
-            <span class="icon">📰</span><span class="label">Daftar Berita</span>
+            <span class="icon"></span><span class="label">Daftar Berita</span>
         </a>
         
         <!-- Accordion: Dashboard -->
-        <div class="sidebar-accordion <?= in_array($current, ['dashboard', 'dashboard_harian', 'berita_negatif', 'inspiratif', 'konten', 'sentimen']) ? 'open' : '' ?>">
-            <div class="accordion-header <?= in_array($current, ['dashboard', 'dashboard_harian', 'berita_negatif', 'inspiratif', 'konten', 'sentimen']) ? 'active' : '' ?>" onclick="toggleSidebarAccordion(this)">
-                <span class="icon">📊</span><span class="label">Dashboard</span>
+        <div class="sidebar-accordion">
+            <div class="accordion-header <?= $current==='dashboard' ? 'active' : '' ?>" onclick="toggleSidebarAccordion(this)">
+                <span class="icon"></span><span class="label">Dashboard</span>
                 <span class="chevron">▼</span>
             </div>
             <div class="accordion-content" style="<?= in_array($current, ['dashboard', 'dashboard_harian', 'berita_negatif', 'inspiratif', 'konten', 'sentimen']) ? 'display:block;' : '' ?>">
@@ -37,7 +37,7 @@ $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['ro
         <!-- Accordion: Statistik -->
         <div class="sidebar-accordion <?= $current==='statistics' ? 'open' : '' ?>">
             <div class="accordion-header <?= $current==='statistics' ? 'active' : '' ?>" onclick="toggleSidebarAccordion(this)">
-                <span class="icon">📈</span><span class="label">Statistik</span>
+                <span class="icon"></span><span class="label">Statistik</span>
                 <span class="chevron">▼</span>
             </div>
             <div class="accordion-content" style="<?= $current==='statistics' ? 'display:block;' : '' ?>">
@@ -48,13 +48,13 @@ $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['ro
         </div>
 
         <a href="<?= BASE_URL ?>/profile.php" class="<?= $current==='profile' ? 'active' : '' ?>">
-            <span class="icon">👤</span><span class="label">Profile</span>
+            <span class="icon"></span><span class="label">Profile</span>
         </a>
 
         <!-- Accordion: Report -->
         <div class="sidebar-accordion <?= $current==='report' ? 'open' : '' ?>">
             <div class="accordion-header <?= $current==='report' ? 'active' : '' ?>" onclick="toggleSidebarAccordion(this)">
-                <span class="icon">📄</span><span class="label">Report</span>
+                <span class="icon"></span><span class="label">Report</span>
                 <span class="chevron">▼</span>
             </div>
             <div class="accordion-content" style="<?= $current==='report' ? 'display:block;' : '' ?>">
@@ -64,11 +64,11 @@ $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['ro
         </div>
 
         <a href="<?= BASE_URL ?>/gallery.php" class="<?= $current==='gallery' ? 'active' : '' ?>">
-            <span class="icon">🖼️</span><span class="label">Galeri Berita</span>
+            <span class="icon"></span><span class="label">Galeri Berita</span>
         </a>
         
         <a href="<?= BASE_URL ?>/support.php" class="<?= $current==='support' ? 'active' : '' ?>">
-            <span class="icon">💬</span><span class="label">Kontak Support</span>
+            <span class="icon"></span><span class="label">Kontak Support</span>
         </a>
     </nav>
 </aside>
