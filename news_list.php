@@ -71,46 +71,7 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
     <?php include __DIR__ . '/includes/sidebar.php'; ?>
 
     <main class="main-content">
-        <!-- TOP NAVBAR -->
-        <div class="top-navbar">
-            <div class="top-navbar-left">
-                <button class="hamburger-btn" title="Toggle Menu">☰ Menu</button>
-                <div class="media-tabs">
-                    <?php
-                    $tabs = [
-                        'Semua'        => 'Semua Sumber',
-                        'Wilayah'      => 'Berita Wilayah',
-                        'Media Online' => 'Media Online',
-                        'Media Sosial' => 'Media Sosial',
-                    ];
-                    foreach ($tabs as $key => $label): ?>
-                        <a href="<?= BASE_URL ?>/news_list.php?media=<?= urlencode($key) ?>"
-                           class="media-tab-item <?= $mediaFilter === $key ? 'active' : '' ?>">
-                            <?= $label ?>
-                        </a>
-                    <?php endforeach; ?>
-                    <span class="media-tab-divider"></span>
-                    <a href="<?= BASE_URL ?>/statistics.php" class="media-tab-item">Statistik</a>
-                    <a href="<?= BASE_URL ?>/gallery.php" class="media-tab-item">Galeri Media</a>
-                </div>
-            </div>
-            <div class="top-navbar-right">
-                <form method="GET" style="display:flex;gap:6px;align-items:center">
-                    <input type="hidden" name="media" value="<?= e($mediaFilter) ?>">
-                    <input type="text" name="q" class="form-input" placeholder="🔍 Cari berita..." value="<?= e($search) ?>" style="width:190px;height:34px;font-size:12px;border-radius:20px">
-                    <button type="submit" class="top-action-btn">Cari</button>
-                </form>
-                <span class="top-action-btn">📅 <?= date('d M Y') ?></span>
-            </div>
-        </div>
-
-        <!-- WORKSPACE TABS -->
-        <div class="workspace-tabs-row">
-            <div class="workspace-tab active">
-                <span><?= $mediaFilter === 'Semua' ? 'Semua Sumber' : e($mediaFilter) ?></span>
-                <span class="close-tab" title="Tutup tab">×</span>
-            </div>
-        </div>
+        <?php include __DIR__ . '/includes/topbar.php'; ?>
 
         <!-- PAGE CONTENT -->
         <div class="page-container">

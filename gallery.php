@@ -95,15 +95,7 @@ foreach ($galleryImages as $img) {
     <?php include __DIR__ . '/includes/sidebar.php'; ?>
 
     <main class="main-content">
-        <div class="top-navbar">
-            <div class="top-navbar-left">
-                <button class="hamburger-btn" title="Toggle Menu">&#9776; Menu</button>
-                <span style="font-weight:600; font-size:14px; color:var(--text);">Galeri Berita</span>
-            </div>
-            <div class="top-navbar-right">
-                <button class="top-action-btn" style="font-weight:600;">User <?= e($user['full_name']) ?></button>
-            </div>
-        </div>
+        <?php include __DIR__ . '/includes/topbar.php'; ?>
 
         <div class="page-container">
             <div style="margin-bottom: 20px;">

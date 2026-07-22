@@ -114,20 +114,7 @@ $user = currentUser();
     <?php include __DIR__ . '/includes/sidebar.php'; ?>
 
     <main class="main-content">
-        <!-- TOP NAVBAR MATCHING SCREENSHOT -->
-        <div class="top-navbar" style="height:56px">
-            <div class="top-navbar-left">
-                <button class="hamburger-btn" title="Toggle Menu">&#9776; Menu</button>
-                <div class="media-tabs">
-                    <span class="media-tab-item active" style="border:none">Ekspor Laporan</span>
-                </div>
-            </div>
-            <div class="top-navbar-right">
-                <div class="user-dropdown-btn">
-                    <?= e($user['full_name']) ?> (<?= e(['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi'][$user['role']]) ?>)
-                </div>
-            </div>
-        </div>
+        <?php include __DIR__ . '/includes/topbar.php'; ?>
 
         <div class="page-container" style="background:var(--bg-body)">
             <div class="report-page-container">

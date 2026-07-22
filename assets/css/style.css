@@ -1249,3 +1249,361 @@ textarea.form-input { resize: vertical; min-height: 80px; }
     .dash-grid { grid-template-columns: 1fr; }
     .gallery-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ============================================================
+   LOGOUT BUTTON & MODAL POPUP (PREMIUM STYLING - REFINED SIZING)
+   ============================================================ */
+.sidebar-footer {
+    padding: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.fixed-logout-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.15), rgba(193, 18, 31, 0.25));
+    border: 1px solid rgba(230, 57, 70, 0.4);
+    border-radius: 8px;
+    color: #ff8a8a;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 3px 10px rgba(230, 57, 70, 0.1);
+}
+
+.fixed-logout-btn:hover {
+    background: linear-gradient(135deg, #e63946, #c1121f);
+    border-color: #ff6b6b;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(230, 57, 70, 0.35);
+}
+
+.fixed-logout-btn:active {
+    transform: translateY(0);
+}
+
+.logout-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* MODAL OVERLAY & BOX - PROPORTIONED COMPACT SIZE */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(7, 19, 36, 0.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.modal-box {
+    position: relative;
+    z-index: 2;
+    background: linear-gradient(145deg, #0b1f3a 0%, #0f2748 100%);
+    border: 1px solid rgba(201, 162, 39, 0.35);
+    border-radius: 16px;
+    padding: 24px 22px 20px;
+    max-width: 380px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 24px rgba(201, 162, 39, 0.12);
+    color: #ffffff;
+    transform: scale(0.92) translateY(12px);
+    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-overlay.active .modal-box {
+    transform: scale(1) translateY(0);
+}
+
+.modal-close-icon {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s ease;
+}
+
+.modal-close-icon:hover {
+    color: #ffffff;
+}
+
+.modal-icon-badge {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 14px;
+    border-radius: 50%;
+    background: rgba(230, 57, 70, 0.15);
+    border: 1px solid rgba(230, 57, 70, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 16px rgba(230, 57, 70, 0.25);
+    animation: pulse-glow 2s infinite alternate;
+}
+
+@keyframes pulse-glow {
+    from { box-shadow: 0 0 10px rgba(230, 57, 70, 0.2); }
+    to { box-shadow: 0 0 22px rgba(230, 57, 70, 0.45); }
+}
+
+.modal-title {
+    font-size: 16.5px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 6px;
+    letter-spacing: -0.2px;
+}
+
+.modal-desc {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.45;
+    margin-bottom: 20px;
+}
+
+.modal-desc strong {
+    color: var(--gold-shine, #ffd700);
+}
+
+.modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.modal-btn {
+    flex: 1;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: none;
+}
+
+.modal-btn.cancel {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.modal-btn.cancel:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+.modal-btn.confirm {
+    background: linear-gradient(135deg, #e63946, #c1121f);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(230, 57, 70, 0.35);
+}
+
+.modal-btn.confirm:hover {
+    background: linear-gradient(135deg, #ff4d5a, #d90429);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(230, 57, 70, 0.5);
+}
+
+/* ============================================================
+   GOOGLE CHROME-STYLE WORKSPACE TABS (REFINED SIZING)
+   ============================================================ */
+.workspace-tabs-row {
+    background: linear-gradient(180deg, #d3e5f8 0%, #c4dbf4 100%);
+    border-bottom: 1px solid rgba(30, 111, 191, 0.18);
+    display: flex;
+    align-items: flex-end;
+    padding: 4px 10px 0 10px;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    user-select: none;
+}
+
+.workspace-tabs-row::-webkit-scrollbar {
+    height: 3px;
+}
+.workspace-tabs-row::-webkit-scrollbar-thumb {
+    background: rgba(30, 111, 191, 0.25);
+    border-radius: 3px;
+}
+
+.workspace-tab {
+    position: relative;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(30, 111, 191, 0.15);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    padding: 5px 10px 5px 10px;
+    font-size: 11.5px;
+    color: var(--text-sec, #4a5568);
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 170px;
+    min-width: 100px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease, max-width 0.25s ease, opacity 0.25s ease;
+    text-decoration: none;
+}
+
+.workspace-tab:hover {
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--navy, #0b1f3a);
+}
+
+.workspace-tab.active {
+    background: #ffffff;
+    color: var(--navy, #0b1f3a);
+    font-weight: 700;
+    border-color: rgba(30, 111, 191, 0.22);
+    border-top: 2.5px solid var(--gold, #c9a227);
+    box-shadow: 0 -2px 8px rgba(11, 37, 69, 0.08);
+    z-index: 5;
+}
+
+.workspace-tab .tab-icon {
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.workspace-tab .tab-title {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.workspace-tab .close-tab {
+    font-size: 12px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #718096;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    margin-left: 2px;
+    line-height: 1;
+}
+
+.workspace-tab .close-tab:hover {
+    background: rgba(230, 57, 70, 0.18);
+    color: #e63946;
+}
+
+.add-tab-btn {
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.55);
+    color: var(--navy, #0b1f3a);
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: 4px;
+    margin-bottom: 2px;
+    transition: all 0.2s ease;
+}
+
+.add-tab-btn:hover {
+    background: #ffffff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transform: scale(1.08);
+}
+
+/* ============================================================
+   SMOOTH ANIMATIONS & DASHBOARD MULTI-TAB PANES
+   ============================================================ */
+.tab-content-container {
+    position: relative;
+    width: 100%;
+}
+
+.tab-pane {
+    display: none;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tab-pane.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    animation: smooth-fade-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes smooth-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.smooth-card {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.smooth-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(11, 37, 69, 0.12);
+}
+
