@@ -62,29 +62,7 @@ if (!function_exists('timeAgo')) {
     <?php include __DIR__ . '/includes/sidebar.php'; ?>
 
     <main class="main-content">
-        <!-- TOP NAVBAR MATCHING SCREENSHOT -->
-        <div class="top-navbar" style="height:56px">
-            <div class="top-navbar-left">
-                <button class="hamburger-btn" title="Toggle Menu">&#9776;</button>
-                <div class="media-tabs">
-                    <span class="media-tab-item active" style="color: #4A89DC; border-bottom: 2px solid #4A89DC;"><span class="icon" style="margin-right:5px">📰</span>Berita Wilayah</span>
-                    <span class="media-tab-item text-muted">Media Online</span>
-                    <span class="media-tab-item text-muted">Media Sosial</span>
-                    <span class="media-tab-item text-muted">Semua Sumber</span>
-                </div>
-            </div>
-            <div class="top-navbar-right">
-                <span class="top-action-btn">📅 Hari Ini <span>▼</span></span>
-                <span class="top-action-btn">⚙️ Filter</span>
-                <span class="top-action-btn" style="border:none;background:transparent;color:var(--text-sec)"><?= e(explode(' ',$user['full_name'])[0]) ?> <span>➔</span></span>
-            </div>
-        </div>
-
-        <!-- WORKSPACE TABS MATCHING SCREENSHOT -->
-        <div class="workspace-tabs-row" style="padding-top:10px;background:#fff;border-bottom:1px solid #ced4da;">
-            <div class="workspace-tab text-muted" style="background:transparent;border:none;border-right:1px solid #eee;">Berita Wilayah <span class="close-tab" style="margin-left:8px;opacity:0.5;">×</span></div>
-            <div class="workspace-tab active" style="border:none;border-bottom:2px solid transparent;background:#fff;color:var(--text);font-weight:600;">Penerban... <span class="close-tab" style="margin-left:8px;">×</span></div>
-        </div>
+        <?php include __DIR__ . '/includes/topbar.php'; ?>
 
         <div class="page-container">
             <div class="detail-grid">
@@ -94,16 +72,31 @@ if (!function_exists('timeAgo')) {
                     <div class="detail-card">
                         <div class="detail-toolbar" style="border:none; margin-bottom:8px;">
                             <div class="detail-toolbar-left">
-                                <span class="btn-tool" style="border-radius:4px;"><span class="icon">📢</span> Ubah Ke Berita Utama</span>
+                                <span class="btn-tool" style="border-radius:4px;">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                    Ubah Ke Berita Utama
+                                </span>
                                 <?php if ($user['role'] === 'A' && in_array($news['status'], ['draft','pending_b','revision_b','revision_c'])): ?>
-                                <a href="<?= BASE_URL ?>/news_edit.php?id=<?= $id ?>" class="btn-tool" style="border-radius:4px;"><span class="icon">✏️</span> Edit</a>
+                                <a href="<?= BASE_URL ?>/news_edit.php?id=<?= $id ?>" class="btn-tool" style="border-radius:4px;">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                    Edit
+                                </a>
                                 <?php endif; ?>
-                                <span class="btn-tool" style="border-radius:4px;"><span class="icon">👁️</span> Review</span>
-                                <span class="btn-tool" style="border-radius:4px;"><span class="icon">🏷️</span> Ditandai Sebagai ▼</span>
-                                <span class="btn-tool active" style="border-radius:4px;background:#4A89DC;color:#fff;border-color:#4A89DC">Riwayat Catatan</span>
+                                <span class="btn-tool" style="border-radius:4px;">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    Review
+                                </span>
+                                <span class="btn-tool" style="border-radius:4px;">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                                    Ditandai Sebagai
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                                </span>
+                                <span class="btn-tool active" style="border-radius:4px;background:var(--navy);color:#fff;border-color:var(--navy)">Riwayat Catatan</span>
                             </div>
                             <div class="detail-toolbar-right">
-                                <button class="btn-tool" style="border-radius:4px;color:#4A89DC;background:rgba(74,137,220,0.1);border-color:transparent;"><span class="icon">🔗</span></button>
+                                <button class="btn-tool" style="border-radius:4px;color:var(--blue);background:rgba(30,111,191,0.08);border-color:transparent;" title="Salin tautan">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                                </button>
                             </div>
                         </div>
                         
@@ -201,7 +194,10 @@ if (!function_exists('timeAgo')) {
                             </label>
                             <?php endif; ?>
                             <div>
-                                <button type="submit" class="btn btn-outline btn-sm">💬 Kirim Catatan</button>
+                                <button type="submit" class="btn btn-outline btn-sm">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                    Kirim Catatan
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -236,26 +232,64 @@ if (!function_exists('timeAgo')) {
                     </div>
                     <?php endif; ?>
 
-                    <div style="font-size:14px; font-weight:700; color:var(--text); margin-bottom:16px;">Informasi Relevan</div>
-                    
-                    <div class="accordion" style="box-shadow:none; border:none; border-bottom:1px solid #eee; border-radius:0;">
-                        <div class="accordion-head" style="background:transparent; padding:12px 0; border:none; color:var(--text-sec); font-weight:500;">
-                            <span>◎ Subjek yang terkait</span>
-                            <span class="chevron">▼</span>
+                    <div class="relevan-section">
+                        <div class="relevan-header">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            Informasi Relevan
                         </div>
-                    </div>
-                    
-                    <div class="accordion" style="box-shadow:none; border:none; border-bottom:1px solid #eee; border-radius:0;">
-                        <div class="accordion-head" style="background:transparent; padding:12px 0; border:none; color:var(--text-sec); font-weight:500;">
-                            <span>👤 Aktor yang sama</span>
-                            <span class="chevron">▼</span>
+
+                        <!-- Subjek terkait -->
+                        <div class="relevan-card">
+                            <div class="relevan-card-title">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                                Subjek yang terkait
+                            </div>
+                            <?php if (!empty($news['topik'])): ?>
+                                <div class="relevan-tags">
+                                    <?php foreach(array_filter(array_map('trim', explode(',', $news['topik']))) as $t): ?>
+                                        <span class="relevan-tag"><?= e($t) ?></span>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php else: ?>
+                                <span class="relevan-empty">Tidak ada subjek terkait</span>
+                            <?php endif; ?>
                         </div>
-                    </div>
-                    
-                    <div class="accordion" style="box-shadow:none; border:none; border-bottom:1px solid #eee; border-radius:0;">
-                        <div class="accordion-head" style="background:transparent; padding:12px 0; border:none; color:var(--text-sec); font-weight:500;">
-                            <span># Tag yang sama</span>
-                            <span class="chevron">▼</span>
+
+                        <!-- Aktor yang sama -->
+                        <div class="relevan-card">
+                            <div class="relevan-card-title">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                Aktor yang sama
+                            </div>
+                            <?php if (!empty($news['aktor'])): ?>
+                                <div class="relevan-tags">
+                                    <?php foreach(array_filter(array_map('trim', explode(',', $news['aktor']))) as $a): ?>
+                                        <span class="relevan-tag"><?= e($a) ?></span>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php else: ?>
+                                <span class="relevan-empty">Tidak ada aktor terkait</span>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Tag yang sama -->
+                        <div class="relevan-card">
+                            <div class="relevan-card-title">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                                Tag yang sama
+                            </div>
+                            <?php
+                                $tags = array_filter(array_map('trim', explode(',', $news['tag'] ?? '')));
+                            ?>
+                            <?php if (!empty($tags)): ?>
+                                <div class="relevan-tags">
+                                    <?php foreach($tags as $t): ?>
+                                        <span class="relevan-tag relevan-tag-gold"><?= e($t) ?></span>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php else: ?>
+                                <span class="relevan-empty">Tidak ada tag terkait</span>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

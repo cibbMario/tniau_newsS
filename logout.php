@@ -18,11 +18,11 @@ if (ini_get("session.use_cookies")) {
     );
 }
 
-// Clear any output buffers before header
-if (ob_get_level()) {
+// Clear any output buffers before header redirect
+while (ob_get_level()) {
     ob_end_clean();
 }
 
-// Always redirect directly to login page
+// Always redirect directly to login page — no conditional, no fallback
 header("Location: " . BASE_URL . "/login.php");
 exit;

@@ -5,25 +5,36 @@ $current = $current ?? '';
 $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['role']] ?? '';
 ?>
 
-<aside class="sidebar">
+<aside class="sidebar" id="appSidebar">
+    <!-- SIDEBAR BRAND HEADER -->
     <div class="sidebar-brand">
-        <img src="<?= BASE_URL ?>/assets/img/logo-new.png" alt="TNI AU" class="logo" onerror="this.src='<?= BASE_URL ?>/assets/img/logo-tniau.png'">
-        <div class="brand-text"><br></div>
+        <img src="<?= BASE_URL ?>/assets/img/logo-tniau.png" alt="TNI AU" class="logo" onerror="this.src='<?= BASE_URL ?>/assets/img/logo-new.png'">
+        <div class="brand-text">
+            <span class="brand-title">TNI ANGKATAN UDARA</span>
+            <span class="brand-subtitle">PORTAL MONITORING BERITA</span>
+        </div>
     </div>
-    <div class="sidebar-user" style="display:none;"> <!-- Hidden in new design -->
-        <div class="name"><?= e($user['full_name']) ?></div>
-        <div class="role"><span class="role-dot"></span> <?= e($roleName) ?></div>
-    </div>
+
+    <!-- SIDEBAR NAVIGATION -->
     <nav class="sidebar-nav">
+        <!-- 1. Daftar Berita -->
         <a href="<?= BASE_URL ?>/news_list.php" class="<?= in_array($current,['list','draft','view','edit']) ? 'active' : '' ?>">
-            <span class="icon"></span><span class="label">Daftar Berita</span>
+            <span class="icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1m2 13a2 2 0 0 1-2-2V7m2 13a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2m-4-3H9M7 16h6M7 8h6m-6 4h6"></path></svg>
+            </span>
+            <span class="label">Daftar Berita</span>
         </a>
         
-        <!-- Accordion: Dashboard -->
+        <!-- 2. Accordion: Dashboard -->
         <div class="sidebar-accordion <?= in_array($current, ['dashboard', 'dashboard_harian', 'berita_negatif', 'inspiratif', 'konten', 'sentimen']) ? 'open' : '' ?>">
             <div class="accordion-header <?= in_array($current, ['dashboard', 'dashboard_harian', 'berita_negatif', 'inspiratif', 'konten', 'sentimen']) ? 'active' : '' ?>" onclick="toggleSidebarAccordion(this)">
-                <span class="icon"></span><span class="label">Dashboard</span>
-                <span class="chevron">▼</span>
+                <span class="icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                </span>
+                <span class="label">Dashboard</span>
+                <span class="chevron">
+                    <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </span>
             </div>
             <div class="accordion-content" style="<?= in_array($current, ['dashboard', 'dashboard_harian', 'berita_negatif', 'inspiratif', 'konten', 'sentimen']) ? 'display:block;' : '' ?>">
                 <a href="<?= BASE_URL ?>/dashboard.php?view=harian" class="<?= $current==='dashboard_harian' ? 'active' : '' ?>">Dashboard Harian</a>
@@ -34,44 +45,67 @@ $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['ro
             </div>
         </div>
 
-        <!-- Accordion: Statistik -->
+        <!-- 3. Accordion: Statistik -->
         <div class="sidebar-accordion <?= $current==='statistics' ? 'open' : '' ?>">
             <div class="accordion-header <?= $current==='statistics' ? 'active' : '' ?>" onclick="toggleSidebarAccordion(this)">
-                <span class="icon"></span><span class="label">Statistik</span>
-                <span class="chevron">▼</span>
+                <span class="icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                </span>
+                <span class="label">Statistik</span>
+                <span class="chevron">
+                    <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </span>
             </div>
             <div class="accordion-content" style="<?= $current==='statistics' ? 'display:block;' : '' ?>">
-                <a href="<?= BASE_URL ?>/statistics.php?view=berita" class="active">Statistik Berita</a>
-                <a href="<?= BASE_URL ?>/statistics.php?view=tren">Tren</a>
-                <a href="<?= BASE_URL ?>/statistics.php?view=aktor">Top Aktor</a>
+                <a href="<?= BASE_URL ?>/statistics.php?view=berita" class="<?= ($_GET['view']??'')==='berita' ? 'active' : '' ?>">Statistik Berita</a>
+                <a href="<?= BASE_URL ?>/statistics.php?view=tren" class="<?= ($_GET['view']??'')==='tren' ? 'active' : '' ?>">Tren</a>
+                <a href="<?= BASE_URL ?>/statistics.php?view=aktor" class="<?= ($_GET['view']??'')==='aktor' ? 'active' : '' ?>">Top Aktor</a>
             </div>
         </div>
 
+        <!-- 4. Profile -->
         <a href="<?= BASE_URL ?>/profile.php" class="<?= $current==='profile' ? 'active' : '' ?>">
-            <span class="icon"></span><span class="label">Profile</span>
+            <span class="icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </span>
+            <span class="label">Profile</span>
         </a>
 
-        <!-- Accordion: Report -->
+        <!-- 5. Accordion: Report -->
         <div class="sidebar-accordion <?= $current==='report' ? 'open' : '' ?>">
             <div class="accordion-header <?= $current==='report' ? 'active' : '' ?>" onclick="toggleSidebarAccordion(this)">
-                <span class="icon"></span><span class="label">Report</span>
-                <span class="chevron">▼</span>
+                <span class="icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                </span>
+                <span class="label">Report</span>
+                <span class="chevron">
+                    <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </span>
             </div>
             <div class="accordion-content" style="<?= $current==='report' ? 'display:block;' : '' ?>">
-                <a href="<?= BASE_URL ?>/report.php?view=kontributor">Kontributor Informasi</a>
-                <a href="<?= BASE_URL ?>/report.php?view=reviewer">Reviewer</a>
+                <a href="<?= BASE_URL ?>/report.php?view=kontributor" class="<?= ($_GET['view']??'')==='kontributor' ? 'active' : '' ?>">Kontributor Informasi</a>
+                <a href="<?= BASE_URL ?>/report.php?view=reviewer" class="<?= ($_GET['view']??'')==='reviewer' ? 'active' : '' ?>">Reviewer</a>
             </div>
         </div>
 
+        <!-- 6. Galeri Berita -->
         <a href="<?= BASE_URL ?>/gallery.php" class="<?= $current==='gallery' ? 'active' : '' ?>">
-            <span class="icon"></span><span class="label">Galeri Berita</span>
+            <span class="icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+            </span>
+            <span class="label">Galeri Berita</span>
         </a>
         
+        <!-- 7. Kontak Support -->
         <a href="<?= BASE_URL ?>/support.php" class="<?= $current==='support' ? 'active' : '' ?>">
-            <span class="icon"></span><span class="label">Kontak Support</span>
+            <span class="icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            </span>
+            <span class="label">Kontak Support</span>
         </a>
     </nav>
     
+    <!-- SIDEBAR FOOTER LOGOUT -->
     <?php if (in_array($user['role'], ['A','B','C'])): ?>
         <div class="sidebar-footer">
             <button type="button" id="logoutBtn" class="fixed-logout-btn" title="Keluar dari akun">
@@ -102,22 +136,22 @@ $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['ro
                 <p class="modal-desc">Apakah Anda yakin ingin keluar dari sistem <strong>Portal Berita TNI AU</strong>?</p>
                 <div class="modal-actions">
                     <button type="button" class="modal-btn cancel" id="logoutCancel">Batal</button>
-                    <form id="logoutForm" action="<?= BASE_URL ?>/logout.php" method="POST" style="margin:0;flex:1;">
-                        <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
-                        <button type="submit" class="modal-btn confirm" id="logoutConfirm">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                                <polyline points="16 17 21 12 16 7"></polyline>
-                                <line x1="21" y1="12" x2="9" y2="12"></line>
-                            </svg>
-                            Keluar Sekarang
-                        </button>
-                    </form>
+                    <button type="button" class="modal-btn confirm" id="logoutConfirm" onclick="window.location.href='<?= BASE_URL ?>/logout.php'">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        Keluar Sekarang
+                    </button>
                 </div>
             </div>
         </div>
     <?php endif; ?>
 </aside>
+
+<!-- MOBILE BACKDROP OVERLAY -->
+<div class="sidebar-mobile-backdrop" id="sidebarMobileBackdrop"></div>
 
 <script>
 function toggleSidebarAccordion(el) {
@@ -128,7 +162,8 @@ function toggleSidebarAccordion(el) {
     allAccordions.forEach(acc => {
         if(acc !== parent) {
             acc.classList.remove('open');
-            acc.querySelector('.accordion-content').style.display = 'none';
+            const accContent = acc.querySelector('.accordion-content');
+            if (accContent) accContent.style.display = 'none';
         }
     });
 
@@ -138,21 +173,28 @@ function toggleSidebarAccordion(el) {
     } else {
         parent.classList.add('open');
         content.style.display = 'block';
-        content.style.animation = 'accordionSlideDown 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards';
     }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    const hamburgerBtns = document.querySelectorAll('.hamburger-btn');
-    const sidebar       = document.querySelector('.sidebar');
-    const mainContent   = document.querySelector('.main-content');
+    const hamburgerBtns         = document.querySelectorAll('.hamburger-btn');
+    const sidebar               = document.getElementById('appSidebar');
+    const mobileBackdrop        = document.getElementById('sidebarMobileBackdrop');
+    const mainContent           = document.querySelector('.main-content');
+
+    function toggleMobileSidebar() {
+        if (!sidebar) return;
+        sidebar.classList.toggle('mobile-open');
+        if (mobileBackdrop) mobileBackdrop.classList.toggle('active');
+    }
 
     hamburgerBtns.forEach(btn => {
-        btn.addEventListener('click', function () {
-            sidebar.classList.toggle('collapsed');
-            mainContent.classList.toggle('expanded');
-        });
+        btn.addEventListener('click', toggleMobileSidebar);
     });
+
+    if (mobileBackdrop) {
+        mobileBackdrop.addEventListener('click', toggleMobileSidebar);
+    }
     
     // Logout Modal Logic
     const logoutBtn      = document.getElementById('logoutBtn');
@@ -185,4 +227,3 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-

@@ -136,6 +136,7 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
 
             <!-- NEWS TABLE -->
             <div class="news-table-wrap">
+                <div class="table-responsive">
                 <table class="news-table">
                     <thead>
                         <tr>
