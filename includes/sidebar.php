@@ -71,6 +71,24 @@ $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['ro
             <span class="icon"></span><span class="label">Kontak Support</span>
         </a>
     </nav>
+    
+    <?php if (in_array($user['role'], ['A','B','C'])): ?>
+        <form id="logoutForm" action="<?= BASE_URL ?>/logout.php" method="POST" style="display:inline">
+            <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
+            <button type="button" id="logoutBtn" class="fixed-logout-btn" title="Keluar dari akun">⎋ Keluar</button>
+        </form>
+
+        <div id="logoutModal" class="modal-overlay" role="dialog" aria-modal="true">
+            <div class="modal-box">
+                <h3>Konfirmasi Keluar</h3>
+                <p>Anda akan keluar dari akun. Lanjutkan?</p>
+                <div class="modal-actions">
+                    <button type="button" class="modal-btn cancel" id="logoutCancel">Batal</button>
+                    <button type="button" class="modal-btn confirm" id="logoutConfirm">Keluar</button>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
 </aside>
 
 <script>
@@ -107,5 +125,14 @@ document.addEventListener('DOMContentLoaded', function () {
             mainContent.classList.toggle('expanded');
         });
     });
+    
+    // If a logout form exists inside sidebar, handle its modal trigger (for global placement)
+    var globalLogoutBtn = document.getElementById('logoutBtn');
+    if (globalLogoutBtn) {
+        globalLogoutBtn.addEventListener('click', function(){
+            var modal = document.getElementById('logoutModal');
+            if (modal) modal.style.display = 'flex';
+        });
+    }
 });
 </script>

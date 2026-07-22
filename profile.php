@@ -160,6 +160,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background: #eef2f5;
             border-color: #d1d5da;
         }
+        /* Logout confirmation modal */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+            display: none; align-items: center; justify-content: center; z-index: 1300;
+        }
+        .modal-box {
+            background: #fff; border-radius: 12px; padding: 20px; width: 380px; max-width: calc(100% - 32px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.2); text-align: left;
+        }
+        .modal-box h3 { margin: 0 0 8px 0; font-size: 16px; color: var(--text); }
+        .modal-box p { margin: 0 0 14px 0; color: var(--text-sec); font-size: 13px; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+        .modal-btn { padding: 8px 12px; border-radius: 8px; font-weight: 700; cursor: pointer; border: none; }
+        .modal-btn.cancel { background: #f3f4f6; color: #111827; }
+        .modal-btn.confirm { background: linear-gradient(135deg, var(--red), rgba(217,48,37,0.9)); color: #fff; }
     </style>
 </head>
 <body>
@@ -202,7 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="profile-form-row">
                             <label>Username</label>
                             <input type="text" value="<?= e($user['username']) ?>" readonly>
-                            <span class="profile-info-text">Username tidak dapat diubah.</span>
+                            <span class="profile-info-text"></span>
                         </div>
                         <div class="profile-form-row">
                             <label>Role</label>
@@ -235,5 +250,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </main>
 </div>
+        
 </body>
 </html>

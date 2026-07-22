@@ -253,7 +253,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <div class="form-group">
                                     <label>Klasifikasi</label>
                                     <select name="classification" class="form-input">
-                                        <option value="9. Tni au" <?= (($_POST['classification'] ?? '9. Tni au') === '9. Tni au') ? 'selected' : '' ?>>9. Tni au</option>
+                                        <option value="9. Tni au" <?= (($_POST['classification'] ?? '9. Tni au') === '9. Tni au') ? 'selected' : '' ?>>Tni au</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
