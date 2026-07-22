@@ -110,7 +110,7 @@ input, button, select, textarea { font: inherit; }
     min-height: 68px;
 }
 .sidebar-brand img.logo {
-    width: 40px; height: 40px; object-fit: contain; flex-shrink: 0;
+    width: 100px; height: 100px; object-fit: contain; flex-shrink: 0;
     filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
     transition: transform 0.25s ease;
 }
