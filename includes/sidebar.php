@@ -8,7 +8,7 @@ $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['ro
 <aside class="sidebar">
     <div class="sidebar-brand">
         <img src="<?= BASE_URL ?>/assets/img/logo-new.png" alt="TNI AU" class="logo" onerror="this.src='<?= BASE_URL ?>/assets/img/logo-tniau.png'">
-        <div class="brand-text">TNI ANGKATAN<br>UDARA</div>
+        <div class="brand-text"><br></div>
     </div>
     <div class="sidebar-user" style="display:none;"> <!-- Hidden in new design -->
         <div class="name"><?= e($user['full_name']) ?></div>

@@ -34,8 +34,8 @@
     --text-muted:    rgba(58, 90, 122, 0.65);
 
     /* ── Border ── */
-    --border:        rgba(30, 111, 191, 0.12);
-    --border-light:  rgba(255, 255, 255, 0.60);
+    --border:        #1e6fbf1f;
+    --border-light:  #ffffff99;
 
     /* ── Status Colors ── */
     --green:         #0F9B6E;
@@ -153,21 +153,28 @@ input, button, select, textarea { font: inherit; }
 .sidebar-nav { flex: 1; padding: 10px 8px; display: flex; flex-direction: column; gap: 2px; }
 .sidebar-nav a {
     display: flex; align-items: center; gap: 12px;
-    padding: 10px 14px; border-radius: 0;
+    padding: 10px 14px; border-radius: 14px;
     font-size: 12.5px; font-weight: 500;
     color: rgba(255,255,255,0.60);
     border-left: 3px solid transparent;
     transition: all var(--transition);
     position: relative; overflow: hidden;
 }
-.sidebar-nav a:hover, .accordion-header:hover {
+.sidebar-nav a::before {
+    content: ''; position: absolute; inset: 0;
+    background: rgba(255,255,255,0);
+    transition: background var(--transition);
+    border-radius: 14px;
+}
+.sidebar-nav a:hover {
     background: rgba(255,255,255,0.07); color: #fff;
+    transform: translateX(3px);
 }
 .sidebar-nav a.active {
-    background: rgba(0, 210, 255, 0.1);
-    color: #fff; font-weight: 600;
-    border-left-color: #00d2ff;
-    box-shadow: none;
+    background: linear-gradient(90deg, rgba(201,162,39,0.15), rgba(201,162,39,0.06));
+    color: var(--gold); font-weight: 600;
+    border-left-color: var(--gold);
+    box-shadow: inset 0 0 0 1px rgba(201,162,39,0.12);
 }
 .sidebar-nav .icon { width: 18px; text-align: center; font-size: 14px; flex-shrink: 0; }
 .sidebar-nav .label { flex: 1; }
@@ -183,46 +190,8 @@ input, button, select, textarea { font: inherit; }
 }
 .sidebar-nav .nav-divider {
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    background: linear-gradient(90deg, transparent, rgba(201,162,39,0.20), transparent);
     margin: 8px 14px;
-}
-
-/* Accordion */
-.sidebar-accordion {
-    display: flex; flex-direction: column;
-}
-.accordion-header {
-    display: flex; align-items: center; gap: 12px;
-    padding: 10px 14px; border-radius: 0;
-    font-size: 12.5px; font-weight: 500;
-    color: rgba(255,255,255,0.60);
-    border-left: 3px solid transparent;
-    cursor: pointer;
-    transition: all var(--transition);
-}
-.accordion-header.active, .sidebar-accordion.open .accordion-header {
-    color: #fff; font-weight: 600;
-}
-.accordion-header .icon { width: 18px; text-align: center; font-size: 14px; flex-shrink: 0; }
-.accordion-header .label { flex: 1; }
-.accordion-header .chevron { 
-    font-size: 10px; opacity: 0.6; transition: transform var(--transition-bounce); 
-}
-.sidebar-accordion.open .accordion-header .chevron {
-    transform: rotate(180deg);
-}
-.accordion-content {
-    display: none; background: rgba(0,0,0,0.15);
-    overflow: hidden;
-}
-.accordion-content a {
-    padding: 8px 14px 8px 44px;
-    font-size: 11.5px;
-    border-left: 3px solid transparent;
-}
-@keyframes accordionSlideDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
 }
 
 /* Footer */
@@ -1250,6 +1219,7 @@ textarea.form-input { resize: vertical; min-height: 80px; }
     .gallery-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
+<<<<<<< HEAD
 /* ============================================================
    LOGOUT BUTTON & MODAL POPUP (PREMIUM STYLING - REFINED SIZING)
    ============================================================ */
@@ -1607,3 +1577,62 @@ textarea.form-input { resize: vertical; min-height: 80px; }
     box-shadow: 0 12px 28px rgba(11, 37, 69, 0.12);
 }
 
+=======
+/* Fixed logout button (bottom-left) */
+.fixed-logout-btn {
+    position: fixed;
+    left: 18px;
+    bottom: 18px;
+    z-index: 1400;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: linear-gradient(135deg, rgba(217,48,37,0.95), rgba(220,80,70,0.95));
+    color: var(--white);
+    border-radius: 999px;
+    box-shadow: 0 14px 40px rgba(217,48,37,0.18), 0 2px 6px rgba(0,0,0,0.06) inset;
+    font-weight: 800;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.06);
+    transform: translateX(-6px);
+    animation: logoutSlideIn 0.6s cubic-bezier(.2,.9,.3,1) forwards;
+}
+.fixed-logout-btn .logout-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 6px;
+    background: rgba(255,255,255,0.12); font-size: 14px;
+}
+.fixed-logout-btn .logout-text { font-size: 13px; letter-spacing: 0.4px; }
+.fixed-logout-btn:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(217,48,37,0.22); }
+
+@keyframes logoutSlideIn {
+    from { opacity: 0; transform: translateX(-18px) translateY(6px) scale(.98); }
+    to { opacity: 1; transform: translateX(0) translateY(0) scale(1); }
+}
+
+@media (max-width: 520px) {
+    .fixed-logout-btn { left: 12px; bottom: 12px; padding: 10px 12px; }
+    .fixed-logout-btn .logout-text { display: none; }
+}
+
+/* Modal improvements */
+.modal-overlay { background: rgba(6,10,20,0.6); }
+.modal-box { display:flex; flex-direction:column; gap:12px; }
+.modal-box .modal-icon {
+    width: 64px; height: 64px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, rgba(217,48,37,0.12), rgba(217,48,37,0.06));
+    color: var(--red);
+    font-size: 26px; margin: 0 auto 6px auto;
+}
+.modal-box h3 { text-align: center; }
+.modal-actions { gap: 10px; }
+.modal-btn { padding: 8px 14px; border-radius: 10px; }
+.modal-btn.cancel { background: transparent; border: 1px solid rgba(30,111,191,0.12); color: var(--navy); }
+.modal-btn.confirm { background: linear-gradient(135deg, var(--red), #c12b2b); color: #fff; border: none; }
+
+@media (prefers-reduced-motion: reduce) {
+    .fixed-logout-btn { animation: none; transition: none; }
+}
+>>>>>>> a3353ca54111df8c5c9198e0958e90d7ec8ad33b
