@@ -103,22 +103,8 @@ $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['ro
 
     </nav>
     
-    <!-- SIDEBAR FOOTER LOGOUT -->
+    <!-- MODAL OVERLAY LOGOUT -->
     <?php if (in_array($user['role'], ['A','B','C'])): ?>
-        <div class="sidebar-footer">
-            <button type="button" id="logoutBtn" class="fixed-logout-btn" title="Keluar dari akun">
-                <span class="logout-icon">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                        <polyline points="16 17 21 12 16 7"></polyline>
-                        <line x1="21" y1="12" x2="9" y2="12"></line>
-                    </svg>
-                </span>
-                <span class="logout-text label">Keluar Akun</span>
-            </button>
-        </div>
-
-        <!-- MODAL OVERLAY LOGOUT -->
         <div id="logoutModal" class="modal-overlay" role="dialog" aria-modal="true">
             <div class="modal-backdrop" id="logoutBackdrop"></div>
             <div class="modal-box">
@@ -134,7 +120,7 @@ $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['ro
                 <p class="modal-desc">Apakah Anda yakin ingin keluar dari sistem <strong>Portal Berita TNI AU</strong>?</p>
                 <div class="modal-actions">
                     <button type="button" class="modal-btn cancel" id="logoutCancel">Batal</button>
-                    <button type="button" class="modal-btn confirm" id="logoutConfirm" onclick="window.location.href='<?= BASE_URL ?>/logout.php'">
+                    <button type="button" class="modal-btn confirm" id="logoutConfirm">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                             <polyline points="16 17 21 12 16 7"></polyline>
@@ -195,11 +181,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
     // Logout Modal Logic
-    const logoutBtn      = document.getElementById('logoutBtn');
+    const logoutBtn      = document.getElementById('topbarLogoutBtn');
     const logoutModal    = document.getElementById('logoutModal');
     const logoutBackdrop = document.getElementById('logoutBackdrop');
     const logoutCancel   = document.getElementById('logoutCancel');
     const modalCloseX    = document.getElementById('modalCloseX');
+    const logoutConfirm  = document.getElementById('logoutConfirm');
 
     function openModal() {
         if (!logoutModal) return;
@@ -213,10 +200,16 @@ document.addEventListener('DOMContentLoaded', function () {
         setTimeout(() => logoutModal.style.display = 'none', 250);
     }
 
-    if (logoutBtn) logoutBtn.addEventListener('click', openModal);
+    if (logoutBtn) logoutBtn.addEventListener('click', function (event) {
+        event.preventDefault();
+        openModal();
+    });
     if (logoutBackdrop) logoutBackdrop.addEventListener('click', closeModal);
     if (logoutCancel) logoutCancel.addEventListener('click', closeModal);
     if (modalCloseX) modalCloseX.addEventListener('click', closeModal);
+    if (logoutConfirm) logoutConfirm.addEventListener('click', function () {
+        window.location.href = '<?= BASE_URL ?>/logout.php';
+    });
 
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && logoutModal && logoutModal.classList.contains('active')) {

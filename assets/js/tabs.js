@@ -162,12 +162,7 @@
         if (tabIndex === -1) return;
 
         const isCurrentActive = tabEl.classList.contains('active');
-
-        tabEl.style.transform = 'scale(0.85)';
-        tabEl.style.opacity = '0';
-        tabEl.style.maxWidth = '0px';
-        tabEl.style.padding = '0px';
-        tabEl.style.margin = '0px';
+        tabEl.classList.add('is-removing');
 
         setTimeout(() => {
             tabs.splice(tabIndex, 1);
@@ -187,7 +182,7 @@
             } else {
                 renderWorkspaceTabs();
             }
-        }, 200);
+        }, 240);
     }
 
     function openNewTabQuickMenu() {
