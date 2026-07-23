@@ -6,15 +6,23 @@ if (isLoggedIn()) {
     exit;
 }
 
+$csrfToken = generate_csrf_token();
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $token = $_POST['csrf_token'] ?? '';
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
-    if ($username && $password && login($username, $password)) {
+
+    if (!verify_csrf_token($token)) {
+        $error = 'Sesi login tidak valid. Silakan refresh halaman dan coba lagi.';
+    } elseif (isLoginLocked()) {
+        $error = 'Terlalu banyak percobaan login. Silakan tunggu beberapa menit lalu coba lagi.';
+    } elseif ($username && $password && login($username, $password)) {
         header("Location: " . BASE_URL . "/news_list.php");
         exit;
+    } else {
+        $error = 'Username atau password salah.';
     }
-    $error = 'Username atau password salah.';
 }
 ?>
 <!DOCTYPE html>
@@ -37,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <form method="POST" style="text-align:left" id="loginForm" onsubmit="showLoginLoader()">
+            <input type="hidden" name="csrf_token" value="<?= e($csrfToken) ?>">
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" class="form-input" placeholder="Masukkan username" autofocus required value="<?= e($_POST['username'] ?? '') ?>">

@@ -8,6 +8,12 @@ $error = '';
 $success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $token = $_POST['csrf_token'] ?? '';
+    if (!verify_csrf_token($token)) {
+        header("Location: " . BASE_URL . "/profile.php");
+        exit;
+    }
+
     $fullName = trim($_POST['full_name'] ?? '');
     $oldPass  = $_POST['old_password'] ?? '';
     $newPass  = $_POST['new_password'] ?? '';
@@ -214,6 +220,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <div class="profile-card">
                     <form method="POST">
+                        <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
                         <div class="profile-form-row">
                             <label>Username</label>
                             <input type="text" value="<?= e($user['username']) ?>" readonly>

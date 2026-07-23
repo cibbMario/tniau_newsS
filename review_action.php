@@ -8,6 +8,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
+    header("Location: " . BASE_URL . "/dashboard.php");
+    exit;
+}
+
 $newsId         = (int)($_POST['news_id'] ?? 0);
 $action         = $_POST['action'] ?? '';
 $rejectionNote  = trim($_POST['rejection_note'] ?? '');

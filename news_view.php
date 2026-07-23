@@ -184,6 +184,7 @@ if (!function_exists('timeAgo')) {
                         </div>
 
                         <form action="<?= BASE_URL ?>/comment_action.php" method="POST" style="margin-top:20px;border-top:1px solid #e2e6ea;padding-top:16px">
+                            <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
                             <input type="hidden" name="news_id" value="<?= $id ?>">
                             <div class="form-group">
                                 <textarea name="comment" class="form-input" placeholder="Tulis catatan atau instruksi revisi..." required></textarea>
@@ -214,6 +215,7 @@ if (!function_exists('timeAgo')) {
                         <h3>Tindakan Review</h3>
                         <p>Silakan tinjau berita ini. Jika sudah sesuai, setujui. Jika perlu perbaikan, kembalikan ke Reporter.</p>
                         <form action="<?= BASE_URL ?>/review_action.php" method="POST" style="display:flex;flex-direction:column;gap:8px">
+                            <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
                             <input type="hidden" name="news_id" value="<?= $id ?>">
                             <button type="submit" name="action" value="approve" class="btn btn-success btn-block">Setujui &amp; Lanjutkan</button>
                             <button type="submit" name="action" value="reject" class="btn btn-danger btn-block" onclick="return confirm('Kembalikan ke Reporter untuk direvisi?')">Minta Revisi</button>
@@ -226,6 +228,7 @@ if (!function_exists('timeAgo')) {
                         <h3 style="color:var(--red)">Tarik Berita</h3>
                         <p>Turunkan berita ini dari publikasi jika ada kesalahan fatal.</p>
                         <form action="<?= BASE_URL ?>/review_action.php" method="POST">
+                            <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
                             <input type="hidden" name="news_id" value="<?= $id ?>">
                             <button type="submit" name="action" value="unpublish" class="btn btn-outline btn-block" onclick="return confirm('Yakin ingin menurunkan berita ini?')" style="color:var(--red);border-color:var(--red)">Unpublish</button>
                         </form>

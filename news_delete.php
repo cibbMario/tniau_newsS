@@ -2,6 +2,11 @@
 require_once __DIR__ . '/config/config.php';
 requireLogin();
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !verify_csrf_token($_POST['csrf_token'] ?? '')) {
+    header("Location: " . BASE_URL . "/news_list.php");
+    exit;
+}
+
 $user = currentUser();
 $id = $_GET['id'] ?? $_POST['id'] ?? null;
 

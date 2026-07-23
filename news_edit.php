@@ -29,6 +29,14 @@ if (!in_array($news['status'], ['draft', 'pending_b', 'revision_b', 'revision_c'
 $error = '';
 $success = '';
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $token = $_POST['csrf_token'] ?? '';
+    if (!verify_csrf_token($token)) {
+        header("Location: " . BASE_URL . "/news_list.php");
+        exit;
+    }
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_news'])) {
     $title          = trim($_POST['title'] ?? '');
     $content        = trim($_POST['content'] ?? '');
@@ -505,6 +513,7 @@ $gallery = $images->fetchAll();
             <?php endif; ?>
 
             <form method="POST" enctype="multipart/form-data" id="editForm">
+                <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
                 <input type="hidden" name="update_news" value="1">
                 <input type="hidden" name="media" value="<?= e($news['media']) ?>"> <!-- Hidden for media if not in sidebar -->
 

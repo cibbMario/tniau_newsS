@@ -5,11 +5,17 @@
 
 function login($username, $password) {
     global $pdo;
+
+    if (!empty($_SESSION['login_locked_until']) && $_SESSION['login_locked_until'] > time()) {
+        return false;
+    }
+
     $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ? LIMIT 1");
     $stmt->execute([$username]);
     $user = $stmt->fetch();
 
     if ($user && password_verify($password, $user['password_hash'])) {
+        unset($_SESSION['login_attempts'], $_SESSION['login_locked_until']);
         session_regenerate_id(true);
         $_SESSION['user_id']    = $user['id'];
         $_SESSION['username']   = $user['username'];
@@ -19,6 +25,14 @@ function login($username, $password) {
         $_SESSION['last_activity'] = time();
         return true;
     }
+
+    $attempts = (int)($_SESSION['login_attempts'] ?? 0) + 1;
+    $_SESSION['login_attempts'] = $attempts;
+
+    if ($attempts >= 5) {
+        $_SESSION['login_locked_until'] = time() + 300;
+    }
+
     return false;
 }
 
@@ -59,6 +73,10 @@ function sessionExpired() {
 
 function isLoggedIn() {
     return !sessionExpired() && isset($_SESSION['user_id']);
+}
+
+function isLoginLocked() {
+    return !empty($_SESSION['login_locked_until']) && $_SESSION['login_locked_until'] > time();
 }
 
 function currentUser() {

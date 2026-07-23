@@ -8,6 +8,12 @@ $error = '';
 $success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $token = $_POST['csrf_token'] ?? '';
+    if (!verify_csrf_token($token)) {
+        header("Location: " . BASE_URL . "/news_list.php");
+        exit;
+    }
+
     $title    = trim($_POST['title'] ?? '');
     $content  = trim($_POST['content'] ?? '');
     $action   = $_POST['action'] ?? 'draft';
@@ -117,6 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
 
                 <form method="POST" enctype="multipart/form-data" id="createForm" class="create-card">
+                    <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
                     <div class="create-layout-grid">
                         <div class="create-main">
                             <div class="form-group">

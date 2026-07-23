@@ -187,6 +187,7 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                                                 <a href="<?= BASE_URL ?>/news_edit.php?id=<?= $row['id'] ?>" class="btn btn-primary btn-sm">Edit</a>
                                             <?php endif; ?>
                                             <form method="POST" action="<?= BASE_URL ?>/news_delete.php" onsubmit="return confirm('Yakin ingin menghapus berita ini?');" style="display:inline;margin:0;">
+                                                <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
                                                 <input type="hidden" name="id" value="<?= $row['id'] ?>">
                                                 <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
                                             </form>
