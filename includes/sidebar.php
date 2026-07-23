@@ -9,7 +9,7 @@ $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['ro
     <!-- SIDEBAR BRAND HEADER -->
     <div class="sidebar-brand">
         <img src="<?= BASE_URL ?>/assets/img/logo-tniau.png" alt="TNI AU" class="logo" onerror="this.src='<?= BASE_URL ?>/assets/img/logo-new.png'">
-        <div class="brand-text"></div>  
+        <div class="brand-text"></div>    
     </div>
 
     <!-- SIDEBAR NAVIGATION -->
@@ -100,6 +100,7 @@ $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['ro
             </span>
             <span class="label">Kontak Support</span>
         </a>
+
     </nav>
     
     <!-- SIDEBAR FOOTER LOGOUT -->

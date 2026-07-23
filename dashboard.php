@@ -5,10 +5,10 @@ $current = 'dashboard';
 $user = currentUser();
 
 // Determine requested view
-$view = $_GET['view'] ?? $_GET['media'] ?? 'semua';
-$validViews = ['semua', 'wilayah', 'online', 'sosial', 'statistics', 'report', 'gallery', 'harian', 'negatif', 'inspiratif', 'konten', 'sentimen'];
+$view = $_GET['view'] ?? $_GET['media'] ?? 'harian';
+$validViews = ['harian', 'negatif', 'inspiratif', 'konten', 'sentimen'];
 if (!in_array($view, $validViews)) {
-    $view = 'semua';
+    $view = 'harian';
 }
 
 // 1. Overall Stats
@@ -58,10 +58,10 @@ $contributorsData = $pdo->query("SELECT u.full_name, u.role, COUNT(n.id) as tota
     GROUP BY u.id 
     ORDER BY total_news DESC")->fetchAll();
 
-// 8. Gallery Media Images
-$mainImages = $pdo->query("SELECT id, title, image_path, created_at, 'Gambar Utama' as img_type FROM news WHERE image_path IS NOT NULL AND status != 'draft' ORDER BY created_at DESC LIMIT 12")->fetchAll();
-$galleryImages = $pdo->query("SELECT ni.image_path, n.id as news_id, n.title, 'Galeri Pendukung' as img_type FROM news_images ni JOIN news n ON n.id = ni.news_id WHERE n.status != 'draft' ORDER BY ni.id DESC LIMIT 12")->fetchAll();
-$allGallery = array_merge($mainImages, $galleryImages);
+// 8. View-specific datasets
+$negativeNews = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JOIN users u ON n.created_by = u.id WHERE n.sentiment='Negatif' ORDER BY n.created_at DESC LIMIT 10")->fetchAll();
+$inspiratifNews = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JOIN users u ON n.created_by = u.id WHERE n.sentiment='Positif' ORDER BY n.created_at DESC LIMIT 10")->fetchAll();
+$kontenNews = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JOIN users u ON n.created_by = u.id ORDER BY n.created_at DESC LIMIT 10")->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -247,41 +247,31 @@ $allGallery = array_merge($mainImages, $galleryImages);
             
             <!-- VIEW SWITCHER BAR -->
             <div class="view-switcher-bar">
-                <button type="button" onclick="switchDashboardTab('semua')" class="view-tab-btn <?= $view==='semua' ? 'active':'' ?>" id="tabbtn-semua">
+                <button type="button" onclick="switchDashboardTab('harian')" class="view-tab-btn <?= $view==='harian' ? 'active':'' ?>" id="tabbtn-harian">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-                    Semua Sumber
+                    Dashboard Harian
                 </button>
-                <button type="button" onclick="switchDashboardTab('wilayah')" class="view-tab-btn <?= $view==='wilayah' ? 'active':'' ?>" id="tabbtn-wilayah">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                    Berita Wilayah (<?= $stats['wilayah'] ?>)
+                <button type="button" onclick="switchDashboardTab('negatif')" class="view-tab-btn <?= $view==='negatif' ? 'active':'' ?>" id="tabbtn-negatif">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                    Berita Negatif
                 </button>
-                <button type="button" onclick="switchDashboardTab('online')" class="view-tab-btn <?= $view==='online' ? 'active':'' ?>" id="tabbtn-online">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                    Media Online (<?= $stats['online'] ?>)
+                <button type="button" onclick="switchDashboardTab('inspiratif')" class="view-tab-btn <?= $view==='inspiratif' ? 'active':'' ?>" id="tabbtn-inspiratif">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L14.39 8.26L21 9.27L16 14.14L17.18 21L12 17.77L6.82 21L8 14.14L3 9.27L9.61 8.26Z"></path></svg>
+                    Inspiratif
                 </button>
-                <button type="button" onclick="switchDashboardTab('sosial')" class="view-tab-btn <?= $view==='sosial' ? 'active':'' ?>" id="tabbtn-sosial">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-                    Media Sosial (<?= $stats['sosial'] ?>)
+                <button type="button" onclick="switchDashboardTab('konten')" class="view-tab-btn <?= $view==='konten' ? 'active':'' ?>" id="tabbtn-konten">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"></path><path d="M8 10h8"></path><path d="M8 14h5"></path></svg>
+                    Konten
                 </button>
-                <button type="button" onclick="switchDashboardTab('statistics')" class="view-tab-btn <?= $view==='statistics' ? 'active':'' ?>" id="tabbtn-statistics">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-                    Statistik
-                </button>
-                <button type="button" onclick="switchDashboardTab('report')" class="view-tab-btn <?= $view==='report' ? 'active':'' ?>" id="tabbtn-report">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                    Report
-                </button>
-                <button type="button" onclick="switchDashboardTab('gallery')" class="view-tab-btn <?= $view==='gallery' ? 'active':'' ?>" id="tabbtn-gallery">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-                    Galeri Media
+                <button type="button" onclick="switchDashboardTab('sentimen')" class="view-tab-btn <?= $view==='sentimen' ? 'active':'' ?>" id="tabbtn-sentimen">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    Sentimen
                 </button>
             </div>
 
             <!-- TAB CONTENT CONTAINER -->
             <div class="tab-content-container">
-
-                <!-- 1. SEMUA SUMBER / MAIN DASHBOARD -->
-                <div class="tab-pane <?= $view==='semua' ? 'active':'' ?>" id="pane-semua">
+                <div class="tab-pane <?= $view==='harian' ? 'active':'' ?>" id="pane-harian">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
                         <div>
                             <h2 style="color:var(--navy);font-weight:700;margin:0;font-size:20px">Selamat datang, <?= e($user['full_name']) ?>!</h2>
@@ -295,47 +285,25 @@ $allGallery = array_merge($mainImages, $galleryImages);
                         <?php endif; ?>
                     </div>
 
-                    <!-- DASH STATS GRID -->
                     <div class="dash-grid-responsive">
                         <div class="dash-card smooth-card">
-                            <div class="dash-card-info">
-                                <span class="dash-card-label">TOTAL BERITA</span>
-                                <span class="dash-card-value"><?= $stats['total'] ?></span>
-                            </div>
-                            <div class="icon-box-badge icon-box-blue">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-                            </div>
+                            <div class="dash-card-info"><span class="dash-card-label">TOTAL BERITA</span><span class="dash-card-value"><?= $stats['total'] ?></span></div>
+                            <div class="icon-box-badge icon-box-blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg></div>
                         </div>
                         <div class="dash-card smooth-card">
-                            <div class="dash-card-info">
-                                <span class="dash-card-label">DIPUBLIKASIKAN</span>
-                                <span class="dash-card-value"><?= $stats['published'] ?></span>
-                            </div>
-                            <div class="icon-box-badge icon-box-green">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                            </div>
+                            <div class="dash-card-info"><span class="dash-card-label">DIPUBLIKASIKAN</span><span class="dash-card-value"><?= $stats['published'] ?></span></div>
+                            <div class="icon-box-badge icon-box-green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
                         </div>
                         <div class="dash-card smooth-card">
-                            <div class="dash-card-info">
-                                <span class="dash-card-label">MENUNGGU REVIEW</span>
-                                <span class="dash-card-value"><?= $stats['pending'] ?></span>
-                            </div>
-                            <div class="icon-box-badge icon-box-yellow">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                            </div>
+                            <div class="dash-card-info"><span class="dash-card-label">MENUNGGU REVIEW</span><span class="dash-card-value"><?= $stats['pending'] ?></span></div>
+                            <div class="icon-box-badge icon-box-yellow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
                         </div>
                         <div class="dash-card smooth-card">
-                            <div class="dash-card-info">
-                                <span class="dash-card-label">PENGGUNA AKTIF</span>
-                                <span class="dash-card-value"><?= $stats['users'] ?></span>
-                            </div>
-                            <div class="icon-box-badge icon-box-gold">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                            </div>
+                            <div class="dash-card-info"><span class="dash-card-label">PENGGUNA AKTIF</span><span class="dash-card-value"><?= $stats['users'] ?></span></div>
+                            <div class="icon-box-badge icon-box-gold"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
                         </div>
                     </div>
 
-                    <!-- SENTIMENT SUMMARY & OVERVIEW -->
                     <div class="sentiment-grid-responsive">
                         <div class="card smooth-card">
                             <h3 style="font-size:13.5px;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:12px;color:var(--navy);font-weight:600">Analisis Sentimen Publik</h3>
@@ -345,18 +313,9 @@ $allGallery = array_merge($mainImages, $galleryImages);
                                 <div class="sentiment-segment sentiment-seg-negative" style="width:<?= $pctN ?>%" title="Negatif: <?= $pctN ?>%"></div>
                             </div>
                             <div class="sent-legend">
-                                <div class="sent-legend-item">
-                                    <span class="legend-dot" style="background:#10b981"></span>
-                                    <span>Positif (<?= $pctP ?>%)</span>
-                                </div>
-                                <div class="sent-legend-item">
-                                    <span class="legend-dot" style="background:#3b82f6"></span>
-                                    <span>Netral (<?= $pctNe ?>%)</span>
-                                </div>
-                                <div class="sent-legend-item">
-                                    <span class="legend-dot" style="background:#ef4444"></span>
-                                    <span>Negatif (<?= $pctN ?>%)</span>
-                                </div>
+                                <div class="sent-legend-item"><span class="legend-dot" style="background:#10b981"></span><span>Positif (<?= $pctP ?>%)</span></div>
+                                <div class="sent-legend-item"><span class="legend-dot" style="background:#3b82f6"></span><span>Netral (<?= $pctNe ?>%)</span></div>
+                                <div class="sent-legend-item"><span class="legend-dot" style="background:#ef4444"></span><span>Negatif (<?= $pctN ?>%)</span></div>
                             </div>
                         </div>
 
@@ -366,320 +325,85 @@ $allGallery = array_merge($mainImages, $galleryImages);
                                 <span style="font-size:11.5px;color:var(--text-sec)">Total: <?= $stats['total'] ?> Berita</span>
                             </div>
                             <div style="display:flex;gap:12px;justify-content:space-around;text-align:center;padding:8px 0">
-                                <div>
-                                    <div style="font-size:22px;font-weight:700;color:#2563eb"><?= $stats['wilayah'] ?></div>
-                                    <div style="font-size:11.5px;color:var(--text-sec)">Berita Wilayah</div>
-                                </div>
+                                <div><div style="font-size:22px;font-weight:700;color:#2563eb"><?= $stats['wilayah'] ?></div><div style="font-size:11.5px;color:var(--text-sec)">Berita Wilayah</div></div>
                                 <div style="border-left:1px solid #e2e8f0;height:36px"></div>
-                                <div>
-                                    <div style="font-size:22px;font-weight:700;color:#059669"><?= $stats['online'] ?></div>
-                                    <div style="font-size:11.5px;color:var(--text-sec)">Media Online</div>
-                                </div>
+                                <div><div style="font-size:22px;font-weight:700;color:#059669"><?= $stats['online'] ?></div><div style="font-size:11.5px;color:var(--text-sec)">Media Online</div></div>
                                 <div style="border-left:1px solid #e2e8f0;height:36px"></div>
-                                <div>
-                                    <div style="font-size:22px;font-weight:700;color:#d97706"><?= $stats['sosial'] ?></div>
-                                    <div style="font-size:11.5px;color:var(--text-sec)">Media Sosial</div>
-                                </div>
+                                <div><div style="font-size:22px;font-weight:700;color:#d97706"><?= $stats['sosial'] ?></div><div style="font-size:11.5px;color:var(--text-sec)">Media Sosial</div></div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- RECENT NEWS TABLE -->
                     <div class="card smooth-card">
                         <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:12px">
                             <h3 style="font-size:13.5px;margin:0;color:var(--navy);font-weight:600">Berita & Publikasi Terbaru</h3>
                             <a href="<?= BASE_URL ?>/news_list.php" style="font-size:11.5px;color:var(--blue);font-weight:600;text-decoration:none">Lihat Semua →</a>
                         </div>
-                        <div class="news-table-wrap">
-                            <div class="table-responsive">
-                            <table class="news-table">
-                                <thead>
-                                    <tr>
-                                        <th>Subjek Berita</th>
-                                        <th>Media</th>
-                                        <th>Sentimen</th>
-                                        <th>Status</th>
-                                        <th>Penulis</th>
-                                        <th>Waktu</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach($recent as $r): ?>
-                                    <tr>
-                                        <td class="col-subject"><a href="<?= BASE_URL ?>/news_view.php?id=<?= $r['id'] ?>"><?= e($r['title']) ?></a></td>
-                                        <td><span class="badge badge-gray"><?= e($r['media']) ?></span></td>
-                                        <td>
-                                            <?php 
-                                            $sColor = ($r['sentiment'] === 'Positif') ? 'badge-green' : (($r['sentiment'] === 'Negatif') ? 'badge-red' : 'badge-blue');
-                                            ?>
-                                            <span class="badge <?= $sColor ?>"><?= e($r['sentiment']) ?></span>
-                                        </td>
-                                        <td><span class="badge <?= statusBadgeClass($r['status']) ?>"><?= statusLabel($r['status']) ?></span></td>
-                                        <td style="font-size:11.5px;color:var(--text-sec)"><?= e($r['author_name']) ?></td>
-                                        <td class="col-time"><?= formatTanggal($r['created_at']) ?></td>
-                                    </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                            </div>
-                        </div>
+                        <div class="news-table-wrap"><div class="table-responsive"><table class="news-table"><thead><tr><th>Subjek Berita</th><th>Media</th><th>Sentimen</th><th>Status</th><th>Penulis</th><th>Waktu</th></tr></thead><tbody><?php foreach($recent as $r): ?><tr><td class="col-subject"><a href="<?= BASE_URL ?>/news_view.php?id=<?= $r['id'] ?>"><?= e($r['title']) ?></a></td><td><span class="badge badge-gray"><?= e($r['media']) ?></span></td><td><?php $sColor = ($r['sentiment'] === 'Positif') ? 'badge-green' : (($r['sentiment'] === 'Negatif') ? 'badge-red' : 'badge-blue'); ?><span class="badge <?= $sColor ?>"><?= e($r['sentiment']) ?></span></td><td><span class="badge <?= statusBadgeClass($r['status']) ?>"><?= statusLabel($r['status']) ?></span></td><td style="font-size:11.5px;color:var(--text-sec)"><?= e($r['author_name']) ?></td><td class="col-time"><?= formatTanggal($r['created_at']) ?></td></tr><?php endforeach; ?></tbody></table></div></div>
                     </div>
                 </div>
 
-                <!-- 2. BERITA WILAYAH PANE -->
-                <div class="tab-pane <?= $view==='wilayah' ? 'active':'' ?>" id="pane-wilayah">
+                <div class="tab-pane <?= $view==='negatif' ? 'active':'' ?>" id="pane-negatif">
                     <div class="card smooth-card mb-4">
                         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-                            <h3 style="font-size:15px;color:var(--navy);margin:0;font-weight:600">Monitoring Berita Wilayah / Lanud / Satuan</h3>
-                            <span class="badge badge-blue"><?= count($regionalNews) ?> Berita Ditemukan</span>
+                            <h3 style="font-size:15px;color:var(--navy);margin:0;font-weight:600">Berita Negatif</h3>
+                            <span class="badge badge-red"><?= count($negativeNews) ?> Berita Ditemukan</span>
                         </div>
-                        <div class="news-table-wrap">
-                            <div class="table-responsive">
-                            <table class="news-table">
-                                <thead>
-                                    <tr>
-                                        <th>Judul Berita Wilayah</th>
-                                        <th>Sentimen</th>
-                                        <th>Status</th>
-                                        <th>Kontributor</th>
-                                        <th>Tanggal</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if(empty($regionalNews)): ?>
-                                        <tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-sec)">Belum ada data berita wilayah.</td></tr>
-                                    <?php else: ?>
-                                        <?php foreach($regionalNews as $rn): ?>
-                                        <tr>
-                                            <td class="col-subject"><a href="<?= BASE_URL ?>/news_view.php?id=<?= $rn['id'] ?>"><?= e($rn['title']) ?></a></td>
-                                            <td><span class="badge <?= ($rn['sentiment']==='Positif')?'badge-green':(($rn['sentiment']==='Negatif')?'badge-red':'badge-blue') ?>"><?= e($rn['sentiment']) ?></span></td>
-                                            <td><span class="badge <?= statusBadgeClass($rn['status']) ?>"><?= statusLabel($rn['status']) ?></span></td>
-                                            <td style="font-size:11.5px"><?= e($rn['author_name']) ?></td>
-                                            <td class="col-time"><?= formatTanggal($rn['created_at']) ?></td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
-                            </div>
-                        </div>
+                        <div class="news-table-wrap"><div class="table-responsive"><table class="news-table"><thead><tr><th>Judul</th><th>Media</th><th>Status</th><th>Penulis</th><th>Waktu</th></tr></thead><tbody><?php if(empty($negativeNews)): ?><tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-sec)">Belum ada berita negatif.</td></tr><?php else: ?><?php foreach($negativeNews as $row): ?><tr><td class="col-subject"><a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>"><?= e($row['title']) ?></a></td><td><span class="badge badge-gray"><?= e($row['media']) ?></span></td><td><span class="badge <?= statusBadgeClass($row['status']) ?>"><?= statusLabel($row['status']) ?></span></td><td style="font-size:11.5px"><?= e($row['author_name']) ?></td><td class="col-time"><?= formatTanggal($row['created_at']) ?></td></tr><?php endforeach; ?><?php endif; ?></tbody></table></div></div>
                     </div>
                 </div>
 
-                <!-- 3. MEDIA ONLINE PANE -->
-                <div class="tab-pane <?= $view==='online' ? 'active':'' ?>" id="pane-online">
+                <div class="tab-pane <?= $view==='inspiratif' ? 'active':'' ?>" id="pane-inspiratif">
                     <div class="card smooth-card mb-4">
                         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-                            <h3 style="font-size:15px;color:var(--navy);margin:0;font-weight:600">Monitoring Portal Media Online Nasional & Lokal</h3>
-                            <span class="badge badge-green"><?= count($onlineNews) ?> Artikel Media Online</span>
+                            <h3 style="font-size:15px;color:var(--navy);margin:0;font-weight:600">Konten Inspiratif</h3>
+                            <span class="badge badge-green"><?= count($inspiratifNews) ?> Berita Ditemukan</span>
                         </div>
-                        <div class="news-table-wrap">
-                            <div class="table-responsive">
-                            <table class="news-table">
-                                <thead>
-                                    <tr>
-                                        <th>Artikel Media Online</th>
-                                        <th>Sentimen</th>
-                                        <th>Status</th>
-                                        <th>Penulis</th>
-                                        <th>Waktu</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if(empty($onlineNews)): ?>
-                                        <tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-sec)">Belum ada data berita media online.</td></tr>
-                                    <?php else: ?>
-                                        <?php foreach($onlineNews as $on): ?>
-                                        <tr>
-                                            <td class="col-subject"><a href="<?= BASE_URL ?>/news_view.php?id=<?= $on['id'] ?>"><?= e($on['title']) ?></a></td>
-                                            <td><span class="badge <?= ($on['sentiment']==='Positif')?'badge-green':(($on['sentiment']==='Negatif')?'badge-red':'badge-blue') ?>"><?= e($on['sentiment']) ?></span></td>
-                                            <td><span class="badge <?= statusBadgeClass($on['status']) ?>"><?= statusLabel($on['status']) ?></span></td>
-                                            <td style="font-size:11.5px"><?= e($on['author_name']) ?></td>
-                                            <td class="col-time"><?= formatTanggal($on['created_at']) ?></td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
-                            </div>
-                        </div>
+                        <div class="news-table-wrap"><div class="table-responsive"><table class="news-table"><thead><tr><th>Judul</th><th>Media</th><th>Status</th><th>Penulis</th><th>Waktu</th></tr></thead><tbody><?php if(empty($inspiratifNews)): ?><tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-sec)">Belum ada konten inspiratif.</td></tr><?php else: ?><?php foreach($inspiratifNews as $row): ?><tr><td class="col-subject"><a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>"><?= e($row['title']) ?></a></td><td><span class="badge badge-gray"><?= e($row['media']) ?></span></td><td><span class="badge <?= statusBadgeClass($row['status']) ?>"><?= statusLabel($row['status']) ?></span></td><td style="font-size:11.5px"><?= e($row['author_name']) ?></td><td class="col-time"><?= formatTanggal($row['created_at']) ?></td></tr><?php endforeach; ?><?php endif; ?></tbody></table></div></div>
                     </div>
                 </div>
 
-                <!-- 4. MEDIA SOSIAL PANE -->
-                <div class="tab-pane <?= $view==='sosial' ? 'active':'' ?>" id="pane-sosial">
+                <div class="tab-pane <?= $view==='konten' ? 'active':'' ?>" id="pane-konten">
                     <div class="card smooth-card mb-4">
                         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-                            <h3 style="font-size:15px;color:var(--navy);margin:0;font-weight:600">Monitoring & Analisis Media Sosial</h3>
-                            <span class="badge badge-gold"><?= count($socialNews) ?> Postingan Medsos</span>
+                            <h3 style="font-size:15px;color:var(--navy);margin:0;font-weight:600">Konten</h3>
+                            <span class="badge badge-blue"><?= count($kontenNews) ?> Konten Terbaru</span>
                         </div>
-                        <div class="news-table-wrap">
-                            <div class="table-responsive">
-                            <table class="news-table">
-                                <thead>
-                                    <tr>
-                                        <th>Konten Media Sosial</th>
-                                        <th>Sentimen</th>
-                                        <th>Status</th>
-                                        <th>Penulis</th>
-                                        <th>Waktu</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if(empty($socialNews)): ?>
-                                        <tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-sec)">Belum ada data media sosial.</td></tr>
-                                    <?php else: ?>
-                                        <?php foreach($socialNews as $sn): ?>
-                                        <tr>
-                                            <td class="col-subject"><a href="<?= BASE_URL ?>/news_view.php?id=<?= $sn['id'] ?>"><?= e($sn['title']) ?></a></td>
-                                            <td><span class="badge <?= ($sn['sentiment']==='Positif')?'badge-green':(($sn['sentiment']==='Negatif')?'badge-red':'badge-blue') ?>"><?= e($sn['sentiment']) ?></span></td>
-                                            <td><span class="badge <?= statusBadgeClass($sn['status']) ?>"><?= statusLabel($sn['status']) ?></span></td>
-                                            <td style="font-size:11.5px"><?= e($sn['author_name']) ?></td>
-                                            <td class="col-time"><?= formatTanggal($sn['created_at']) ?></td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
-                            </div>
-                        </div>
+                        <div class="news-table-wrap"><div class="table-responsive"><table class="news-table"><thead><tr><th>Judul Konten</th><th>Media</th><th>Sentimen</th><th>Penulis</th><th>Waktu</th></tr></thead><tbody><?php foreach($kontenNews as $row): ?><tr><td class="col-subject"><a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>"><?= e($row['title']) ?></a></td><td><span class="badge badge-gray"><?= e($row['media']) ?></span></td><td><span class="badge <?= ($row['sentiment']==='Positif')?'badge-green':(($row['sentiment']==='Negatif')?'badge-red':'badge-blue') ?>"><?= e($row['sentiment']) ?></span></td><td style="font-size:11.5px"><?= e($row['author_name']) ?></td><td class="col-time"><?= formatTanggal($row['created_at']) ?></td></tr><?php endforeach; ?></tbody></table></div></div>
                     </div>
                 </div>
 
-                <!-- 5. STATISTIK PANE -->
-                <div class="tab-pane <?= $view==='statistics' ? 'active':'' ?>" id="pane-statistics">
+                <div class="tab-pane <?= $view==='sentimen' ? 'active':'' ?>" id="pane-sentimen">
                     <div class="card smooth-card mb-4">
-                        <h3 style="font-size:15px;color:var(--navy);margin-bottom:14px;font-weight:600">Statistik Distribution & Analysis</h3>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-                            <div style="background:#f8fafc;padding:16px;border-radius:10px;border:1px solid #e2e8f0">
-                                <h4 style="font-size:13px;margin-bottom:12px;color:var(--navy)">Persentase Sentimen</h4>
-                                <div style="margin-bottom:10px">
-                                    <div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:4px">
-                                        <span>Positif (<?= $sentStats['Positif'] ?>)</span>
-                                        <span><?= $pctP ?>%</span>
-                                    </div>
-                                    <div style="height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden">
-                                        <div style="height:100%;background:#10b981;width:<?= $pctP ?>%;transition:width 0.8s ease"></div>
-                                    </div>
+                        <h3 style="font-size:15px;color:var(--navy);margin-bottom:14px;font-weight:600">Sentimen</h3>
+                        <div class="sentiment-grid-responsive">
+                            <div class="card smooth-card">
+                                <h3 style="font-size:13.5px;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:12px;color:var(--navy);font-weight:600">Analisis Sentimen Publik</h3>
+                                <div class="sentiment-bar-wrap">
+                                    <div class="sentiment-segment sentiment-seg-positive" style="width:<?= $pctP ?>%" title="Positif: <?= $pctP ?>%"></div>
+                                    <div class="sentiment-segment sentiment-seg-neutral" style="width:<?= $pctNe ?>%" title="Netral: <?= $pctNe ?>%"></div>
+                                    <div class="sentiment-segment sentiment-seg-negative" style="width:<?= $pctN ?>%" title="Negatif: <?= $pctN ?>%"></div>
                                 </div>
-                                <div style="margin-bottom:10px">
-                                    <div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:4px">
-                                        <span>Netral (<?= $sentStats['Netral'] ?>)</span>
-                                        <span><?= $pctNe ?>%</span>
-                                    </div>
-                                    <div style="height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden">
-                                        <div style="height:100%;background:#3b82f6;width:<?= $pctNe ?>%;transition:width 0.8s ease"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:4px">
-                                        <span>Negatif (<?= $sentStats['Negatif'] ?>)</span>
-                                        <span><?= $pctN ?>%</span>
-                                    </div>
-                                    <div style="height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden">
-                                        <div style="height:100%;background:#ef4444;width:<?= $pctN ?>%;transition:width 0.8s ease"></div>
-                                    </div>
+                                <div class="sent-legend">
+                                    <div class="sent-legend-item"><span class="legend-dot" style="background:#10b981"></span><span>Positif (<?= $pctP ?>%)</span></div>
+                                    <div class="sent-legend-item"><span class="legend-dot" style="background:#3b82f6"></span><span>Netral (<?= $pctNe ?>%)</span></div>
+                                    <div class="sent-legend-item"><span class="legend-dot" style="background:#ef4444"></span><span>Negatif (<?= $pctN ?>%)</span></div>
                                 </div>
                             </div>
-
-                            <div style="background:#f8fafc;padding:16px;border-radius:10px;border:1px solid #e2e8f0">
-                                <h4 style="font-size:13px;margin-bottom:12px;color:var(--navy)">Distribusi Kanal Media</h4>
-                                <?php 
-                                $totalM = max(1, $stats['total']);
-                                $pW = round(($stats['wilayah'] / $totalM) * 100);
-                                $pO = round(($stats['online'] / $totalM) * 100);
-                                $pS = round(($stats['sosial'] / $totalM) * 100);
-                                ?>
-                                <div style="margin-bottom:10px">
-                                    <div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:4px">
-                                        <span>Berita Wilayah (<?= $stats['wilayah'] ?>)</span>
-                                        <span><?= $pW ?>%</span>
-                                    </div>
-                                    <div style="height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden">
-                                        <div style="height:100%;background:#2563eb;width:<?= $pW ?>%;transition:width 0.8s ease"></div>
-                                    </div>
+                            <div class="card smooth-card">
+                                <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:12px">
+                                    <h3 style="font-size:13.5px;margin:0;color:var(--navy);font-weight:600">Distribusi Sentimen</h3>
+                                    <span style="font-size:11.5px;color:var(--text-sec)">Total: <?= $stats['total'] ?> Berita</span>
                                 </div>
-                                <div style="margin-bottom:10px">
-                                    <div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:4px">
-                                        <span>Media Online (<?= $stats['online'] ?>)</span>
-                                        <span><?= $pO ?>%</span>
-                                    </div>
-                                    <div style="height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden">
-                                        <div style="height:100%;background:#059669;width:<?= $pO ?>%;transition:width 0.8s ease"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:4px">
-                                        <span>Media Sosial (<?= $stats['sosial'] ?>)</span>
-                                        <span><?= $pS ?>%</span>
-                                    </div>
-                                    <div style="height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden">
-                                        <div style="height:100%;background:#d97706;width:<?= $pS ?>%;transition:width 0.8s ease"></div>
-                                    </div>
+                                <div style="display:grid;gap:10px">
+                                    <div><div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:4px"><span>Positif (<?= $sentStats['Positif'] ?>)</span><span><?= $pctP ?>%</span></div><div style="height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden"><div style="height:100%;background:#10b981;width:<?= $pctP ?>%;transition:width 0.8s ease"></div></div></div>
+                                    <div><div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:4px"><span>Netral (<?= $sentStats['Netral'] ?>)</span><span><?= $pctNe ?>%</span></div><div style="height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden"><div style="height:100%;background:#3b82f6;width:<?= $pctNe ?>%;transition:width 0.8s ease"></div></div></div>
+                                    <div><div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:4px"><span>Negatif (<?= $sentStats['Negatif'] ?>)</span><span><?= $pctN ?>%</span></div><div style="height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden"><div style="height:100%;background:#ef4444;width:<?= $pctN ?>%;transition:width 0.8s ease"></div></div></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- 6. REPORT PANE -->
-                <div class="tab-pane <?= $view==='report' ? 'active':'' ?>" id="pane-report">
-                    <div class="card smooth-card mb-4">
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-                            <h3 style="font-size:15px;color:var(--navy);margin:0;font-weight:600">Report Monitoring Kontributor & Publikasi</h3>
-                            <button onclick="window.print()" class="btn btn-outline btn-sm">Cetak Laporan</button>
-                        </div>
-                        <div class="news-table-wrap">
-                            <div class="table-responsive">
-                            <table class="news-table">
-                                <thead>
-                                    <tr>
-                                        <th>Nama Kontributor</th>
-                                        <th>Role / Peran</th>
-                                        <th>Total Berita Dibuat</th>
-                                        <th>Berita Dipublikasikan</th>
-                                        <th>Menunggu Review</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach($contributorsData as $cd): ?>
-                                    <tr>
-                                        <td style="font-weight:600;color:var(--navy)"><?= e($cd['full_name']) ?></td>
-                                        <td><span class="badge badge-gray"><?= ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi'][$cd['role']] ?? $cd['role'] ?></span></td>
-                                        <td style="font-weight:700"><?= (int)$cd['total_news'] ?></td>
-                                        <td style="color:#059669;font-weight:700"><?= (int)$cd['published_count'] ?></td>
-                                        <td style="color:#d97706;font-weight:700"><?= (int)$cd['pending_count'] ?></td>
-                                    </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 7. GALERI MEDIA PANE -->
-                <div class="tab-pane <?= $view==='gallery' ? 'active':'' ?>" id="pane-gallery">
-                    <div class="card smooth-card mb-4">
-                        <h3 style="font-size:15px;color:var(--navy);margin-bottom:14px;font-weight:600">Galeri Media Foto & Dokumentasi</h3>
-                        <?php if(empty($allGallery)): ?>
-                            <p style="color:var(--text-sec);text-align:center;padding:24px">Belum ada dokumentasi foto berita.</p>
-                        <?php else: ?>
-                            <div class="gallery-grid-tab">
-                                <?php foreach($allGallery as $g): ?>
-                                    <?php 
-                                    $imgPath = str_starts_with($g['image_path'] ?? '', 'http') ? $g['image_path'] : BASE_URL . '/' . ltrim($g['image_path'] ?? '', '/');
-                                    ?>
-                                    <div class="gallery-item-card" onclick="openLightbox('<?= e($imgPath) ?>')">
-                                        <img src="<?= e($imgPath) ?>" alt="<?= e($g['title']) ?>" class="gallery-thumb" onerror="this.src='<?= BASE_URL ?>/assets/img/logo-tniau.png'">
-                                        <div class="gallery-caption"><?= e($g['title']) ?></div>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                </div>
-
             </div> <!-- /tab-content-container -->
 
         </div>
