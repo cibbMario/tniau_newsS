@@ -43,8 +43,9 @@ $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['ro
         </div>
 
         <!-- 3. Accordion: Statistik -->
-        <div class="sidebar-accordion <?= $current==='statistics' ? 'open' : '' ?>">
-            <div class="accordion-header <?= $current==='statistics' ? 'active' : '' ?>" onclick="toggleSidebarAccordion(this)">
+        <?php $statsViews = ['berita','tren','aktor']; $isStatsActive = $current==='statistics'; ?>
+        <div class="sidebar-accordion <?= $isStatsActive ? 'open' : '' ?>">
+            <div class="accordion-header <?= $isStatsActive ? 'active' : '' ?>" onclick="toggleSidebarAccordion(this)">
                 <span class="icon">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
                 </span>
@@ -53,10 +54,10 @@ $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['ro
                     <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </span>
             </div>
-            <div class="accordion-content" style="<?= $current==='statistics' ? 'display:block;' : '' ?>">
-                <a href="<?= BASE_URL ?>/statistics.php?view=berita" class="<?= ($_GET['view']??'')==='berita' ? 'active' : '' ?>">Statistik Berita</a>
-                <a href="<?= BASE_URL ?>/statistics.php?view=tren" class="<?= ($_GET['view']??'')==='tren' ? 'active' : '' ?>">Tren</a>
-                <a href="<?= BASE_URL ?>/statistics.php?view=aktor" class="<?= ($_GET['view']??'')==='aktor' ? 'active' : '' ?>">Top Aktor</a>
+            <div class="accordion-content" style="<?= $isStatsActive ? 'display:block;' : '' ?>">
+                <a href="<?= BASE_URL ?>/statistics.php?view=berita" class="<?= ($current==='statistics' && ($_GET['view']??'berita')==='berita') ? 'active' : '' ?>">Statistik Berita</a>
+                <a href="<?= BASE_URL ?>/statistics.php?view=tren"   class="<?= ($current==='statistics' && ($_GET['view']??'')==='tren')   ? 'active' : '' ?>">Tren</a>
+                <a href="<?= BASE_URL ?>/statistics.php?view=aktor"  class="<?= ($current==='statistics' && ($_GET['view']??'')==='aktor')  ? 'active' : '' ?>">Top Aktor</a>
             </div>
         </div>
 
