@@ -90,7 +90,7 @@ $kontenNews = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JO
             font-weight: 500;
             color: var(--text-sec);
             background: transparent;
-            border: none;
+            border: 1px solid transparent;
             cursor: pointer;
             transition: all 0.2s ease;
             white-space: nowrap;
@@ -104,10 +104,12 @@ $kontenNews = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JO
             color: var(--navy);
         }
         .view-tab-btn.active {
-            background: var(--navy);
-            color: #ffffff;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(11, 37, 69, 0.18);
+            background: #ffffff;
+            color: var(--navy);
+            font-weight: 700;
+            border-color: rgba(30, 111, 191, 0.14);
+            border-bottom-color: var(--gold);
+            box-shadow: 0 4px 12px rgba(11, 37, 69, 0.08);
         }
 
         /* Responsive Stat Grids */
@@ -417,10 +419,12 @@ $kontenNews = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JO
 
 <script>
 function switchDashboardTab(tabId) {
+    const normalizedTabId = tabId.startsWith('dashboard-') ? tabId.replace('dashboard-', '') : tabId;
+
     const panes = document.querySelectorAll('.tab-pane');
     panes.forEach(p => p.classList.remove('active'));
 
-    const targetPane = document.getElementById('pane-' + tabId);
+    const targetPane = document.getElementById('pane-' + normalizedTabId);
     if (targetPane) {
         targetPane.classList.add('active');
     }
@@ -428,14 +432,14 @@ function switchDashboardTab(tabId) {
     const btns = document.querySelectorAll('.view-tab-btn');
     btns.forEach(b => b.classList.remove('active'));
 
-    const targetBtn = document.getElementById('tabbtn-' + tabId);
+    const targetBtn = document.getElementById('tabbtn-' + normalizedTabId);
     if (targetBtn) {
         targetBtn.classList.add('active');
     }
 
     if (window.history && window.history.pushState) {
-        const newUrl = window.location.pathname + '?view=' + tabId;
-        window.history.pushState({ view: tabId }, '', newUrl);
+        const newUrl = window.location.pathname + '?view=' + normalizedTabId;
+        window.history.pushState({ view: normalizedTabId }, '', newUrl);
     }
 
     if (window.WorkspaceTabs && window.WorkspaceTabs.render) {

@@ -22,6 +22,11 @@
     const TAB_CATALOG = {
         'dashboard': { id: 'dashboard', title: 'Semua Sumber', iconType: 'dashboard', view: 'semua' },
         'semua': { id: 'dashboard', title: 'Semua Sumber', iconType: 'dashboard', view: 'semua' },
+        'harian': { id: 'dashboard-harian', title: 'Dashboard Harian', iconType: 'dashboard', view: 'harian' },
+        'negatif': { id: 'dashboard-negatif', title: 'Berita Negatif', iconType: 'dashboard', view: 'negatif' },
+        'inspiratif': { id: 'dashboard-inspiratif', title: 'Inspiratif', iconType: 'dashboard', view: 'inspiratif' },
+        'konten': { id: 'dashboard-konten', title: 'Konten', iconType: 'dashboard', view: 'konten' },
+        'sentimen': { id: 'dashboard-sentimen', title: 'Sentimen', iconType: 'dashboard', view: 'sentimen' },
         'wilayah': { id: 'wilayah', title: 'Berita Wilayah', iconType: 'wilayah', view: 'wilayah' },
         'online': { id: 'online', title: 'Media Online', iconType: 'online', view: 'online' },
         'sosial': { id: 'sosial', title: 'Media Sosial', iconType: 'sosial', view: 'sosial' },
