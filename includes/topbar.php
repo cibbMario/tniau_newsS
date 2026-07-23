@@ -69,6 +69,28 @@ $initials = strtoupper(substr($user['full_name'] ?? 'U', 0, 1));
             <span><?= date('d M Y') ?></span>
         </div>
 
+        <?php if (in_array($user['role'], ['A','B','C'])): ?>
+            <div class="topbar-notification-wrap">
+                <button type="button" id="notificationBell" class="topbar-notify-btn" title="Notifikasi" aria-label="Notifikasi">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                    <span class="topbar-notify-badge" id="notificationBadge">0</span>
+                </button>
+
+                <div id="notificationDropdown" class="notification-dropdown" hidden>
+                    <div class="notification-dropdown-header">
+                        <strong>Notifikasi Terbaru</strong>
+                        <a href="<?= BASE_URL ?>/notifications.php">Lihat semua</a>
+                    </div>
+                    <div id="notificationList" class="notification-list"></div>
+                </div>
+
+                <div id="notificationInlineHint" class="notification-inline-hint" hidden></div>
+            </div>
+        <?php endif; ?>
+
         <!-- User badge -->
         <div class="topbar-user-badge" title="<?= e($user['full_name']) ?> — <?= $roleLabel ?>">
             <div class="topbar-avatar"><?= $initials ?></div>
@@ -101,16 +123,179 @@ $initials = strtoupper(substr($user['full_name'] ?? 'U', 0, 1));
 <script src="<?= BASE_URL ?>/assets/js/tabs.js?v=<?= time() ?>"></script>
 
 <script>
-// ── Hamburger ────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', function () {
-    const btn = document.getElementById('hamburgerBtn');
-    if (btn) {
-        btn.addEventListener('click', function () {
-            const sidebar = document.getElementById('appSidebar');
-            const backdrop = document.getElementById('sidebarMobileBackdrop');
-            if (sidebar) sidebar.classList.toggle('mobile-open');
-            if (backdrop) backdrop.classList.toggle('active');
+(function () {
+    const baseUrl = '<?= BASE_URL ?>';
+    const bell = document.getElementById('notificationBell');
+    const dropdown = document.getElementById('notificationDropdown');
+    const badge = document.getElementById('notificationBadge');
+    const list = document.getElementById('notificationList');
+    const inlineHint = document.getElementById('notificationInlineHint');
+    const storageKey = 'tniau_notification_broadcast';
+    const seenKey = 'tniau_last_seen_notification';
+    const broadcastChannel = ('BroadcastChannel' in window) ? new BroadcastChannel('tniau_notification_channel') : null;
+    let lastUnreadCount = 0;
+    let lastItemId = 0;
+
+    function formatShortDate(value) {
+        if (!value) return '';
+        const date = new Date(value);
+        return date.toLocaleString('id-ID', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
         });
     }
-});
+
+    function renderNotificationList(items) {
+        if (!list) return;
+        if (!items.length) {
+            list.innerHTML = '<div class="notification-empty">Belum ada notifikasi baru.</div>';
+            return;
+        }
+
+        list.innerHTML = items.map(item => `
+            <a class="notification-item ${item.is_read ? '' : 'unread'}" href="${baseUrl}/news_view.php?id=${item.news_id}&mark_read=${item.id}">
+                <div class="notification-item-copy">
+                    <strong>${item.message}</strong>
+                    <span>${formatShortDate(item.created_at)}</span>
+                </div>
+            </a>
+        `).join('');
+    }
+
+    function updateBadge(count) {
+        if (!badge) return;
+        const unread = Number(count || 0);
+        badge.textContent = unread > 99 ? '99+' : unread;
+        badge.style.display = unread > 0 ? 'inline-flex' : 'none';
+    }
+
+    function showInlineNotice(item) {
+        if (!inlineHint) return;
+        inlineHint.textContent = item.message;
+        inlineHint.hidden = false;
+
+        if ('Notification' in window && Notification.permission === 'granted') {
+            try {
+                new Notification('Notifikasi Baru', {
+                    body: item.message,
+                    tag: 'tniau-notif-' + (item.id || Date.now())
+                });
+            } catch (error) {
+                console.warn('Notification API failed:', error);
+            }
+        }
+
+        clearTimeout(showInlineNotice.timer);
+        showInlineNotice.timer = setTimeout(() => {
+            inlineHint.hidden = true;
+        }, 2600);
+    }
+
+    function publishNotificationPayload(payload) {
+        if (broadcastChannel) {
+            broadcastChannel.postMessage(payload);
+        }
+
+        if (typeof localStorage !== 'undefined') {
+            localStorage.setItem(storageKey, JSON.stringify(payload));
+        }
+    }
+
+    function handleIncoming(data) {
+        const unreadCount = Number(data.unread_count || 0);
+        const items = Array.isArray(data.items) ? data.items : [];
+        updateBadge(unreadCount);
+        renderNotificationList(items);
+
+        const newestId = items.reduce((maxId, item) => Math.max(maxId, Number(item.id || 0)), 0);
+        const seenId = Number(localStorage.getItem(seenKey) || 0);
+        const shouldNotify = newestId > seenId;
+
+        if (shouldNotify && items.length) {
+            const nextItems = items.filter(item => Number(item.id || 0) > seenId);
+            const firstNewItem = nextItems[0];
+
+            if (firstNewItem) {
+                showInlineNotice(firstNewItem);
+                publishNotificationPayload({
+                    id: firstNewItem.id,
+                    message: firstNewItem.message,
+                    ts: Date.now()
+                });
+                localStorage.setItem(seenKey, String(firstNewItem.id));
+            }
+        }
+
+        lastUnreadCount = unreadCount;
+        lastItemId = newestId;
+    }
+
+    async function fetchNotifications() {
+        try {
+            const response = await fetch(baseUrl + '/notifications_feed.php', { cache: 'no-store' });
+            const data = await response.json();
+            handleIncoming(data);
+        } catch (error) {
+            console.error('Failed to load notifications:', error);
+        }
+    }
+
+    if (bell && dropdown) {
+        bell.addEventListener('click', function (event) {
+            event.preventDefault();
+            const willShow = dropdown.hidden;
+            dropdown.hidden = !willShow;
+            bell.classList.toggle('active', willShow);
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!dropdown.hidden && !dropdown.contains(event.target) && !bell.contains(event.target)) {
+                dropdown.hidden = true;
+                bell.classList.remove('active');
+            }
+        });
+    }
+
+    if (typeof window !== 'undefined') {
+        if (broadcastChannel) {
+            broadcastChannel.addEventListener('message', function (event) {
+                const payload = event.data;
+                if (payload && payload.message) {
+                    showInlineNotice(payload);
+                    localStorage.setItem(seenKey, String(payload.id || 0));
+                }
+            });
+        }
+
+        window.addEventListener('storage', function (event) {
+            if (event.key === storageKey && event.newValue) {
+                const payload = JSON.parse(event.newValue);
+                if (payload && payload.message) {
+                    showInlineNotice(payload);
+                    localStorage.setItem(seenKey, String(payload.id || 0));
+                }
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        fetchNotifications();
+        setInterval(fetchNotifications, 15000);
+
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission().catch(function () {});
+        }
+
+        document.addEventListener('visibilitychange', function () {
+            if (!document.hidden) {
+                fetchNotifications();
+            }
+        });
+
+        window.addEventListener('focus', fetchNotifications);
+    });
+})();
 </script>
