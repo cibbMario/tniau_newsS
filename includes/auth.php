@@ -10,10 +10,13 @@ function login($username, $password) {
     $user = $stmt->fetch();
 
     if ($user && password_verify($password, $user['password_hash'])) {
-        $_SESSION['user_id']   = $user['id'];
-        $_SESSION['username']  = $user['username'];
-        $_SESSION['full_name'] = $user['full_name'];
-        $_SESSION['role']      = $user['role'];
+        session_regenerate_id(true);
+        $_SESSION['user_id']    = $user['id'];
+        $_SESSION['username']   = $user['username'];
+        $_SESSION['full_name']  = $user['full_name'];
+        $_SESSION['role']       = $user['role'];
+        $_SESSION['login_time'] = time();
+        $_SESSION['last_activity'] = time();
         return true;
     }
     return false;
@@ -21,11 +24,41 @@ function login($username, $password) {
 
 function logout() {
     $_SESSION = [];
-    session_destroy();
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_destroy();
+    }
+}
+
+function refreshSessionActivity() {
+    if (isset($_SESSION['user_id'])) {
+        $_SESSION['last_activity'] = time();
+    }
+}
+
+function sessionExpired() {
+    if (!isset($_SESSION['user_id'])) {
+        return true;
+    }
+
+    $now = time();
+    $idleTimeout = SESSION_IDLE_TIMEOUT ?? 1800;
+    $absoluteTimeout = SESSION_ABSOLUTE_TIMEOUT ?? 3600;
+
+    if (isset($_SESSION['last_activity']) && ($now - $_SESSION['last_activity']) > $idleTimeout) {
+        logout();
+        return true;
+    }
+
+    if (isset($_SESSION['login_time']) && ($now - $_SESSION['login_time']) > $absoluteTimeout) {
+        logout();
+        return true;
+    }
+
+    return false;
 }
 
 function isLoggedIn() {
-    return isset($_SESSION['user_id']);
+    return !sessionExpired() && isset($_SESSION['user_id']);
 }
 
 function currentUser() {
@@ -43,6 +76,8 @@ function requireLogin() {
         header("Location: " . BASE_URL . "/login.php");
         exit;
     }
+
+    refreshSessionActivity();
 }
 
 /** Panggil untuk membatasi halaman hanya untuk role tertentu, mis: requireRole(['A']) */
