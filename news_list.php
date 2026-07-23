@@ -98,42 +98,6 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
             </div>
             <?php endif; ?>
 
-            <!-- SENTIMENT CARDS -->
-            <div class="sentiment-grid">
-                <div class="sentiment-card negatif">
-                    <div class="card-label">Negatif</div>
-                    <div class="card-row">
-                        <span class="card-count"><?= $negatif ?></span>
-                        <span class="card-pct"><?= $pctN ?>%</span>
-                    </div>
-                    <div class="progress-track"><div class="progress-fill" style="width:<?= $pctN ?>%"></div></div>
-                </div>
-                <div class="sentiment-card netral">
-                    <div class="card-label">Netral</div>
-                    <div class="card-row">
-                        <span class="card-count"><?= $netral ?></span>
-                        <span class="card-pct"><?= $pctNe ?>%</span>
-                    </div>
-                    <div class="progress-track"><div class="progress-fill" style="width:<?= $pctNe ?>%"></div></div>
-                </div>
-                <div class="sentiment-card positif">
-                    <div class="card-label">Positif</div>
-                    <div class="card-row">
-                        <span class="card-count"><?= $positif ?></span>
-                        <span class="card-pct"><?= $pctP ?>%</span>
-                    </div>
-                    <div class="progress-track"><div class="progress-fill" style="width:<?= $pctP ?>%"></div></div>
-                </div>
-                <div class="sentiment-card total">
-                    <div class="card-label">Total</div>
-                    <div class="card-row">
-                        <span class="card-count"><?= $total ?></span>
-                        <span class="card-pct">100%</span>
-                    </div>
-                    <div class="progress-track"><div class="progress-fill" style="width:100%"></div></div>
-                </div>
-            </div>
-
             <!-- NEWS TABLE -->
             <div class="news-table-wrap">
                 <div class="table-responsive">

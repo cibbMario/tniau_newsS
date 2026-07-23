@@ -100,6 +100,46 @@ foreach ($mediaData as $row) {
                 <p style="color:var(--text-muted); font-size:12px;">Visualisasi data dan sentimen berita termonitor</p>
             </div>
 
+            <?php
+            $negatifPct = $totalSent > 0 ? round(($sentStats['Negatif'] / $totalSent) * 100) : 0;
+            $netralPct = $totalSent > 0 ? round(($sentStats['Netral'] / $totalSent) * 100) : 0;
+            $positifPct = $totalSent > 0 ? round(($sentStats['Positif'] / $totalSent) * 100) : 0;
+            ?>
+            <div class="sentiment-grid">
+                <div class="sentiment-card negatif">
+                    <div class="card-label">Negatif</div>
+                    <div class="card-row">
+                        <span class="card-count"><?= $sentStats['Negatif'] ?></span>
+                        <span class="card-pct"><?= $negatifPct ?>%</span>
+                    </div>
+                    <div class="progress-track"><div class="progress-fill" style="width:<?= $negatifPct ?>%"></div></div>
+                </div>
+                <div class="sentiment-card netral">
+                    <div class="card-label">Netral</div>
+                    <div class="card-row">
+                        <span class="card-count"><?= $sentStats['Netral'] ?></span>
+                        <span class="card-pct"><?= $netralPct ?>%</span>
+                    </div>
+                    <div class="progress-track"><div class="progress-fill" style="width:<?= $netralPct ?>%"></div></div>
+                </div>
+                <div class="sentiment-card positif">
+                    <div class="card-label">Positif</div>
+                    <div class="card-row">
+                        <span class="card-count"><?= $sentStats['Positif'] ?></span>
+                        <span class="card-pct"><?= $positifPct ?>%</span>
+                    </div>
+                    <div class="progress-track"><div class="progress-fill" style="width:<?= $positifPct ?>%"></div></div>
+                </div>
+                <div class="sentiment-card total">
+                    <div class="card-label">Total</div>
+                    <div class="card-row">
+                        <span class="card-count"><?= $totalSent ?></span>
+                        <span class="card-pct">100%</span>
+                    </div>
+                    <div class="progress-track"><div class="progress-fill" style="width:100%"></div></div>
+                </div>
+            </div>
+
             <div class="stats-grid">
                 <!-- Sentiment Statistics -->
                 <div class="stats-card">
