@@ -112,7 +112,7 @@ try {
     ");
     echo "New tables (statistik, galeri_media, berita_wilayah, media_online, media_sosial) checked/created.<br>";
 
-    // 4. Alter users table role column to allow 'D' and seed default users: gilang, budi, chandra, dian
+    // 4. Alter users table role column to allow 'D' and seed default users: reporter1, editor1, approver1, dian
     try {
         $pdo->exec("ALTER TABLE users MODIFY COLUMN role ENUM('A', 'B', 'C', 'D') NOT NULL");
         echo "Updated users table role column definition.<br>";
@@ -124,10 +124,10 @@ try {
     $hash = password_hash($defaultPassword, PASSWORD_DEFAULT);
 
     $users = [
-        ['username' => 'gilang',   'full_name' => 'Gilang (Reporter)',          'role' => 'A'],
-        ['username' => 'budi',     'full_name' => 'Budi (Editor)',               'role' => 'B'],
-        ['username' => 'chandra',  'full_name' => 'Chandra (Petinggi)',          'role' => 'C'],
-        ['username' => 'dian',     'full_name' => 'Dian (Approver Kejelasan)',   'role' => 'D'],
+        ['username' => 'reporter1', 'full_name' => 'Reporter (Mario)',          'role' => 'A'],
+        ['username' => 'editor1',   'full_name' => 'Editor (Saksak)',           'role' => 'B'],
+        ['username' => 'approver1', 'full_name' => 'Approver (Kadis)',          'role' => 'C'],
+        ['username' => 'dian',      'full_name' => 'Dian (Approver Kejelasan)',   'role' => 'D'],
     ];
 
     foreach ($users as $u) {
@@ -144,10 +144,10 @@ try {
         }
     }
 
-    // Get Gilang's ID for author seeding
-    $stmt = $pdo->prepare("SELECT id FROM users WHERE username = 'gilang' LIMIT 1");
+    // Get Reporter1's ID for author seeding
+    $stmt = $pdo->prepare("SELECT id FROM users WHERE username = 'reporter1' LIMIT 1");
     $stmt->execute();
-    $gilangId = $stmt->fetchColumn();
+    $reporterId = $stmt->fetchColumn();
 
     // 5. Seed sample news items to match screenshots
     $newsItems = [
@@ -223,7 +223,7 @@ try {
             $stmt->execute([
                 $item['title'], $item['slug'], $item['content'], $item['status'], $item['sentiment'], $item['priority'],
                 $item['classification'], $item['wilayah'], $item['tempat'], $item['media'], $item['aktor'], $item['tag'],
-                $item['topik'], $item['keyword'], $item['author_label'], $gilangId, $item['created_at'], $item['created_at']
+                $item['topik'], $item['keyword'], $item['author_label'], $reporterId, $item['created_at'], $item['created_at']
             ]);
             echo "Seeded news: <em>{$item['title']}</em>.<br>";
         } else {
@@ -234,9 +234,9 @@ try {
     echo "<h3 style='color:green;'>Migration completed successfully!</h3>";
     echo "<p>You can now log in using:</p>";
     echo "<ul>";
-    echo "<li>Username: <strong>gilang</strong>, Password: <strong>password123</strong> (Reporter)</li>";
-    echo "<li>Username: <strong>budi</strong>, Password: <strong>password123</strong> (Editor)</li>";
-    echo "<li>Username: <strong>chandra</strong>, Password: <strong>password123</strong> (Petinggi)</li>";
+    echo "<li>Username: <strong>reporter1</strong>, Password: <strong>password123</strong> (Reporter)</li>";
+    echo "<li>Username: <strong>editor1</strong>, Password: <strong>password123</strong> (Editor)</li>";
+    echo "<li>Username: <strong>approver1</strong>, Password: <strong>password123</strong> (Petinggi)</li>";
     echo "<li>Username: <strong>dian</strong>, Password: <strong>password123</strong> (Approver Kejelasan - User D)</li>";
     echo "</ul>";
 

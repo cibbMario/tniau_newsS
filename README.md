@@ -20,6 +20,7 @@ Sistem manajemen berita dengan alur review berjenjang: **User A → User B → U
    | reporter1   | password123   | User A (Reporter)     |
    | editor1     | password123   | User B (Editor)       |
    | approver1   | password123   | User C (Petinggi)     |
+   | dian        | password123   | User D (Approver Kejelasan) |
 
    **Segera ganti password** setelah login pertama (bisa lewat phpMyAdmin dengan
    `password_hash()` baru, atau minta dibuatkan halaman ganti password menyusul).
