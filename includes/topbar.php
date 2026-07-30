@@ -1,7 +1,7 @@
 <?php
 $currentView = $_GET['view'] ?? $_GET['media'] ?? $current ?? 'semua';
 $user = currentUser();
-$roleLabel = ['A'=>'Reporter','B'=>'Editor','C'=>'Approver'][$user['role']] ?? 'User';
+$roleLabel = ['A'=>'Reporter','B'=>'Editor','C'=>'Approver','D'=>'Approver Kejelasan'][$user['role']] ?? 'User';
 $initials = strtoupper(substr($user['full_name'] ?? 'U', 0, 1));
 ?>
 
@@ -69,7 +69,7 @@ $initials = strtoupper(substr($user['full_name'] ?? 'U', 0, 1));
             <span><?= date('d M Y') ?></span>
         </div>
 
-        <?php if (in_array($user['role'], ['A','B','C'])): ?>
+        <?php if (in_array($user['role'], ['A','B','C','D'])): ?>
             <div class="topbar-notification-wrap">
                 <button type="button" id="notificationBell" class="topbar-notify-btn" title="Notifikasi" aria-label="Notifikasi">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -100,7 +100,7 @@ $initials = strtoupper(substr($user['full_name'] ?? 'U', 0, 1));
             </div>
         </div>
 
-        <?php if (in_array($user['role'], ['A','B','C'])): ?>
+        <?php if (in_array($user['role'], ['A','B','C','D'])): ?>
             <button type="button" id="topbarLogoutBtn" class="topbar-logout-btn" title="Keluar dari akun">
                 <span class="logout-icon">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

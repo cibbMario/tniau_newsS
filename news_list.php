@@ -31,6 +31,8 @@ $params = [];
 if ($user['role'] === 'A') {
     $where[] = "(n.created_by = ? OR n.status = 'published')";
     $params[] = $user['id'];
+} elseif ($user['role'] === 'D') {
+    // User D can view all news to check clarity and edit User A news
 } else {
     $where[] = "n.status != 'draft'";
 }
@@ -145,10 +147,13 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                                     <span class="pill <?= $cls ?>"><?= e($row['sentiment'] ?? 'Netral') ?></span>
                                 </td>
                                 <td>
-                                    <?php if (in_array($user['role'], ['A','B','C'])): ?>
-                                        <div style="display:inline-flex;gap:8px;flex-wrap:wrap;align-items:center;">
-                                            <?php if ($user['role'] === 'A' && $row['created_by'] === $user['id'] && in_array($row['status'], ['draft','pending_b','revision_b','revision_c'])): ?>
+                                    <?php if (in_array($user['role'], ['A','B','C','D'])): ?>
+                                        <div style="display:inline-flex;gap:6px;flex-wrap:wrap;align-items:center;">
+                                            <?php if (($user['role'] === 'A' && $row['created_by'] === $user['id'] && in_array($row['status'], ['draft','pending_b','revision_b','revision_c'])) || $user['role'] === 'D'): ?>
                                                 <a href="<?= BASE_URL ?>/news_edit.php?id=<?= $row['id'] ?>" class="btn btn-primary btn-sm">Edit</a>
+                                            <?php endif; ?>
+                                            <?php if (in_array($user['role'], ['C','D']) && in_array($row['status'], ['pending_c','pending_b','draft','revision_b','revision_c'])): ?>
+                                                <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>" class="btn btn-success btn-sm" style="background:#27ae60;color:#fff;">Setujui Kejelasan</a>
                                             <?php endif; ?>
                                             <form method="POST" action="<?= BASE_URL ?>/news_delete.php" onsubmit="return confirm('Yakin ingin menghapus berita ini?');" style="display:inline;margin:0;">
                                                 <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">

@@ -2,7 +2,12 @@
 require_once __DIR__ . '/config/config.php';
 
 if (isLoggedIn()) {
-    header("Location: " . BASE_URL . "/news_list.php");
+    $u = currentUser();
+    if (($u['role'] ?? '') === 'D') {
+        header("Location: " . BASE_URL . "/user_d_dashboard.php");
+    } else {
+        header("Location: " . BASE_URL . "/news_list.php");
+    }
     exit;
 }
 
@@ -18,7 +23,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (isLoginLocked()) {
         $error = 'Terlalu banyak percobaan login. Silakan tunggu beberapa menit lalu coba lagi.';
     } elseif ($username && $password && login($username, $password)) {
-        header("Location: " . BASE_URL . "/news_list.php");
+        $u = currentUser();
+        if (($u['role'] ?? '') === 'D') {
+            header("Location: " . BASE_URL . "/user_d_dashboard.php");
+        } else {
+            header("Location: " . BASE_URL . "/news_list.php");
+        }
         exit;
     } else {
         $error = 'Username atau password salah.';

@@ -2,7 +2,7 @@
 $user = currentUser();
 $unread = countUnreadNotifications($user['id']);
 $current = $current ?? '';
-$roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['role']] ?? '';
+$roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver','D'=>'Approver Kejelasan'][$user['role']] ?? '';
 ?>
 
 <aside class="sidebar" id="appSidebar">
@@ -14,6 +14,16 @@ $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['ro
 
     <!-- SIDEBAR NAVIGATION -->
     <nav class="sidebar-nav">
+        <!-- User D Dedicated Page -->
+        <?php if ($user['role'] === 'D'): ?>
+        <a href="<?= BASE_URL ?>/user_d_dashboard.php" class="<?= $current==='user_d' ? 'active' : '' ?>">
+            <span class="icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </span>
+            <span class="label">Persetujuan Kejelasan (User D)</span>
+        </a>
+        <?php endif; ?>
+
         <!-- 1. Daftar Berita -->
         <a href="<?= BASE_URL ?>/news_list.php" class="<?= in_array($current,['list','draft','view','edit']) ? 'active' : '' ?>">
             <span class="icon">
@@ -105,7 +115,7 @@ $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver'][$user['ro
     </nav>
     
     <!-- MODAL OVERLAY LOGOUT -->
-    <?php if (in_array($user['role'], ['A','B','C'])): ?>
+    <?php if (in_array($user['role'], ['A','B','C','D'])): ?>
         <div id="logoutModal" class="modal-overlay" role="dialog" aria-modal="true">
             <div class="modal-backdrop" id="logoutBackdrop"></div>
             <div class="modal-box">

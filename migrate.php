@@ -112,14 +112,22 @@ try {
     ");
     echo "New tables (statistik, galeri_media, berita_wilayah, media_online, media_sosial) checked/created.<br>";
 
-    // 4. Seed default users: gilang, budi, chandra
+    // 4. Alter users table role column to allow 'D' and seed default users: gilang, budi, chandra, dian
+    try {
+        $pdo->exec("ALTER TABLE users MODIFY COLUMN role ENUM('A', 'B', 'C', 'D') NOT NULL");
+        echo "Updated users table role column definition.<br>";
+    } catch (PDOException $e) {
+        echo "Users role column update check/skip: " . $e->getMessage() . "<br>";
+    }
+
     $defaultPassword = 'password123';
     $hash = password_hash($defaultPassword, PASSWORD_DEFAULT);
 
     $users = [
-        ['username' => 'gilang',   'full_name' => 'Gilang (Reporter)',    'role' => 'A'],
-        ['username' => 'budi',     'full_name' => 'Budi (Editor)',         'role' => 'B'],
-        ['username' => 'chandra',  'full_name' => 'Chandra (Petinggi)',    'role' => 'C'],
+        ['username' => 'gilang',   'full_name' => 'Gilang (Reporter)',          'role' => 'A'],
+        ['username' => 'budi',     'full_name' => 'Budi (Editor)',               'role' => 'B'],
+        ['username' => 'chandra',  'full_name' => 'Chandra (Petinggi)',          'role' => 'C'],
+        ['username' => 'dian',     'full_name' => 'Dian (Approver Kejelasan)',   'role' => 'D'],
     ];
 
     foreach ($users as $u) {
@@ -229,6 +237,7 @@ try {
     echo "<li>Username: <strong>gilang</strong>, Password: <strong>password123</strong> (Reporter)</li>";
     echo "<li>Username: <strong>budi</strong>, Password: <strong>password123</strong> (Editor)</li>";
     echo "<li>Username: <strong>chandra</strong>, Password: <strong>password123</strong> (Petinggi)</li>";
+    echo "<li>Username: <strong>dian</strong>, Password: <strong>password123</strong> (Approver Kejelasan - User D)</li>";
     echo "</ul>";
 
 } catch (PDOException $e) {

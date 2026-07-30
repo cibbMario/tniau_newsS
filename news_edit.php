@@ -18,12 +18,15 @@ if (!$news) {
     die("Berita tidak ditemukan.");
 }
 
-if ($user['role'] !== 'A') {
+$isAuthorA = ($user['role'] === 'A' && $news['created_by'] == $user['id']);
+$isUserD   = ($user['role'] === 'D');
+
+if (!$isAuthorA && !$isUserD) {
     die("Anda tidak memiliki akses untuk mengedit berita ini.");
 }
 
-if (!in_array($news['status'], ['draft', 'pending_b', 'revision_b', 'revision_c'])) {
-    die("Berita yang sedang di-review atau sudah diterbitkan tidak dapat diedit.");
+if (!in_array($news['status'], ['draft', 'pending_b', 'pending_c', 'revision_b', 'revision_c', 'published'])) {
+    die("Berita ini tidak dapat diedit.");
 }
 
 $error = '';
