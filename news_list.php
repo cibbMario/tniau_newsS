@@ -16,7 +16,7 @@ function timeAgo($datetime) {
 
 // Media filter
 $mediaFilter = $_GET['media'] ?? 'Semua';
-$validMedia = ['Wilayah', 'Media Online', 'Media Sosial', 'Semua'];
+$validMedia = ['Wilayah', 'Semua'];
 if (!in_array($mediaFilter, $validMedia)) $mediaFilter = 'Semua';
 
 // Search

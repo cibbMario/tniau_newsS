@@ -149,8 +149,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <label for="media">Sumber Media</label>
                                     <select id="media" name="media" class="form-input">
                                         <option value="Wilayah">Berita Wilayah</option>
-                                        <option value="Media Online">Media Online</option>
-                                        <option value="Media Sosial">Media Sosial</option>
                                     </select>
                                 </div>
                                 <div class="form-group">

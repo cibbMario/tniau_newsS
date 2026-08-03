@@ -18,10 +18,17 @@
         list: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1m2 13a2 2 0 0 1-2-2V7m2 13a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2m-4-3H9M7 16h6M7 8h6m-6 4h6"></path></svg>`
     };
 
+    function normalizeDashboardView(viewName) {
+        const normalized = String(viewName || '').trim().toLowerCase();
+        if (!normalized) return 'harian';
+        if (normalized === 'dashboard' || normalized === 'semua') return 'harian';
+        return normalized;
+    }
+
     // Default predefined tabs catalog
     const TAB_CATALOG = {
-        'dashboard': { id: 'dashboard', title: 'Semua Sumber', iconType: 'dashboard', view: 'semua' },
-        'semua': { id: 'dashboard', title: 'Semua Sumber', iconType: 'dashboard', view: 'semua' },
+        'dashboard': { id: 'dashboard-harian', title: 'Semua Sumber', iconType: 'dashboard', view: 'harian' },
+        'semua': { id: 'dashboard-harian', title: 'Semua Sumber', iconType: 'dashboard', view: 'harian' },
         'harian': { id: 'dashboard-harian', title: 'Dashboard Harian', iconType: 'dashboard', view: 'harian' },
         'negatif': { id: 'dashboard-negatif', title: 'Berita Negatif', iconType: 'dashboard', view: 'negatif' },
         'inspiratif': { id: 'dashboard-inspiratif', title: 'Inspiratif', iconType: 'dashboard', view: 'inspiratif' },
@@ -47,7 +54,7 @@
             console.error('Failed to parse workspace tabs:', e);
         }
         return [
-            { id: 'dashboard', title: 'Semua Sumber', iconType: 'dashboard', url: 'dashboard.php?view=semua' }
+            { id: 'dashboard-harian', title: 'Semua Sumber', iconType: 'dashboard', url: 'dashboard.php?view=harian' }
         ];
     }
 
@@ -62,15 +69,15 @@
     function detectCurrentTabInfo() {
         const params = new URLSearchParams(window.location.search);
         const currentPath = window.location.pathname;
-        const view = params.get('view') || params.get('media');
+        const view = normalizeDashboardView(params.get('view') || params.get('media'));
 
-        if (view && TAB_CATALOG[view.toLowerCase()]) {
-            const cat = TAB_CATALOG[view.toLowerCase()];
+        if (view && TAB_CATALOG[view]) {
+            const cat = TAB_CATALOG[view];
             return {
                 id: cat.id,
                 title: cat.title,
                 iconType: cat.iconType,
-                url: window.location.pathname + window.location.search
+                url: currentPath + '?view=' + view
             };
         }
 
@@ -87,7 +94,7 @@
             return { id: 'list', title: 'Daftar Berita', iconType: 'list', url: 'news_list.php' };
         }
 
-        return { id: 'dashboard', title: 'Semua Sumber', iconType: 'dashboard', url: 'dashboard.php?view=semua' };
+        return { id: 'dashboard-harian', title: 'Semua Sumber', iconType: 'dashboard', url: 'dashboard.php?view=harian' };
     }
 
     function currentPathIsDashboard() {
@@ -167,7 +174,7 @@
         setTimeout(() => {
             tabs.splice(tabIndex, 1);
             if (tabs.length === 0) {
-                tabs = [{ id: 'dashboard', title: 'Semua Sumber', iconType: 'dashboard', url: 'dashboard.php?view=semua' }];
+                tabs = [{ id: 'dashboard-harian', title: 'Semua Sumber', iconType: 'dashboard', url: 'dashboard.php?view=harian' }];
             }
 
             saveTabs(tabs);
@@ -192,7 +199,7 @@
         const remaining = catalogKeys.filter(k => !openIds.includes(k));
 
         if (remaining.length === 0) {
-            window.location.href = 'dashboard.php?view=semua';
+            window.location.href = 'dashboard.php?view=harian';
             return;
         }
 

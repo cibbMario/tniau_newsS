@@ -5,9 +5,12 @@ $current = 'dashboard';
 $user = currentUser();
 
 // Determine requested view
-$view = $_GET['view'] ?? $_GET['media'] ?? 'harian';
-$validViews = ['harian', 'negatif', 'inspiratif', 'konten', 'sentimen'];
+$view = $_GET['view'] ?? $_GET['media'] ?? 'semua';
+$validViews = ['semua', 'dashboard', 'harian', 'negatif', 'inspiratif', 'konten', 'sentimen'];
 if (!in_array($view, $validViews)) {
+    $view = 'semua';
+}
+if (in_array($view, ['semua', 'dashboard'], true)) {
     $view = 'harian';
 }
 
@@ -18,8 +21,6 @@ $stats = [
     'pending'    => (int)$pdo->query("SELECT COUNT(*) FROM news WHERE status LIKE 'pending%'")->fetchColumn(),
     'users'      => (int)$pdo->query("SELECT COUNT(*) FROM users")->fetchColumn(),
     'wilayah'    => (int)$pdo->query("SELECT COUNT(*) FROM news WHERE media='Wilayah'")->fetchColumn(),
-    'online'     => (int)$pdo->query("SELECT COUNT(*) FROM news WHERE media='Media Online'")->fetchColumn(),
-    'sosial'     => (int)$pdo->query("SELECT COUNT(*) FROM news WHERE media='Media Sosial'")->fetchColumn(),
 ];
 
 // 2. Sentiment Counts
@@ -43,13 +44,7 @@ $recent = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JOIN u
 // 4. Regional News
 $regionalNews = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JOIN users u ON n.created_by = u.id WHERE n.media='Wilayah' ORDER BY n.created_at DESC LIMIT 10")->fetchAll();
 
-// 5. Online Media News
-$onlineNews = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JOIN users u ON n.created_by = u.id WHERE n.media='Media Online' ORDER BY n.created_at DESC LIMIT 10")->fetchAll();
-
-// 6. Social Media News
-$socialNews = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JOIN users u ON n.created_by = u.id WHERE n.media='Media Sosial' ORDER BY n.created_at DESC LIMIT 10")->fetchAll();
-
-// 7. Contributors Report Data
+// 5. Contributors Report Data
 $contributorsData = $pdo->query("SELECT u.full_name, u.role, COUNT(n.id) as total_news, 
     SUM(CASE WHEN n.status='published' THEN 1 ELSE 0 END) as published_count,
     SUM(CASE WHEN n.status LIKE 'pending%' THEN 1 ELSE 0 END) as pending_count
@@ -273,7 +268,7 @@ $kontenNews = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JO
 
             <!-- TAB CONTENT CONTAINER -->
             <div class="tab-content-container">
-                <div class="tab-pane <?= $view==='harian' ? 'active':'' ?>" id="pane-harian">
+                <div class="tab-pane <?= in_array($view, ['semua', 'harian']) ? 'active':'' ?>" id="pane-harian">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
                         <div>
                             <h2 style="color:var(--navy);font-weight:700;margin:0;font-size:20px">Selamat datang, <?= e($user['full_name']) ?>!</h2>
@@ -323,15 +318,11 @@ $kontenNews = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JO
 
                         <div class="card smooth-card">
                             <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:12px">
-                                <h3 style="font-size:13.5px;margin:0;color:var(--navy);font-weight:600">Distribution Media Overview</h3>
-                                <span style="font-size:11.5px;color:var(--text-sec)">Total: <?= $stats['total'] ?> Berita</span>
+                                <h3 style="font-size:13.5px;margin:0;color:var(--navy);font-weight:600">Distribusi Berita Wilayah</h3>
+                                <span style="font-size:11.5px;color:var(--text-sec)">Total: <?= $stats['wilayah'] ?> Berita</span>
                             </div>
-                            <div style="display:flex;gap:12px;justify-content:space-around;text-align:center;padding:8px 0">
+                            <div style="display:flex;gap:12px;justify-content:center;text-align:center;padding:8px 0">
                                 <div><div style="font-size:22px;font-weight:700;color:#2563eb"><?= $stats['wilayah'] ?></div><div style="font-size:11.5px;color:var(--text-sec)">Berita Wilayah</div></div>
-                                <div style="border-left:1px solid #e2e8f0;height:36px"></div>
-                                <div><div style="font-size:22px;font-weight:700;color:#059669"><?= $stats['online'] ?></div><div style="font-size:11.5px;color:var(--text-sec)">Media Online</div></div>
-                                <div style="border-left:1px solid #e2e8f0;height:36px"></div>
-                                <div><div style="font-size:22px;font-weight:700;color:#d97706"><?= $stats['sosial'] ?></div><div style="font-size:11.5px;color:var(--text-sec)">Media Sosial</div></div>
                             </div>
                         </div>
                     </div>
@@ -419,12 +410,14 @@ $kontenNews = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JO
 
 <script>
 function switchDashboardTab(tabId) {
-    const normalizedTabId = tabId.startsWith('dashboard-') ? tabId.replace('dashboard-', '') : tabId;
+    const rawTabId = String(tabId || '').trim().toLowerCase();
+    const normalizedTabId = rawTabId.startsWith('dashboard-') ? rawTabId.replace('dashboard-', '') : rawTabId;
+    const effectiveTabId = normalizedTabId === 'dashboard' || normalizedTabId === 'semua' ? 'harian' : normalizedTabId;
 
     const panes = document.querySelectorAll('.tab-pane');
     panes.forEach(p => p.classList.remove('active'));
 
-    const targetPane = document.getElementById('pane-' + normalizedTabId);
+    const targetPane = document.getElementById('pane-' + effectiveTabId);
     if (targetPane) {
         targetPane.classList.add('active');
     }
@@ -432,14 +425,14 @@ function switchDashboardTab(tabId) {
     const btns = document.querySelectorAll('.view-tab-btn');
     btns.forEach(b => b.classList.remove('active'));
 
-    const targetBtn = document.getElementById('tabbtn-' + normalizedTabId);
+    const targetBtn = document.getElementById('tabbtn-' + effectiveTabId);
     if (targetBtn) {
         targetBtn.classList.add('active');
     }
 
     if (window.history && window.history.pushState) {
-        const newUrl = window.location.pathname + '?view=' + normalizedTabId;
-        window.history.pushState({ view: normalizedTabId }, '', newUrl);
+        const newUrl = window.location.pathname + '?view=' + effectiveTabId;
+        window.history.pushState({ view: effectiveTabId }, '', newUrl);
     }
 
     if (window.WorkspaceTabs && window.WorkspaceTabs.render) {

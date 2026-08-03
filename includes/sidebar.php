@@ -96,14 +96,20 @@ $roleName = ['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver','D'=>'Appr
             </div>
         </div>
 
-        <!-- 6. Galeri Berita -->
-        <a href="<?= BASE_URL ?>/gallery.php" class="<?= $current==='gallery' ? 'active' : '' ?>">
+        <!-- 6. Notifikasi -->
+        <a href="<?= BASE_URL ?>/notifications.php" class="<?= $current==='notif' ? 'active' : '' ?>">
             <span class="icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
             </span>
-            <span class="label">Galeri Berita</span>
+            <span class="label">Notifikasi</span>
+            <?php if ($unread > 0): ?>
+                <span class="badge badge-red" style="margin-left:auto;font-size:10px;padding:3px 7px;min-width:20px;text-align:center"><?= $unread ?></span>
+            <?php endif; ?>
         </a>
-        
+
         <!-- 7. Kontak Support -->
         <a href="<?= BASE_URL ?>/support.php" class="<?= $current==='support' ? 'active' : '' ?>">
             <span class="icon">
