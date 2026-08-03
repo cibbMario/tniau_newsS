@@ -101,7 +101,7 @@ $initials = strtoupper(substr($user['full_name'] ?? 'U', 0, 1));
         </div>
 
         <?php if (in_array($user['role'], ['A','B','C','D'])): ?>
-            <button type="button" id="topbarLogoutBtn" class="topbar-logout-btn" title="Keluar dari akun">
+            <a href="<?= BASE_URL ?>/logout.php" id="topbarLogoutBtn" class="topbar-logout-btn" title="Keluar dari akun" aria-label="Keluar dari akun">
                 <span class="logout-icon">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -110,7 +110,7 @@ $initials = strtoupper(substr($user['full_name'] ?? 'U', 0, 1));
                     </svg>
                 </span>
                 <span class="logout-text">Keluar</span>
-            </button>
+            </a>
         <?php endif; ?>
     </div>
 </header>

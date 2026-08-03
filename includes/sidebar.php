@@ -211,15 +211,17 @@ document.addEventListener('DOMContentLoaded', function () {
         setTimeout(() => logoutModal.style.display = 'none', 250);
     }
 
-    if (logoutBtn) logoutBtn.addEventListener('click', function (event) {
-        event.preventDefault();
-        openModal();
-    });
+    if (logoutBtn && logoutBtn.tagName !== 'A') {
+        logoutBtn.addEventListener('click', function (event) {
+            event.preventDefault();
+            openModal();
+        });
+    }
     if (logoutBackdrop) logoutBackdrop.addEventListener('click', closeModal);
     if (logoutCancel) logoutCancel.addEventListener('click', closeModal);
     if (modalCloseX) modalCloseX.addEventListener('click', closeModal);
     if (logoutConfirm) logoutConfirm.addEventListener('click', function () {
-        window.location.href = '<?= BASE_URL ?>/logout.php';
+        window.location.assign('<?= BASE_URL ?>/logout.php');
     });
 
     document.addEventListener('keydown', function(e) {
