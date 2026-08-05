@@ -39,6 +39,13 @@ function countUnreadNotifications($user_id) {
     return (int)$stmt->fetchColumn();
 }
 
+function countDraftsForUser($user_id) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM news WHERE created_by = ? AND status = 'draft'");
+    $stmt->execute([$user_id]);
+    return (int)$stmt->fetchColumn();
+}
+
 function markNotificationRead($notif_id, $user_id) {
     global $pdo;
     $stmt = $pdo->prepare("UPDATE notifications SET is_read = 1 WHERE id = ? AND user_id = ?");
@@ -177,6 +184,7 @@ function userDisplayName($role) {
         'B' => 'User B',
         'C' => 'User C',
         'D' => 'User D',
+        'E' => 'User E',
     ];
     return $labels[$role] ?? 'User';
 }

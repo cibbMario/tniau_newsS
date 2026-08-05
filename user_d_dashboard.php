@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/config/config.php';
-requireRole(['D']);
+requireRole(['D','E']);
 $current = 'user_d';
 $user = currentUser();
 

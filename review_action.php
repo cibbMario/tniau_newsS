@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/config/config.php';
-requireRole(['B', 'C', 'D']);
+requireRole(['B', 'C', 'D', 'E']);
 $user = currentUser();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -76,8 +76,34 @@ elseif ($user['role'] === 'D' && in_array($news['status'], ['pending_d', 'pendin
         sendNotification($newsId, $news['created_by'], "Berita \"{$news['title']}\" perlu direvisi. Catatan User D: $note");
     }
 }
-elseif ($user['role'] === 'D' && $action === 'unpublish' && $news['status'] === 'published') {
-    updateNewsStatus($newsId, 'draft', $user['id'], 'Diturunkan dari publikasi oleh User D');
+elseif ($user['role'] === 'E' && in_array($news['status'], ['pending_b', 'pending_c', 'pending_d'], true)) {
+    if ($action === 'approve') {
+        if ($news['status'] === 'pending_b') {
+            updateNewsStatus($newsId, 'pending_c', $user['id'], 'Disetujui oleh User E sebagai pengganti User B');
+            $stmtC = $pdo->query("SELECT id FROM users WHERE role = 'C'");
+            foreach ($stmtC->fetchAll() as $c) {
+                sendNotification($newsId, $c['id'], "Berita \"{$news['title']}\" telah disetujui User E dan menunggu persetujuan Anda.");
+            }
+        } elseif ($news['status'] === 'pending_c') {
+            updateNewsStatus($newsId, 'pending_d', $user['id'], 'Disetujui oleh User E sebagai pengganti User C');
+            $stmtD = $pdo->query("SELECT id FROM users WHERE role = 'D'");
+            foreach ($stmtD->fetchAll() as $d) {
+                sendNotification($newsId, $d['id'], "Berita \"{$news['title']}\" telah disetujui User E dan menunggu persetujuan Anda.");
+            }
+        } else {
+            updateNewsStatus($newsId, 'published', $user['id'], 'Disetujui oleh User E, berita dipublikasikan');
+            sendNotification($newsId, $news['created_by'], "Selamat! Berita \"{$news['title']}\" telah disetujui oleh User E dan dipublikasikan.");
+        }
+    } elseif ($action === 'reject') {
+        $note = $rejectionNote ?: 'User E meminta revisi pada berita ini.';
+        saveRejectionComment($pdo, $newsId, $user['id'], $note);
+        $revisionStatus = $news['status'] === 'pending_b' ? 'revision_b' : ($news['status'] === 'pending_c' ? 'revision_c' : 'revision_d');
+        updateNewsStatus($newsId, $revisionStatus, $user['id'], 'Ditolak User E: ' . $note);
+        sendNotification($newsId, $news['created_by'], "Berita \"{$news['title']}\" perlu direvisi. Catatan User E: $note");
+    }
+}
+elseif (in_array($user['role'], ['D','E']) && $action === 'unpublish' && $news['status'] === 'published') {
+    updateNewsStatus($newsId, 'draft', $user['id'], 'Diturunkan dari publikasi oleh User D/E');
     sendNotification($newsId, $news['created_by'], "Berita \"{$news['title']}\" telah diturunkan dari publikasi.");
 }
 

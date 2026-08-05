@@ -112,9 +112,9 @@ try {
     ");
     echo "New tables (statistik, galeri_media, berita_wilayah, media_online, media_sosial) checked/created.<br>";
 
-    // 4. Alter users table role column to allow 'D' and seed default users: reporter1, editor1, approver1, dian
+    // 4. Alter users table role column to allow 'E' and seed default users: reporter1, editor1, approver1, dian, user_e
     try {
-        $pdo->exec("ALTER TABLE users MODIFY COLUMN role ENUM('A', 'B', 'C', 'D') NOT NULL");
+        $pdo->exec("ALTER TABLE users MODIFY COLUMN role ENUM('A', 'B', 'C', 'D', 'E') NOT NULL");
         echo "Updated users table role column definition.<br>";
     } catch (PDOException $e) {
         echo "Users role column update check/skip: " . $e->getMessage() . "<br>";

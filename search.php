@@ -18,6 +18,14 @@ if ($q !== '') {
              ORDER BY news.updated_at DESC"
         );
         $stmt->execute(['uid' => $user['id'], 'q' => "%$q%"]);
+    } elseif ($user['role'] === 'E') {
+        $stmt = $pdo->prepare(
+            "SELECT news.*, u.full_name AS author_name
+             FROM news JOIN users u ON u.id = news.created_by
+             WHERE (news.title LIKE :q OR news.content LIKE :q)
+             ORDER BY news.updated_at DESC"
+        );
+        $stmt->execute(['q' => "%$q%"]);
     } else {
         $stmt = $pdo->prepare(
             "SELECT news.*, u.full_name AS author_name

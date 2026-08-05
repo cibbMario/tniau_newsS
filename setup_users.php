@@ -13,6 +13,7 @@ $users = [
     ['username' => 'editor1',   'full_name' => 'saksak',   'role' => 'B'],
     ['username' => 'approver1', 'full_name' => 'kadis',    'role' => 'C'],
     ['username' => 'dian',      'full_name' => 'Dian',     'role' => 'D'],
+    ['username' => 'user_e',    'full_name' => 'User E',   'role' => 'E'],
 ];
 
 $hash = password_hash($defaultPassword, PASSWORD_DEFAULT);

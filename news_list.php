@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__ . '/config/config.php';
 requireLogin();
-$current = 'list';
+$statusFilter = $_GET['status'] ?? '';
+$current = $statusFilter === 'draft' ? 'draft' : 'list';
 $user = currentUser();
 
 // Helper: waktu relatif
@@ -28,11 +29,17 @@ $sql = "SELECT n.*, u.full_name AS author_name, n.created_by
 $where = [];
 $params = [];
 
-if ($user['role'] === 'A') {
+if ($statusFilter === 'draft' && in_array($user['role'], ['A','E'])) {
+    if ($user['role'] === 'A') {
+        $where[] = "n.created_by = ?";
+        $params[] = $user['id'];
+    }
+    $where[] = "n.status = 'draft'";
+} elseif ($user['role'] === 'A') {
     $where[] = "(n.created_by = ? OR n.status = 'published')";
     $params[] = $user['id'];
-} elseif ($user['role'] === 'D') {
-    // User D can view all news to check clarity and edit User A news
+} elseif (in_array($user['role'], ['D','E'])) {
+    // User D and E can view all news
 } else {
     $where[] = "n.status != 'draft'";
 }
@@ -81,7 +88,7 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
             <!-- ACTION BAR -->
             <div class="action-bar">
                 <div class="action-bar-left">
-                    <?php if ($user['role'] === 'A'): ?>
+                    <?php if (in_array($user['role'], ['A','E'])): ?>
                         <a href="<?= BASE_URL ?>/news_create.php" class="btn-entry-new">Buat Berita Baru</a>
                     <?php endif; ?>
                     <span class="pagination-info"><?= $total ?> berita ditemukan</span>
@@ -147,10 +154,10 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                                     <span class="pill <?= $cls ?>"><?= e($row['sentiment'] ?? 'Netral') ?></span>
                                 </td>
                                 <td onclick="event.stopPropagation()">
-                                    <?php if (in_array($user['role'], ['A','B','C','D'])): ?>
+                                    <?php if (in_array($user['role'], ['A','B','C','D','E'])): ?>
                                         <div style="display:inline-flex;gap:6px;flex-wrap:wrap;align-items:center;">
-                                            <?php if ($user['role'] === 'A' && $row['created_by'] === $user['id']): ?>
-                                                <?php if (in_array($row['status'], ['draft','pending_b','revision_b','revision_c','revision_d'])): ?>
+                                            <?php if (($user['role'] === 'A' && $row['created_by'] === $user['id']) || $user['role'] === 'E'): ?>
+                                                <?php if (in_array($row['status'], ['draft','pending_b','pending_c','pending_d','revision_b','revision_c','revision_d','published'])): ?>
                                                     <a href="<?= BASE_URL ?>/news_edit.php?id=<?= $row['id'] ?>" class="btn btn-primary btn-sm">Edit</a>
                                                 <?php endif; ?>
                                                 <?php if (in_array($row['status'], ['revision_b','revision_c','revision_d'])): ?>
@@ -167,11 +174,11 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                                                 </form>
                                             <?php endif; ?>
 
-                                            <?php if ($user['role'] === 'B' && $row['status'] === 'pending_b'): ?>
+                                            <?php if (($user['role'] === 'B' || $user['role'] === 'E') && $row['status'] === 'pending_b'): ?>
                                                 <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>" class="btn btn-success btn-sm" style="background:#27ae60;color:#fff;">Review B</a>
                                             <?php endif; ?>
 
-                                            <?php if ($user['role'] === 'C' && $row['status'] === 'pending_c'): ?>
+                                            <?php if (($user['role'] === 'C' || $user['role'] === 'E') && $row['status'] === 'pending_c'): ?>
                                                 <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>" class="btn btn-success btn-sm" style="background:#27ae60;color:#fff;">Setujui</a>
                                                 <form method="POST" action="<?= BASE_URL ?>/review_action.php" onsubmit="return confirm('Minta revisi dari User A?');" style="display:inline;margin:0;">
                                                     <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
@@ -181,7 +188,7 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                                                 </form>
                                             <?php endif; ?>
 
-                                            <?php if ($user['role'] === 'D' && in_array($row['status'], ['pending_d', 'pending_c'])): ?>
+                                            <?php if (($user['role'] === 'D' || $user['role'] === 'E') && in_array($row['status'], ['pending_d', 'pending_c'], true)): ?>
                                                 <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>" class="btn btn-success btn-sm" style="background:#27ae60;color:#fff;">Setujui</a>
                                             <?php endif; ?>
                                         </div>

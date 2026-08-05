@@ -20,8 +20,9 @@ if (!$news) {
 
 $isAuthorA = ($user['role'] === 'A' && $news['created_by'] == $user['id']);
 $isUserD   = ($user['role'] === 'D');
+$isUserE   = ($user['role'] === 'E');
 
-if (!$isAuthorA && !$isUserD) {
+if (!$isAuthorA && !$isUserD && !$isUserE) {
     die("Anda tidak memiliki akses untuk mengedit berita ini.");
 }
 

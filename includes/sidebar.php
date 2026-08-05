@@ -15,7 +15,7 @@ $roleName = userDisplayName($user['role']);
     <!-- SIDEBAR NAVIGATION -->
     <nav class="sidebar-nav">
         <!-- User D Dedicated Page -->
-        <?php if ($user['role'] === 'D'): ?>
+        <?php if (in_array($user['role'], ['D','E'])): ?>
         <a href="<?= BASE_URL ?>/user_d_dashboard.php" class="<?= $current==='user_d' ? 'active' : '' ?>">
             <span class="icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
@@ -31,6 +31,19 @@ $roleName = userDisplayName($user['role']);
             </span>
             <span class="label">Daftar Berita</span>
         </a>
+        <?php if (in_array($user['role'], ['A','E'])):
+            $draftCount = countDraftsForUser($user['id']);
+        ?>
+        <?php if ($draftCount > 0): ?>
+        <a href="<?= BASE_URL ?>/news_list.php?status=draft" class="<?= $current === 'draft' ? 'active' : '' ?>">
+            <span class="icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><path d="M9 7h6M9 11h6M9 15h3"/></svg>
+            </span>
+            <span class="label">Draft Berita</span>
+            <span class="badge badge-gray" style="margin-left:auto;font-size:10px;padding:3px 7px;min-width:20px;text-align:center"><?= $draftCount ?></span>
+        </a>
+        <?php endif; ?>
+        <?php endif; ?>
         
         <!-- 2. Accordion: Dashboard -->
         <div class="sidebar-accordion <?= in_array($current, ['dashboard', 'dashboard_harian', 'berita_negatif', 'inspiratif', 'konten', 'sentimen']) ? 'open' : '' ?>">
@@ -121,7 +134,7 @@ $roleName = userDisplayName($user['role']);
     </nav>
     
     <!-- MODAL OVERLAY LOGOUT -->
-    <?php if (in_array($user['role'], ['A','B','C','D'])): ?>
+    <?php if (in_array($user['role'], ['A','B','C','D','E'])): ?>
         <div id="logoutModal" class="modal-overlay" role="dialog" aria-modal="true">
             <div class="modal-backdrop" id="logoutBackdrop"></div>
             <div class="modal-box">

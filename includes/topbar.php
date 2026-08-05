@@ -53,7 +53,7 @@ $initials = strtoupper(substr($roleLabel, 0, 1));
             <span><?= date('d M Y') ?></span>
         </div>
 
-        <?php if (in_array($user['role'], ['A','B','C','D'])): ?>
+        <?php if (in_array($user['role'], ['A','B','C','D','E'])): ?>
             <div class="topbar-notification-wrap">
                 <button type="button" id="notificationBell" class="topbar-notify-btn" title="Notifikasi" aria-label="Notifikasi">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -84,7 +84,7 @@ $initials = strtoupper(substr($roleLabel, 0, 1));
             </div>
         </div>
 
-        <?php if (in_array($user['role'], ['A','B','C','D'])): ?>
+        <?php if (in_array($user['role'], ['A','B','C','D','E'])): ?>
             <a href="<?= BASE_URL ?>/logout.php" id="topbarLogoutBtn" class="topbar-logout-btn" title="Keluar dari akun" aria-label="Keluar dari akun">
                 <span class="logout-icon">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

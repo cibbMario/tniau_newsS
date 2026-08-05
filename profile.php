@@ -222,7 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         <div class="profile-form-row">
                             <label>Role</label>
-                            <input type="text" value="<?= e(['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver','D'=>'Approver Kejelasan'][$user['role']] ?? 'User') ?>" readonly>
+                            <input type="text" value="<?= e(['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver','D'=>'Approver Kejelasan','E'=>'Superuser'][ $user['role'] ] ?? 'User') ?>" readonly>
                         </div>
                         <div class="profile-form-row">
                             <label>Nama Tampilan</label>

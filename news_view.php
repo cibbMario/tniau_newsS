@@ -25,7 +25,7 @@ if (!empty($_GET['mark_read'])) {
 }
 
 // Role restriction
-if ($user['role'] !== 'A' && $news['status'] === 'draft') {
+if (!in_array($user['role'], ['A','E']) && $news['status'] === 'draft') {
     die("Berita ini masih dalam bentuk draft.");
 }
 
@@ -76,7 +76,7 @@ if (!function_exists('timeAgo')) {
                                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                                     Ubah Ke Berita Utama
                                 </span>
-                                <?php if (($user['role'] === 'A' && in_array($news['status'], ['draft','pending_b','revision_b','revision_c'])) || ($user['role'] === 'D')): ?>
+                                <?php if ($user['role'] === 'E' || $user['role'] === 'D' || ($user['role'] === 'A' && in_array($news['status'], ['draft','pending_b','revision_b','revision_c']))): ?>
                                 <a href="<?= BASE_URL ?>/news_edit.php?id=<?= $id ?>" class="btn-tool" style="border-radius:4px;">
                                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                                     Edit
@@ -214,7 +214,7 @@ if (!function_exists('timeAgo')) {
                             <div class="form-group">
                                 <textarea name="message" class="form-input" placeholder="Tulis catatan atau instruksi kejelasan..." required></textarea>
                             </div>
-                            <?php if(in_array($user['role'], ['B','C','D'])): ?>
+                            <?php if(in_array($user['role'], ['B','C','D','E'])): ?>
                             <label class="radio-label" style="margin-bottom:12px;display:inline-flex">
                                 <input type="checkbox" name="is_correction" value="1"> Tandai sebagai instruksi koreksi/revisi kejelasan
                             </label>
@@ -251,7 +251,7 @@ if (!function_exists('timeAgo')) {
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($user['role'] === 'B' && $news['status'] === 'pending_b'): ?>
+                    <?php if (in_array($user['role'], ['B','E']) && $news['status'] === 'pending_b'): ?>
                     <div class="review-card">
                         <h3>Persetujuan User B</h3>
                         <p>Silakan tinjau berita ini. Jika sudah sesuai, setujui untuk diteruskan ke User C. Jika perlu perbaikan, kembalikan ke User A.</p>
@@ -262,7 +262,7 @@ if (!function_exists('timeAgo')) {
                             <button type="submit" name="action" value="reject" class="btn btn-danger btn-block" onclick="return confirm('Kembalikan ke User A untuk direvisi?')">Minta Revisi</button>
                         </form>
                     </div>
-                    <?php elseif ($user['role'] === 'C' && $news['status'] === 'pending_c'): ?>
+                    <?php elseif (in_array($user['role'], ['C','E']) && $news['status'] === 'pending_c'): ?>
                     <div class="review-card">
                         <h3>Persetujuan User C</h3>
                         <p>Silakan tinjau berita ini. Jika sudah sesuai, setujui untuk diteruskan ke User D. Jika perlu perbaikan, kembalikan ke User A.</p>
@@ -273,7 +273,7 @@ if (!function_exists('timeAgo')) {
                             <button type="submit" name="action" value="reject" class="btn btn-danger btn-block" onclick="return confirm('Kembalikan ke User A untuk direvisi?')">Minta Revisi</button>
                         </form>
                     </div>
-                    <?php elseif ($user['role'] === 'D' && in_array($news['status'], ['pending_d', 'pending_c'])): ?>
+                    <?php elseif (in_array($user['role'], ['D','E']) && in_array($news['status'], ['pending_d', 'pending_c'])): ?>
                     <div class="review-card">
                         <h3>Persetujuan User D</h3>
                         <p>Silakan tinjau berita ini. Jika sudah sesuai, setujui untuk dipublikasikan.</p>
@@ -286,7 +286,7 @@ if (!function_exists('timeAgo')) {
                     </div>
                     <?php endif; ?>
 
-                    <?php if ($user['role'] === 'D' && $news['status'] === 'published'): ?>
+                    <?php if (in_array($user['role'], ['D','E']) && $news['status'] === 'published'): ?>
                     <div class="review-card" style="border-color:var(--red);background:var(--red-bg)">
                         <h3 style="color:var(--red)">Tarik Berita</h3>
                         <p>Turunkan berita ini dari publikasi jika ada kesalahan fatal.</p>

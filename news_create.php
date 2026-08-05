@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/config/config.php';
-requireRole(['A']);
+requireRole(['A','E']);
 $current = 'create';
 $user = currentUser();
 
