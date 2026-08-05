@@ -2,7 +2,7 @@
 $user = currentUser();
 $unread = countUnreadNotifications($user['id']);
 $current = $current ?? '';
-$roleName = ['A'=>'User A','B'=>'User B','C'=>'User C','D'=>'User D'][$user['role']] ?? '';
+$roleName = userDisplayName($user['role']);
 ?>
 
 <aside class="sidebar" id="appSidebar">

@@ -171,6 +171,16 @@ function e($string) {
     return htmlspecialchars($string ?? '', ENT_QUOTES, 'UTF-8');
 }
 
+function userDisplayName($role) {
+    $labels = [
+        'A' => 'User A',
+        'B' => 'User B',
+        'C' => 'User C',
+        'D' => 'User D',
+    ];
+    return $labels[$role] ?? 'User';
+}
+
 /* =========================================================
    CSRF Helpers
    ========================================================= */
