@@ -1,7 +1,7 @@
 <?php
 $currentView = $_GET['view'] ?? $_GET['media'] ?? $current ?? 'semua';
 $user = currentUser();
-$roleLabel = ['A'=>'Reporter','B'=>'Editor','C'=>'Approver','D'=>'Approver Kejelasan'][$user['role']] ?? 'User';
+$roleLabel = ['A'=>'User A','B'=>'User B','C'=>'User C','D'=>'User D'][$user['role']] ?? 'User';
 $initials = strtoupper(substr($user['full_name'] ?? 'U', 0, 1));
 ?>
 

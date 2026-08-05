@@ -58,6 +58,15 @@ function markAllNotificationsRead($user_id) {
 function updateNewsStatus($news_id, $newStatus, $actor_user_id, $note = null) {
     global $pdo;
 
+    // Safety check to ensure table column supports longer status strings
+    try {
+        static $colAltered = false;
+        if (!$colAltered && isset($pdo)) {
+            $colAltered = true;
+            $pdo->exec("ALTER TABLE news MODIFY COLUMN status VARCHAR(50) NOT NULL DEFAULT 'draft'");
+        }
+    } catch (Exception $e) {}
+
     $stmt = $pdo->prepare("SELECT status FROM news WHERE id = ?");
     $stmt->execute([$news_id]);
     $oldStatus = $stmt->fetchColumn();
@@ -77,10 +86,12 @@ function updateNewsStatus($news_id, $newStatus, $actor_user_id, $note = null) {
 function statusLabel($status) {
     $labels = [
         'draft'      => 'Draft',
-        'pending_b'  => 'Menunggu Review Editor',
-        'revision_b' => 'Perlu Revisi (dari Editor)',
-        'pending_c'  => 'Menunggu Persetujuan Petinggi',
-        'revision_c' => 'Perlu Revisi (dari Petinggi)',
+        'pending_b'  => 'Menunggu Review User B',
+        'revision_b' => 'Perlu Revisi (dari User B)',
+        'pending_c'  => 'Menunggu Persetujuan User C',
+        'revision_c' => 'Perlu Revisi (dari User C)',
+        'pending_d'  => 'Menunggu Persetujuan User D',
+        'revision_d' => 'Perlu Revisi (dari User D)',
         'published'  => 'Sudah Dipublikasikan',
     ];
     return $labels[$status] ?? $status;
@@ -93,6 +104,8 @@ function statusBadgeClass($status) {
         'revision_b' => 'badge-red',
         'pending_c'  => 'badge-blue',
         'revision_c' => 'badge-red',
+        'pending_d'  => 'badge-yellow',
+        'revision_d' => 'badge-red',
         'published'  => 'badge-green',
     ];
     return $classes[$status] ?? 'badge-gray';

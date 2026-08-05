@@ -106,6 +106,31 @@ if (!function_exists('timeAgo')) {
                             <span class="badge" style="border-radius:20px; background:#4A89DC; color:#fff; font-weight:700; padding:2px 10px; font-size:10px;">Publish</span>
                         </div>
 
+                        <?php if ($user['role'] === 'A' && $news['created_by'] == $user['id'] && in_array($news['status'], ['revision_b', 'revision_c', 'revision_d'])): ?>
+                            <?php
+                            $revTarget = match($news['status']) {
+                                'revision_b' => 'User B',
+                                'revision_c' => 'User C',
+                                'revision_d' => 'User D',
+                                default => 'Reviewer'
+                            };
+                            ?>
+                            <div style="background:#fff3cd; border:1px solid #ffeba8; color:#856404; padding:14px 18px; border-radius:10px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                                <div>
+                                    <strong style="font-size:14px; display:block; margin-bottom:2px;">⚠️ Perlu Revisi dari <?= $revTarget ?></strong>
+                                    <span style="font-size:12.5px;">Silakan perbaiki berita ini sesuai catatan review, lalu tekan tombol Selesai Revisi untuk mengirim kembali ke <?= $revTarget ?>.</span>
+                                </div>
+                                <div style="display:flex; gap:8px; align-items:center;">
+                                    <a href="<?= BASE_URL ?>/news_edit.php?id=<?= $id ?>" class="btn btn-primary btn-sm">Edit Berita</a>
+                                    <form action="<?= BASE_URL ?>/resubmit_action.php" method="POST" style="margin:0;">
+                                        <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
+                                        <input type="hidden" name="news_id" value="<?= $id ?>">
+                                        <button type="submit" class="btn btn-success btn-sm" style="background:#27ae60; border-color:#27ae60; color:#fff;">Selesai Revisi (Kirim ke <?= $revTarget ?>)</button>
+                                    </form>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+
                         <h1 class="detail-title"><?= e($news['title']) ?></h1>
                         
                         <div class="detail-meta">
@@ -174,9 +199,9 @@ if (!function_exists('timeAgo')) {
                                             <div class="comment-header">
                                                 <span class="name"><?= e($c['full_name']) ?></span>
                                                 <span class="time"><?= timeAgo($c['created_at']) ?></span>
-                                                <?php if($c['is_correction']): ?><span class="tag-correction">Koreksi</span><?php endif; ?>
+                                                <?php if($c['type']==='correction'): ?><span class="tag-correction">Koreksi</span><?php endif; ?>
                                             </div>
-                                            <div class="comment-text"><?= nl2br(e($c['comment'])) ?></div>
+                                            <div class="comment-text"><?= nl2br(e($c['message'])) ?></div>
                                         </div>
                                     </div>
                                 <?php endforeach; ?>
@@ -187,7 +212,7 @@ if (!function_exists('timeAgo')) {
                             <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
                             <input type="hidden" name="news_id" value="<?= $id ?>">
                             <div class="form-group">
-                                <textarea name="comment" class="form-input" placeholder="Tulis catatan atau instruksi kejelasan..." required></textarea>
+                                <textarea name="message" class="form-input" placeholder="Tulis catatan atau instruksi kejelasan..." required></textarea>
                             </div>
                             <?php if(in_array($user['role'], ['B','C','D'])): ?>
                             <label class="radio-label" style="margin-bottom:12px;display:inline-flex">
@@ -206,24 +231,62 @@ if (!function_exists('timeAgo')) {
 
                 <!-- RIGHT SIDEBAR (REVIEW ACTIONS) -->
                 <div class="detail-sidebar">
-                    <?php 
-                    // Tampilkan kotak action jika user punya hak review
-                    if (($user['role'] === 'B' && $news['status'] === 'pending_b') || 
-                        (in_array($user['role'], ['C', 'D']) && in_array($news['status'], ['pending_c', 'pending_b', 'draft', 'revision_b', 'revision_c']))): 
-                    ?>
+                    <?php if ($user['role'] === 'A' && $news['created_by'] == $user['id'] && in_array($news['status'], ['revision_b', 'revision_c', 'revision_d'])): ?>
+                        <?php
+                        $targetRole = match($news['status']) {
+                            'revision_b' => 'User B',
+                            'revision_c' => 'User C',
+                            'revision_d' => 'User D',
+                            default => 'Reviewer'
+                        };
+                        ?>
+                        <div class="review-card" style="border-color:#27ae60; background:rgba(39,174,96,0.05);">
+                            <h3 style="color:#27ae60;">Selesai Revisi</h3>
+                            <p>Jika Anda sudah selesai melakukan perbaikan berita, klik tombol di bawah untuk mengirim kembali ke <strong><?= $targetRole ?></strong>.</p>
+                            <form action="<?= BASE_URL ?>/resubmit_action.php" method="POST">
+                                <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
+                                <input type="hidden" name="news_id" value="<?= $id ?>">
+                                <button type="submit" class="btn btn-success btn-block" style="background:#27ae60; border-color:#27ae60; color:#fff;">Selesai Revisi &amp; Kirim ke <?= $targetRole ?></button>
+                            </form>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($user['role'] === 'B' && $news['status'] === 'pending_b'): ?>
                     <div class="review-card">
-                        <h3>Tindakan Persetujuan Kejelasan</h3>
-                        <p>Silakan tinjau kejelasan berita ini. Jika sudah sesuai, setujui kejelasan berita untuk dipublikasikan. Jika perlu perbaikan, kembalikan ke Reporter.</p>
+                        <h3>Persetujuan User B</h3>
+                        <p>Silakan tinjau berita ini. Jika sudah sesuai, setujui untuk diteruskan ke User C. Jika perlu perbaikan, kembalikan ke User A.</p>
                         <form action="<?= BASE_URL ?>/review_action.php" method="POST" style="display:flex;flex-direction:column;gap:8px">
                             <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
                             <input type="hidden" name="news_id" value="<?= $id ?>">
-                            <button type="submit" name="action" value="approve" class="btn btn-success btn-block">Setujui Kejelasan &amp; Terbitkan</button>
-                            <button type="submit" name="action" value="reject" class="btn btn-danger btn-block" onclick="return confirm('Kembalikan ke Reporter untuk direvisi?')">Minta Revisi Kejelasan</button>
+                            <button type="submit" name="action" value="approve" class="btn btn-success btn-block">Setujui &amp; Teruskan ke User C</button>
+                            <button type="submit" name="action" value="reject" class="btn btn-danger btn-block" onclick="return confirm('Kembalikan ke User A untuk direvisi?')">Minta Revisi</button>
+                        </form>
+                    </div>
+                    <?php elseif ($user['role'] === 'C' && $news['status'] === 'pending_c'): ?>
+                    <div class="review-card">
+                        <h3>Persetujuan User C</h3>
+                        <p>Silakan tinjau berita ini. Jika sudah sesuai, setujui untuk diteruskan ke User D. Jika perlu perbaikan, kembalikan ke User A.</p>
+                        <form action="<?= BASE_URL ?>/review_action.php" method="POST" style="display:flex;flex-direction:column;gap:8px">
+                            <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
+                            <input type="hidden" name="news_id" value="<?= $id ?>">
+                            <button type="submit" name="action" value="approve" class="btn btn-success btn-block">Setujui &amp; Teruskan ke User D</button>
+                            <button type="submit" name="action" value="reject" class="btn btn-danger btn-block" onclick="return confirm('Kembalikan ke User A untuk direvisi?')">Minta Revisi</button>
+                        </form>
+                    </div>
+                    <?php elseif ($user['role'] === 'D' && in_array($news['status'], ['pending_d', 'pending_c'])): ?>
+                    <div class="review-card">
+                        <h3>Persetujuan User D</h3>
+                        <p>Silakan tinjau berita ini. Jika sudah sesuai, setujui untuk dipublikasikan.</p>
+                        <form action="<?= BASE_URL ?>/review_action.php" method="POST" style="display:flex;flex-direction:column;gap:8px">
+                            <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
+                            <input type="hidden" name="news_id" value="<?= $id ?>">
+                            <button type="submit" name="action" value="approve" class="btn btn-success btn-block">Setujui &amp; Terbitkan</button>
+                            <button type="submit" name="action" value="reject" class="btn btn-danger btn-block" onclick="return confirm('Kembalikan ke User A untuk direvisi?')">Minta Revisi</button>
                         </form>
                     </div>
                     <?php endif; ?>
 
-                    <?php if (in_array($user['role'], ['C', 'D']) && $news['status'] === 'published'): ?>
+                    <?php if ($user['role'] === 'D' && $news['status'] === 'published'): ?>
                     <div class="review-card" style="border-color:var(--red);background:var(--red-bg)">
                         <h3 style="color:var(--red)">Tarik Berita</h3>
                         <p>Turunkan berita ini dari publikasi jika ada kesalahan fatal.</p>

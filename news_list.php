@@ -122,9 +122,9 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                         <?php else: ?>
                             <?php foreach ($newsList as $row): ?>
                             <?php $isPublished = $row['status'] === 'published'; ?>
-                            <tr>
+                            <tr style="cursor:pointer;" onclick="window.location='<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>'">
                                 <td class="col-subject <?= $isPublished ? 'subject-approved' : 'subject-unapproved' ?>">
-                                    <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>">
+                                    <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>" onclick="event.stopPropagation()">
                                         <?= e($row['title']) ?>
                                     </a>
                                 </td>
@@ -146,20 +146,44 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                                     ?>
                                     <span class="pill <?= $cls ?>"><?= e($row['sentiment'] ?? 'Netral') ?></span>
                                 </td>
-                                <td>
+                                <td onclick="event.stopPropagation()">
                                     <?php if (in_array($user['role'], ['A','B','C','D'])): ?>
                                         <div style="display:inline-flex;gap:6px;flex-wrap:wrap;align-items:center;">
-                                            <?php if (($user['role'] === 'A' && $row['created_by'] === $user['id'] && in_array($row['status'], ['draft','pending_b','revision_b','revision_c'])) || $user['role'] === 'D'): ?>
-                                                <a href="<?= BASE_URL ?>/news_edit.php?id=<?= $row['id'] ?>" class="btn btn-primary btn-sm">Edit</a>
+                                            <?php if ($user['role'] === 'A' && $row['created_by'] === $user['id']): ?>
+                                                <?php if (in_array($row['status'], ['draft','pending_b','revision_b','revision_c','revision_d'])): ?>
+                                                    <a href="<?= BASE_URL ?>/news_edit.php?id=<?= $row['id'] ?>" class="btn btn-primary btn-sm">Edit</a>
+                                                <?php endif; ?>
+                                                <?php if (in_array($row['status'], ['revision_b','revision_c','revision_d'])): ?>
+                                                    <form method="POST" action="<?= BASE_URL ?>/resubmit_action.php" style="display:inline;margin:0;">
+                                                        <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
+                                                        <input type="hidden" name="news_id" value="<?= $row['id'] ?>">
+                                                        <button type="submit" class="btn btn-success btn-sm" style="background:#27ae60;color:#fff;" title="Kirim ulang hasil revisi">Selesai Revisi</button>
+                                                    </form>
+                                                <?php endif; ?>
+                                                <form method="POST" action="<?= BASE_URL ?>/news_delete.php" onsubmit="return confirm('Yakin ingin menghapus berita ini?');" style="display:inline;margin:0;">
+                                                    <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
+                                                    <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                                                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                                </form>
                                             <?php endif; ?>
-                                            <?php if (in_array($user['role'], ['C','D']) && in_array($row['status'], ['pending_c','pending_b','draft','revision_b','revision_c'])): ?>
-                                                <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>" class="btn btn-success btn-sm" style="background:#27ae60;color:#fff;">Setujui Kejelasan</a>
+
+                                            <?php if ($user['role'] === 'B' && $row['status'] === 'pending_b'): ?>
+                                                <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>" class="btn btn-success btn-sm" style="background:#27ae60;color:#fff;">Review B</a>
                                             <?php endif; ?>
-                                            <form method="POST" action="<?= BASE_URL ?>/news_delete.php" onsubmit="return confirm('Yakin ingin menghapus berita ini?');" style="display:inline;margin:0;">
-                                                <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
-                                                <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                                                <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                                            </form>
+
+                                            <?php if ($user['role'] === 'C' && $row['status'] === 'pending_c'): ?>
+                                                <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>" class="btn btn-success btn-sm" style="background:#27ae60;color:#fff;">Setujui</a>
+                                                <form method="POST" action="<?= BASE_URL ?>/review_action.php" onsubmit="return confirm('Minta revisi dari User A?');" style="display:inline;margin:0;">
+                                                    <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
+                                                    <input type="hidden" name="news_id" value="<?= $row['id'] ?>">
+                                                    <input type="hidden" name="action" value="reject">
+                                                    <button type="submit" class="btn btn-danger btn-sm">Tolak</button>
+                                                </form>
+                                            <?php endif; ?>
+
+                                            <?php if ($user['role'] === 'D' && in_array($row['status'], ['pending_d', 'pending_c'])): ?>
+                                                <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>" class="btn btn-success btn-sm" style="background:#27ae60;color:#fff;">Setujui</a>
+                                            <?php endif; ?>
                                         </div>
                                     <?php else: ?>
                                         -

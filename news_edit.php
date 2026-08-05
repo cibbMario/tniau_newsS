@@ -25,7 +25,7 @@ if (!$isAuthorA && !$isUserD) {
     die("Anda tidak memiliki akses untuk mengedit berita ini.");
 }
 
-if (!in_array($news['status'], ['draft', 'pending_b', 'pending_c', 'revision_b', 'revision_c', 'published'])) {
+if (!in_array($news['status'], ['draft', 'pending_b', 'pending_c', 'pending_d', 'revision_b', 'revision_c', 'revision_d', 'published'])) {
     die("Berita ini tidak dapat diedit.");
 }
 
@@ -92,6 +92,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_news'])) {
             }
 
             $success = "Berita berhasil diperbarui.";
+
+            if ($isAuthorA && !empty($_POST['resubmit_after_edit'])) {
+                $curStat = $news['status'];
+                if ($curStat === 'revision_b') {
+                    updateNewsStatus($id, 'pending_b', $user['id'], 'User A telah menyelesaikan revisi dan mengirim ulang ke User B');
+                    foreach ($pdo->query("SELECT id FROM users WHERE role = 'B'")->fetchAll() as $uTarget) {
+                        sendNotification($id, $uTarget['id'], "Berita \"$title\" telah direvisi oleh User A dan memerlukan review ulang User B.");
+                    }
+                    $success = "Berita berhasil diperbarui dan dikirim ulang ke User B.";
+                } elseif ($curStat === 'revision_c') {
+                    updateNewsStatus($id, 'pending_c', $user['id'], 'User A telah menyelesaikan revisi dan mengirim ulang ke User C');
+                    foreach ($pdo->query("SELECT id FROM users WHERE role = 'C'")->fetchAll() as $uTarget) {
+                        sendNotification($id, $uTarget['id'], "Berita \"$title\" telah direvisi oleh User A dan memerlukan persetujuan ulang User C.");
+                    }
+                    $success = "Berita berhasil diperbarui dan dikirim ulang ke User C.";
+                } elseif ($curStat === 'revision_d') {
+                    updateNewsStatus($id, 'pending_d', $user['id'], 'User A telah menyelesaikan revisi dan mengirim ulang ke User D');
+                    foreach ($pdo->query("SELECT id FROM users WHERE role = 'D'")->fetchAll() as $uTarget) {
+                        sendNotification($id, $uTarget['id'], "Berita \"$title\" telah direvisi oleh User A dan memerlukan persetujuan ulang User D.");
+                    }
+                    $success = "Berita berhasil diperbarui dan dikirim ulang ke User D.";
+                }
+            }
+
             $stmt = $pdo->prepare("SELECT * FROM news WHERE id = ?");
             $stmt->execute([$id]);
             $news = $stmt->fetch();
@@ -706,9 +730,23 @@ $gallery = $images->fetchAll();
                                 <input type="text" name="keyword" class="chip-input-field" placeholder="Keyword" value="<?= e($news['keyword'] ?? '') ?>">
                             </div>
 
-                            <button type="submit" class="btn-save-blue" onclick="prepareSubmit()">
+                            <button type="submit" name="update_news" value="1" class="btn-save-blue" onclick="prepareSubmit()">
                                 💾 Simpan
                             </button>
+
+                            <?php if ($isAuthorA && in_array($news['status'], ['revision_b', 'revision_c', 'revision_d'])): ?>
+                                <?php
+                                $targetRoleName = match($news['status']) {
+                                    'revision_b' => 'User B',
+                                    'revision_c' => 'User C',
+                                    'revision_d' => 'User D',
+                                    default => 'Reviewer'
+                                };
+                                ?>
+                                <button type="submit" name="resubmit_after_edit" value="1" class="btn-save-blue" style="background:#27ae60; margin-top:8px;" onclick="prepareSubmit()">
+                                    ✅ Simpan &amp; Selesai Revisi (Kirim ke <?= $targetRoleName ?>)
+                                </button>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
