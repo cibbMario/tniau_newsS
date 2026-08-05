@@ -14,42 +14,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $fullName = trim($_POST['full_name'] ?? '');
+    $fullName = userDisplayName($user['role']);
     $oldPass  = $_POST['old_password'] ?? '';
     $newPass  = $_POST['new_password'] ?? '';
 
-    if (!$fullName) {
-        $error = "Nama Lengkap wajib diisi.";
-    } else {
-        try {
-            // Update nama
-            $stmt = $pdo->prepare("UPDATE users SET full_name = ? WHERE id = ?");
-            $stmt->execute([$fullName, $user['id']]);
-            $success = "Profil berhasil diperbarui.";
-            $_SESSION['user']['full_name'] = $fullName;
-            $user['full_name'] = $fullName;
+    try {
+        $stmt = $pdo->prepare("UPDATE users SET full_name = ? WHERE id = ?");
+        $stmt->execute([$fullName, $user['id']]);
+        $_SESSION['full_name'] = $fullName;
+        $user['full_name'] = $fullName;
 
-            // Update password jika diisi
-            if ($oldPass && $newPass) {
-                // Verifikasi old pass
-                $stmt = $pdo->prepare("SELECT password FROM users WHERE id = ?");
-                $stmt->execute([$user['id']]);
-                $dbPass = $stmt->fetchColumn();
+        if ($oldPass && $newPass) {
+            $stmt = $pdo->prepare("SELECT password_hash FROM users WHERE id = ?");
+            $stmt->execute([$user['id']]);
+            $dbPass = $stmt->fetchColumn();
 
-                if (password_verify($oldPass, $dbPass)) {
-                    $newHash = password_hash($newPass, PASSWORD_DEFAULT);
-                    $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
-                    $stmt->execute([$newHash, $user['id']]);
-                    $success = "Profil dan Password berhasil diperbarui.";
-                } else {
-                    $error = "Password lama tidak sesuai.";
-                }
-            } elseif ($oldPass || $newPass) {
-                $error = "Untuk mengganti password, isi password lama dan baru.";
+            if (password_verify($oldPass, $dbPass)) {
+                $newHash = password_hash($newPass, PASSWORD_DEFAULT);
+                $stmt = $pdo->prepare("UPDATE users SET password_hash = ? WHERE id = ?");
+                $stmt->execute([$newHash, $user['id']]);
+                $success = "Profil dan Password berhasil diperbarui.";
+            } else {
+                $error = "Password lama tidak sesuai.";
             }
-        } catch (Exception $e) {
-            $error = "Gagal mengupdate profil.";
+        } elseif ($oldPass || $newPass) {
+            $error = "Untuk mengganti password, isi password lama dan baru.";
+        } else {
+            $success = "Profil berhasil diperbarui.";
         }
+    } catch (Exception $e) {
+        $error = "Gagal mengupdate profil.";
     }
 }
 ?>
@@ -231,8 +225,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <input type="text" value="<?= e(['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver','D'=>'Approver Kejelasan'][$user['role']] ?? 'User') ?>" readonly>
                         </div>
                         <div class="profile-form-row">
-                            <label>Nama Lengkap</label>
-                            <input type="text" name="full_name" value="<?= e($user['full_name']) ?>" required>
+                            <label>Nama Tampilan</label>
+                            <input type="text" value="<?= e($user['full_name']) ?>" readonly>
                         </div>
 
                         <div class="profile-divider"></div>

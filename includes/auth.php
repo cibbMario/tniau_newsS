@@ -19,7 +19,7 @@ function login($username, $password) {
         session_regenerate_id(true);
         $_SESSION['user_id']    = $user['id'];
         $_SESSION['username']   = $user['username'];
-        $_SESSION['full_name']  = $user['full_name'];
+        $_SESSION['full_name']  = userDisplayName($user['role']);
         $_SESSION['role']       = $user['role'];
         $_SESSION['login_time'] = time();
         $_SESSION['last_activity'] = time();
@@ -83,7 +83,7 @@ function currentUser() {
     return [
         'id'        => $_SESSION['user_id']   ?? null,
         'username'  => $_SESSION['username']  ?? null,
-        'full_name' => $_SESSION['full_name'] ?? null,
+        'full_name' => userDisplayName($_SESSION['role'] ?? null),
         'role'      => $_SESSION['role']      ?? null,
     ];
 }
