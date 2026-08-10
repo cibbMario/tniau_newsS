@@ -20,6 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $wilayah  = trim($_POST['wilayah'] ?? 'Lanud Atang Sendjaja');
     $media    = trim($_POST['media'] ?? 'Wilayah');
     $published_at = !empty($_POST['published_at']) ? $_POST['published_at'] : null;
+    $aktor    = trim($_POST['aktor'] ?? '');
+    $tag      = trim($_POST['tag'] ?? '');
+    $topik    = trim($_POST['topik'] ?? '');
+    $keyword  = trim($_POST['keyword'] ?? '');
 
     if (!$title) {
         $error = 'Judul berita wajib diisi.';
@@ -31,20 +35,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $slug = generateSlug($title);
             $status = ($action === 'submit') ? 'pending_b' : 'draft';
 
-            $stmt = $pdo->prepare("
+            $stmt = $pdo->prepare(" 
                 INSERT INTO news (
                     title, slug, content, image_path, status, sentiment, priority,
-                    classification, wilayah, tempat, media, author_label,
+                    classification, wilayah, tempat, media, aktor, tag, topik, keyword, author_label,
                     created_by, created_at, published_at
                 ) VALUES (
                     ?, ?, ?, ?, ?, 'Positif', 'Medium',
-                    '9. Tni au', ?, ?, ?, 'PEN ATS',
+                    '9. Tni au', ?, ?, ?, ?, ?, ?, ?, 'PEN ATS',
                     ?, NOW(), ?
                 )
             ");
             $stmt->execute([
                 $title, $slug, $content, $imagePath, $status,
-                $wilayah, $wilayah, $media,
+                $wilayah, $wilayah, $media, $aktor, $tag, $topik, $keyword,
                 $user['id'], $published_at
             ]);
             $newsId = $pdo->lastInsertId();
@@ -134,16 +138,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
                                 <div class="form-group">
                                     <label for="wilayah">Wilayah / Satuan</label>
-                                    <select id="wilayah" name="wilayah" class="form-input">
-                                        <option value="Lanud Atang Sendjaja">Lanud Atang Sendjaja</option>
-                                        <option value="Lanud Halim Perdanakusuma">Lanud Halim Perdanakusuma</option>
-                                        <option value="Lanud Husein Sastranegara">Lanud Husein Sastranegara</option>
-                                        <option value="Lanud Iswahjudi">Lanud Iswahjudi</option>
-                                        <option value="Lanud Supadio">Lanud Supadio</option>
-                                        <option value="Lanud Sultan Hasanuddin">Lanud Sultan Hasanuddin</option>
-                                        <option value="Lanud Dhomber">Lanud Dhomber</option>
-                                        <option value="Mabes TNI AU">Mabes TNI AU</option>
-                                    </select>
+                                    <?php
+                                    include_once __DIR__ . '/includes/lanud_list.php';
+                                    $selectedWilayah = $_POST['wilayah'] ?? 'Lanud Atang Sendjaja';
+                                    echo render_lanud_select('wilayah', $selectedWilayah, 'id="wilayah" class="form-input"');
+                                    ?>
                                 </div>
                                 <div class="form-group">
                                     <label for="media">Sumber Media</label>

@@ -701,11 +701,11 @@ $gallery = $images->fetchAll();
                                 <option value="9. Tni au" <?= $news['classification']==='9. Tni au'?'selected':'' ?>>9. Tni au</option>
                             </select>
 
-                            <select name="wilayah" class="sidebar-select">
-                                <option value="<?= e($news['wilayah']) ?>"><?= e($news['wilayah']) ?></option>
-                                <option value="Lanud Atang Sendjaja" <?= $news['wilayah']==='Lanud Atang Sendjaja'?'selected':'' ?>>Lanud Atang Sendjaja</option>
-                                <option value="Lanud Halim Perdanakusuma" <?= $news['wilayah']==='Lanud Halim Perdanakusuma'?'selected':'' ?>>Lanud Halim Perdanakusuma</option>
-                            </select>
+                            <?php
+                            include_once __DIR__ . '/includes/lanud_list.php';
+                            $selectedWilayah = $_POST['wilayah'] ?? $news['wilayah'];
+                            echo render_lanud_select('wilayah', $selectedWilayah, 'class="sidebar-select"');
+                            ?>
 
                             <label class="sidebar-label">Sentimen</label>
                             <div class="sidebar-radio-group">
