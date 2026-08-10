@@ -34,15 +34,15 @@ $roleName = userDisplayName($user['role']);
         <?php if (in_array($user['role'], ['A','E'])):
             $draftCount = countDraftsForUser($user['id']);
         ?>
-        <?php if ($draftCount > 0): ?>
         <a href="<?= BASE_URL ?>/news_list.php?status=draft" class="<?= $current === 'draft' ? 'active' : '' ?>">
             <span class="icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><path d="M9 7h6M9 11h6M9 15h3"/></svg>
             </span>
             <span class="label">Draft Berita</span>
-            <span class="badge badge-gray" style="margin-left:auto;font-size:10px;padding:3px 7px;min-width:20px;text-align:center"><?= $draftCount ?></span>
+            <?php if ($draftCount > 0): ?>
+                <span class="badge badge-gray" style="margin-left:auto;font-size:10px;padding:3px 7px;min-width:20px;text-align:center"><?= $draftCount ?></span>
+            <?php endif; ?>
         </a>
-        <?php endif; ?>
         <?php endif; ?>
         
         <!-- 2. Accordion: Dashboard -->

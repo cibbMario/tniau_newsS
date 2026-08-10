@@ -114,6 +114,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_news'])) {
                         sendNotification($id, $uTarget['id'], "Berita \"$title\" telah direvisi oleh User A dan memerlukan persetujuan ulang User D.");
                     }
                     $success = "Berita berhasil diperbarui dan dikirim ulang ke User D.";
+                } elseif ($curStat === 'draft') {
+                    updateNewsStatus($id, 'pending_b', $user['id'], 'User A telah menyelesaikan berita draft dan mengirim ke User B untuk direview');
+                    foreach ($pdo->query("SELECT id FROM users WHERE role = 'B'")->fetchAll() as $uTarget) {
+                        sendNotification($id, $uTarget['id'], "Berita baru \"$title\" telah selesai dibuat dan dikirim oleh User A untuk direview.");
+                    }
+                    $_SESSION['flash_success'] = "Berita \"$title\" berhasil dikirim ke User B untuk direview.";
+                    header("Location: " . BASE_URL . "/news_list.php");
+                    exit;
                 }
             }
 
@@ -458,6 +466,27 @@ $gallery = $images->fetchAll();
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(74, 137, 220, 0.3);
         }
+        .btn-selesai {
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.3px;
+        }
+        .btn-selesai::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        .btn-selesai:hover::before {
+            left: 100%;
+        }
+        .btn-selesai:hover {
+            background: linear-gradient(135deg, #1e8449, #145a32) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.45) !important;
+        }
         
         /* Smooth animations */
         .form-input, .sidebar-select, .chip-input-container {
@@ -734,6 +763,12 @@ $gallery = $images->fetchAll();
                             <button type="submit" name="update_news" value="1" class="btn-save-blue" onclick="prepareSubmit()">
                                 💾 Simpan
                             </button>
+
+                            <?php if ($isAuthorA && $news['status'] === 'draft'): ?>
+                                <button type="submit" name="resubmit_after_edit" value="1" class="btn-save-blue btn-selesai" style="background: linear-gradient(135deg, #27ae60, #1e8449); margin-top:8px; width:100%; justify-content:center; box-shadow: 0 4px 15px rgba(39,174,96,0.35);" onclick="prepareSubmit()">
+                                    ✅ Selesai &amp; Kirim ke User B
+                                </button>
+                            <?php endif; ?>
 
                             <?php if ($isAuthorA && in_array($news['status'], ['revision_b', 'revision_c', 'revision_d'])): ?>
                                 <?php

@@ -107,6 +107,14 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
             </div>
             <?php endif; ?>
 
+            <?php if (!empty($_SESSION['flash_success'])): ?>
+                <div style="background:#eafaf1;color:#1e8449;padding:12px 16px;border-radius:6px;margin-bottom:16px;border:1px solid rgba(39,174,96,.2);display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:500;">
+                    <span style="font-size:16px;">✅</span>
+                    <?= e($_SESSION['flash_success']) ?>
+                </div>
+                <?php unset($_SESSION['flash_success']); ?>
+            <?php endif; ?>
+
             <!-- NEWS TABLE -->
             <div class="news-table-wrap">
                 <div class="table-responsive">
