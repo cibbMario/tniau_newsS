@@ -144,8 +144,8 @@ if (!function_exists('timeAgo')) {
                             <?php endif; ?>
                         </div>
 
-                        <?php if (!empty($news['image'] ?? '')): ?>
-                            <img src="<?= UPLOAD_URL . e($news['image']) ?>" alt="Gambar Berita" class="detail-img">
+                        <?php if (!empty($news['image_path'] ?? '')): ?>
+                            <img src="<?= UPLOAD_URL . e($news['image_path']) ?>" alt="Gambar Berita" class="detail-img">
                         <?php endif; ?>
 
                         <div class="detail-body">
