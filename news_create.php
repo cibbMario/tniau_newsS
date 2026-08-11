@@ -24,6 +24,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tag      = trim($_POST['tag'] ?? '');
     $topik    = trim($_POST['topik'] ?? '');
     $keyword  = trim($_POST['keyword'] ?? '');
+    $sentiment      = $_POST['sentiment'] ?? 'Positif';
+    $priority       = $_POST['priority'] ?? 'Medium';
+    $classification = trim($_POST['classification'] ?? '9. Tni au');
+    $tempat         = trim($_POST['tempat'] ?? '');
 
     if (!$title) {
         $error = 'Judul berita wajib diisi.';
@@ -34,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $imagePath = uploadNewsImage('image');
             $slug = generateSlug($title);
             $status = ($action === 'submit') ? 'pending_b' : 'draft';
+            $author_label = getLanudInitials($wilayah);
 
             $stmt = $pdo->prepare(" 
                 INSERT INTO news (
@@ -41,14 +46,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     classification, wilayah, tempat, media, aktor, tag, topik, keyword, author_label,
                     created_by, created_at, published_at
                 ) VALUES (
-                    ?, ?, ?, ?, ?, 'Positif', 'Medium',
-                    '9. Tni au', ?, ?, ?, ?, ?, ?, ?, 'PEN ATS',
+                    ?, ?, ?, ?, ?, ?, ?,
+                    ?, ?, ?, ?, ?, ?, ?, ?, ?,
                     ?, NOW(), ?
                 )
             ");
             $stmt->execute([
-                $title, $slug, $content, $imagePath, $status,
-                $wilayah, $wilayah, $media, $aktor, $tag, $topik, $keyword,
+                $title, $slug, $content, $imagePath, $status, $sentiment, $priority,
+                $classification, $wilayah, $tempat, $media, $aktor, $tag, $topik, $keyword, $author_label,
                 $user['id'], $published_at
             ]);
             $newsId = $pdo->lastInsertId();
