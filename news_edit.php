@@ -33,7 +33,7 @@ if (!in_array($news['status'], ['draft', 'pending_b', 'pending_c', 'pending_d', 
 $error = '';
 $success = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {    
     $token = $_POST['csrf_token'] ?? '';
     if (!verify_csrf_token($token)) {
         header("Location: " . BASE_URL . "/news_list.php");
