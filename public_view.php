@@ -41,73 +41,6 @@ function getSentimentBadgeClass($sentiment) {
     <title><?= e($title) ?> — Portal Berita Resmi TNI AU</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css?v=<?= time() ?>">
     <style>
-        /* Reader Custom Aesthetics */
-        .public-navbar {
-            background: linear-gradient(90deg, #091a30 0%, #0d2342 100%);
-            border-bottom: 2px solid var(--gold);
-            padding: 10px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(10px);
-        }
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #fff;
-            text-decoration: none;
-        }
-        .navbar-brand img {
-            width: 48px;
-            height: 48px;
-            object-fit: contain;
-        }
-        .navbar-brand-text h1 {
-            font-size: 15px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            margin: 0;
-            text-transform: uppercase;
-        }
-        .navbar-brand-text p {
-            font-size: 10px;
-            color: var(--gold);
-            margin: 0;
-            font-weight: 500;
-        }
-        .navbar-menu {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .navbar-menu a {
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 12px;
-            font-weight: 500;
-            transition: color var(--transition);
-        }
-        .navbar-menu a:hover {
-            color: var(--gold-shine);
-        }
-        .btn-login-cta {
-            background: var(--gold);
-            color: #0b2545 !important;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: 600 !important;
-            box-shadow: 0 4px 10px rgba(201, 162, 39, 0.3);
-            transition: all var(--transition) !important;
-        }
-        .btn-login-cta:hover {
-            background: var(--gold-shine);
-            transform: translateY(-2px);
-        }
-
         .public-container {
             max-width: 900px;
             margin: 0 auto;
@@ -286,31 +219,7 @@ function getSentimentBadgeClass($sentiment) {
             max-width: 600px;
         }
 
-        .public-footer {
-            background: #091a30;
-            color: rgba(255, 255, 255, 0.7);
-            text-align: center;
-            padding: 30px 20px;
-            font-size: 12px;
-            border-top: 4px solid var(--gold);
-            margin-top: auto;
-        }
-        .public-footer-brand {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 14px;
-        }
-        .public-footer-brand img {
-            width: 36px;
-            height: 36px;
-        }
-        .public-footer-brand span {
-            color: #fff;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
+        /* Unified public footer styling is in style.css */
 
         @media (max-width: 768px) {
             .article-card {
@@ -329,19 +238,7 @@ function getSentimentBadgeClass($sentiment) {
 <body style="min-height: 100vh; display: flex; flex-direction: column; background: linear-gradient(145deg, #deeeff 0%, #edf4ff 40%, #e8f0fc 100%);">
 
     <!-- NAVBAR -->
-    <header class="public-navbar">
-        <a href="<?= BASE_URL ?>/" class="navbar-brand">
-            <img src="<?= BASE_URL ?>/assets/img/logo-tniau.png" alt="Logo TNI AU" onerror="this.src='<?= BASE_URL ?>/assets/img/logo-new.png'">
-            <div class="navbar-brand-text">
-                <h1>TNI Angkatan Udara</h1>
-                <p>Portal Publikasi &amp; Berita Resmi</p>
-            </div>
-        </a>
-        <nav class="navbar-menu">
-            <a href="<?= BASE_URL ?>/">Beranda</a>
-            <a href="<?= BASE_URL ?>/login.php" class="btn-login-cta">Masuk Sistem</a>
-        </nav>
-    </header>
+    <?php include __DIR__ . '/includes/public_navbar.php'; ?>
 
     <!-- CONTENT -->
     <main class="public-container">
@@ -441,13 +338,7 @@ function getSentimentBadgeClass($sentiment) {
     </main>
 
     <!-- FOOTER -->
-    <footer class="public-footer">
-        <div class="public-footer-brand">
-            <img src="<?= BASE_URL ?>/assets/img/logo-tniau.png" alt="Logo TNI AU" onerror="this.src='<?= BASE_URL ?>/assets/img/logo-new.png'">
-            <span>Tentara Nasional Indonesia Angkatan Udara</span>
-        </div>
-        <p style="margin: 0; font-size: 11px;">Hak Cipta &copy; 2026 TNI AU. All rights reserved.</p>
-    </footer>
+    <?php include __DIR__ . '/includes/public_footer.php'; ?>
 
 </body>
 </html>

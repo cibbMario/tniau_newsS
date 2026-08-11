@@ -2025,3 +2025,375 @@ textarea.form-input { resize: vertical; min-height: 80px; }
         transition-duration: 0.01ms !important;
     }
 }
+
+/* ============================================================
+   PUBLIC PORTAL NAVIGATION & FOOTER (PREMIUM DESIGN)
+   ============================================================ */
+
+html {
+    scrollbar-gutter: stable; /* Prevent horizontal jumping when scrollbar shows/hides */
+}
+
+/* Scroll Lock on Mobile Menu Open */
+body.menu-open {
+    overflow: hidden;
+}
+
+/* Sticky Navbar Glassmorphism */
+.public-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(9, 26, 48, 0.90);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 2px solid var(--gold);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+    padding: 14px 0;
+    transition: padding 0.3s var(--transition), background 0.3s var(--transition), box-shadow 0.3s var(--transition);
+}
+
+/* Scrolling animation effect */
+.public-navbar.scrolled {
+    padding: 8px 0;
+    background: rgba(6, 17, 32, 0.96);
+    box-shadow: 0 8px 32px rgba(5, 15, 28, 0.25);
+    border-bottom: 2px solid var(--gold-shine);
+}
+
+.navbar-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    transition: transform var(--transition);
+}
+
+.navbar-brand:hover {
+    transform: translateY(-1px);
+}
+
+.navbar-logo {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+    transition: transform var(--transition-bounce);
+}
+
+.navbar-brand:hover .navbar-logo {
+    transform: rotate(5deg) scale(1.05);
+}
+
+.navbar-brand-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-title {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    line-height: 1.2;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #ffffff 0%, #edf4ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: #ffffff;
+}
+
+.brand-subtitle {
+    font-size: 9px;
+    color: var(--gold-shine);
+    margin-top: 2px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+/* Nav Menu */
+.navbar-menu {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    transition: all 0.3s var(--transition);
+}
+
+.menu-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-size: 12.5px;
+    font-weight: 600;
+    transition: color var(--transition);
+    position: relative;
+    padding: 8px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.menu-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--gold-shine);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform var(--transition);
+}
+
+.menu-link:hover {
+    color: #ffffff !important;
+}
+
+.menu-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+.menu-link.active {
+    color: var(--gold-shine) !important;
+    font-weight: 700;
+}
+
+.menu-link.active::after {
+    transform: scaleX(1);
+    background-color: var(--gold-shine);
+}
+
+/* External Link */
+.external-icon {
+    opacity: 0.6;
+    transition: transform var(--transition), opacity var(--transition);
+}
+
+.menu-link:hover .external-icon {
+    opacity: 1;
+    transform: translate(2px, -2px);
+}
+
+/* Premium Login Button CTA */
+.btn-login-cta {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+    color: #0b2545 !important;
+    padding: 9px 22px;
+    border-radius: 30px;
+    font-weight: 700 !important;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 15px rgba(201, 162, 39, 0.3);
+    text-transform: uppercase;
+    font-size: 11.5px;
+    letter-spacing: 0.6px;
+    transition: all var(--transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-login-cta:hover {
+    background: linear-gradient(135deg, var(--gold-shine) 0%, var(--gold) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(201, 162, 39, 0.45), 0 0 0 3px rgba(201, 162, 39, 0.15);
+    color: #0b2545 !important;
+}
+
+.btn-login-cta:active {
+    transform: translateY(0);
+}
+
+/* Hamburger Toggle Button */
+.navbar-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    z-index: 1002;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.navbar-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.toggle-icon {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: #ffffff;
+    position: relative;
+    transition: background 0.3s;
+}
+
+.toggle-icon::before,
+.toggle-icon::after {
+    content: '';
+    position: absolute;
+    width: 22px;
+    height: 2px;
+    background: #ffffff;
+    left: 0;
+    transition: all 0.3s;
+}
+
+.toggle-icon::before { top: -6px; }
+.toggle-icon::after { top: 6px; }
+
+/* Hamburger Open States */
+.navbar-toggle.active .toggle-icon {
+    background: transparent;
+}
+
+.navbar-toggle.active .toggle-icon::before {
+    transform: rotate(45deg);
+    top: 0;
+}
+
+.navbar-toggle.active .toggle-icon::after {
+    transform: rotate(-45deg);
+    top: 0;
+}
+
+/* Premium Footer */
+.public-footer {
+    background: linear-gradient(180deg, #091a30 0%, #050f1c 100%);
+    color: rgba(255, 255, 255, 0.65);
+    padding: 48px 24px 32px 24px;
+    border-top: 4px solid var(--gold);
+    margin-top: auto;
+    box-shadow: 0 -8px 32px rgba(9, 26, 48, 0.15);
+}
+
+.public-footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+}
+
+.public-footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    text-align: left;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.footer-logo {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+}
+
+.footer-brand-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-title {
+    color: #ffffff;
+    font-size: 14.5px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+}
+
+.footer-subtitle {
+    color: var(--gold-shine);
+    font-size: 10px;
+    font-weight: 500;
+    margin-top: 4px;
+    letter-spacing: 0.4px;
+}
+
+.footer-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08) 20%, rgba(255, 255, 255, 0.08) 80%, transparent);
+    margin-bottom: 24px;
+}
+
+.footer-copyright {
+    font-size: 11px;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.40);
+    letter-spacing: 0.3px;
+}
+
+/* Media Queries for Public Layout Mobile responsiveness */
+@media (max-width: 768px) {
+    .navbar-toggle {
+        display: block;
+    }
+    
+    .navbar-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 290px;
+        height: 100vh;
+        background: linear-gradient(180deg, #091a30 0%, #0d2342 100%);
+        box-shadow: -10px 0 35px rgba(5, 15, 28, 0.45);
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        padding: 96px 36px 36px 36px;
+        gap: 16px;
+        z-index: 1001;
+        transition: right 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .navbar-menu.active {
+        right: 0;
+    }
+    
+    .menu-link {
+        font-size: 14px;
+        width: 100%;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .menu-link::after {
+        display: none;
+    }
+    
+    .btn-login-cta {
+        margin-top: 14px;
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(201, 162, 39, 0.2);
+    }
+    
+    .public-footer-brand {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 12px;
+    }
+}
+

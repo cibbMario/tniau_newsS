@@ -1,4 +1,4 @@
-x<?php
+<?php
 require_once __DIR__ . '/config/config.php';
 
 // Guest view: No authentication required
@@ -54,77 +54,13 @@ function getSentimentBadgeClass($sentiment) {
     <title>Portal Berita Resmi TNI Angkatan Udara</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css?v=<?= time() ?>">
     <style>
-        /* Public Portal Custom Aesthetics */
-        .public-navbar {
-            background: linear-gradient(90deg, #091a30 0%, #0d2342 100%);
-            border-bottom: 2px solid var(--gold);
-            padding: 10px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(10px);
-        }
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #fff;
-            text-decoration: none;
-        }
-        .navbar-brand img {
-            width: 48px;
-            height: 48px;
-            object-fit: contain;
-        }
-        .navbar-brand-text h1 {
-            font-size: 15px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            margin: 0;
-            text-transform: uppercase;
-        }
-        .navbar-brand-text p {
-            font-size: 10px;
-            color: var(--gold);
-            margin: 0;
-            font-weight: 500;
-        }
-        .navbar-menu {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .navbar-menu a {
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 12px;
-            font-weight: 500;
-            transition: color var(--transition);
-        }
-        .navbar-menu a:hover {
-            color: var(--gold-shine);
-        }
-        .btn-login-cta {
-            background: var(--gold);
-            color: #0b2545 !important;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: 600 !important;
-            box-shadow: 0 4px 10px rgba(201, 162, 39, 0.3);
-            transition: all var(--transition) !important;
-        }
-        .btn-login-cta:hover {
-            background: var(--gold-shine);
-            transform: translateY(-2px);
-        }
-
         .public-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 24px;
+        }
+        #featuredContainer, #newsGridContainer {
+            transition: opacity 0.22s ease-in-out;
         }
 
         /* Hero / Featured Article */
@@ -379,31 +315,7 @@ function getSentimentBadgeClass($sentiment) {
             grid-column: 1 / -1;
         }
 
-        .public-footer {
-            background: #091a30;
-            color: rgba(255, 255, 255, 0.7);
-            text-align: center;
-            padding: 30px 20px;
-            font-size: 12px;
-            border-top: 4px solid var(--gold);
-            margin-top: auto;
-        }
-        .public-footer-brand {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 14px;
-        }
-        .public-footer-brand img {
-            width: 36px;
-            height: 36px;
-        }
-        .public-footer-brand span {
-            color: #fff;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
+        /* Unified public footer styling is in style.css */
 
         @media (max-width: 768px) {
             .hero-section {
@@ -431,48 +343,38 @@ function getSentimentBadgeClass($sentiment) {
 <body style="min-height: 100vh; display: flex; flex-direction: column; background: linear-gradient(145deg, #deeeff 0%, #edf4ff 40%, #e8f0fc 100%);">
 
     <!-- NAVBAR -->
-    <header class="public-navbar">
-        <a href="<?= BASE_URL ?>/" class="navbar-brand">
-            <img src="<?= BASE_URL ?>/assets/img/logo-tniau.png" alt="Logo TNI AU" onerror="this.src='<?= BASE_URL ?>/assets/img/logo-new.png'">
-            <div class="navbar-brand-text">
-                <h1>TNI Angkatan Udara</h1>
-                <p>Portal Publikasi &amp; Berita Resmi</p>
-            </div>
-        </a>
-        <nav class="navbar-menu">
-            <a href="<?= BASE_URL ?>/">Beranda</a>
-            <a href="<?= BASE_URL ?>/login.php" class="btn-login-cta">Masuk Sistem</a>
-        </nav>
-    </header>
+    <?php include __DIR__ . '/includes/public_navbar.php'; ?>
 
     <!-- CONTENT -->
     <main class="public-container">
 
-        <!-- HERO / FEATURED NEWS -->
-        <?php if ($featuredNews): ?>
-            <?php
-            // Strip tags and create excerpt
-            $excerpt = strip_tags($featuredNews['content']);
-            ?>
-            <div class="hero-section">
-                <div class="hero-img-container">
-                    <img src="<?= $featuredNews['image_path'] ? UPLOAD_URL . e($featuredNews['image_path']) : 'https://placehold.co/600x400/e9edf2/a0a8b3?text=TNI+AU' ?>" class="hero-img" alt="Featured News Image">
-                </div>
-                <div class="hero-content">
-                    <span class="hero-tag"><?= e($featuredNews['media']) ?></span>
-                    <h2 class="hero-title"><?= e($featuredNews['title']) ?></h2>
-                    <p class="hero-excerpt"><?= e($excerpt) ?></p>
-                    <div class="hero-meta">
-                        <span>📍 <?= e($featuredNews['wilayah'] ?: '-') ?></span>
-                        <span>📅 <?= formatTanggal($featuredNews['published_at'] ?: $featuredNews['created_at']) ?></span>
-                        <span>✍️ <?= e($featuredNews['author_label'] ?? $featuredNews['author_name']) ?></span>
+        <!-- HERO / FEATURED NEWS CONTAINER -->
+        <div id="featuredContainer">
+            <?php if ($featuredNews): ?>
+                <?php
+                // Strip tags and create excerpt
+                $excerpt = strip_tags($featuredNews['content']);
+                ?>
+                <div class="hero-section">
+                    <div class="hero-img-container">
+                        <img src="<?= $featuredNews['image_path'] ? UPLOAD_URL . e($featuredNews['image_path']) : 'https://placehold.co/600x400/e9edf2/a0a8b3?text=TNI+AU' ?>" class="hero-img" alt="Featured News Image">
                     </div>
-                    <a href="<?= BASE_URL ?>/public_view.php?id=<?= $featuredNews['id'] ?>" class="btn btn-primary" style="align-self: flex-start; padding: 10px 24px; font-weight: 600;">
-                        Baca Berita Selengkapnya
-                    </a>
+                    <div class="hero-content">
+                        <span class="hero-tag"><?= e($featuredNews['media']) ?></span>
+                        <h2 class="hero-title"><?= e($featuredNews['title']) ?></h2>
+                        <p class="hero-excerpt"><?= e($excerpt) ?></p>
+                        <div class="hero-meta">
+                            <span>📍 <?= e($featuredNews['wilayah'] ?: '-') ?></span>
+                            <span>📅 <?= formatTanggal($featuredNews['published_at'] ?: $featuredNews['created_at']) ?></span>
+                            <span>✍️ <?= e($featuredNews['author_label'] ?? $featuredNews['author_name']) ?></span>
+                        </div>
+                        <a href="<?= BASE_URL ?>/public_view.php?id=<?= $featuredNews['id'] ?>" class="btn btn-primary" style="align-self: flex-start; padding: 10px 24px; font-weight: 600;">
+                            Baca Berita Selengkapnya
+                        </a>
+                    </div>
                 </div>
-            </div>
-        <?php endif; ?>
+            <?php endif; ?>
+        </div>
 
         <!-- FILTER & SEARCH BAR -->
         <div class="filter-search-row">
@@ -490,52 +392,183 @@ function getSentimentBadgeClass($sentiment) {
             </form>
         </div>
 
-        <!-- NEWS GRID -->
-        <div class="news-grid">
-            <?php if (empty($newsList) && !$featuredNews): ?>
-                <div class="empty-results">
-                    <div style="font-size: 32px; margin-bottom: 12px;">🔍</div>
-                    <h3 style="font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 8px;">Berita tidak ditemukan</h3>
-                    <p style="font-size: 12px; color: var(--text-sec);">Silakan coba pencarian lain atau pilih tab media yang berbeda.</p>
-                </div>
-            <?php else: ?>
-                <?php foreach ($newsList as $n): ?>
-                    <?php
-                    $cardExcerpt = strip_tags($n['content']);
-                    ?>
-                    <article class="public-news-card">
-                        <div class="card-img-container">
-                            <img src="<?= $n['image_path'] ? UPLOAD_URL . e($n['image_path']) : 'https://placehold.co/400x250/e9edf2/a0a8b3?text=TNI+AU' ?>" class="card-img" alt="News Image">
-                            <div class="card-labels">
-                                <span class="card-label-left">📍 <?= e($n['wilayah'] ?: '-') ?></span>
-                                <span class="card-label-right"><?= e($n['media']) ?></span>
+        <!-- NEWS GRID CONTAINER -->
+        <div id="newsGridContainer">
+            <div class="news-grid">
+                <?php if (empty($newsList) && !$featuredNews): ?>
+                    <div class="empty-results">
+                        <div style="font-size: 32px; margin-bottom: 12px;">🔍</div>
+                        <h3 style="font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 8px;">Berita tidak ditemukan</h3>
+                        <p style="font-size: 12px; color: var(--text-sec);">Silakan coba pencarian lain atau pilih tab media yang berbeda.</p>
+                    </div>
+                <?php else: ?>
+                    <?php foreach ($newsList as $n): ?>
+                        <?php
+                        $cardExcerpt = strip_tags($n['content']);
+                        ?>
+                        <article class="public-news-card">
+                            <div class="card-img-container">
+                                <img src="<?= $n['image_path'] ? UPLOAD_URL . e($n['image_path']) : 'https://placehold.co/400x250/e9edf2/a0a8b3?text=TNI+AU' ?>" class="card-img" alt="News Image">
+                                <div class="card-labels">
+                                    <span class="card-label-left">📍 <?= e($n['wilayah'] ?: '-') ?></span>
+                                    <span class="card-label-right"><?= e($n['media']) ?></span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="card-body">
-                            <h3 class="card-title">
-                                <a href="<?= BASE_URL ?>/public_view.php?id=<?= $n['id'] ?>"><?= e($n['title']) ?></a>
-                            </h3>
-                            <p class="card-excerpt"><?= e($cardExcerpt) ?></p>
-                            <div class="card-footer">
-                                <span class="card-date">📅 <?= date('d M Y', strtotime($n['published_at'] ?: $n['created_at'])) ?></span>
-                                <span class="badge <?= getSentimentBadgeClass($n['sentiment']) ?> card-sentiment"><?= e($n['sentiment']) ?></span>
+                            <div class="card-body">
+                                <h3 class="card-title">
+                                    <a href="<?= BASE_URL ?>/public_view.php?id=<?= $n['id'] ?>"><?= e($n['title']) ?></a>
+                                </h3>
+                                <p class="card-excerpt"><?= e($cardExcerpt) ?></p>
+                                <div class="card-footer">
+                                    <span class="card-date">📅 <?= date('d M Y', strtotime($n['published_at'] ?: $n['created_at'])) ?></span>
+                                    <span class="badge <?= getSentimentBadgeClass($n['sentiment']) ?> card-sentiment"><?= e($n['sentiment']) ?></span>
+                                </div>
                             </div>
-                        </div>
-                    </article>
-                <?php endforeach; ?>
-            <?php endif; ?>
+                        </article>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
         </div>
 
     </main>
 
     <!-- FOOTER -->
-    <footer class="public-footer">
-        <div class="public-footer-brand">
-            <img src="<?= BASE_URL ?>/assets/img/logo-tniau.png" alt="Logo TNI AU" onerror="this.src='<?= BASE_URL ?>/assets/img/logo-new.png'">
-            <span>Tentara Nasional Indonesia Angkatan Udara</span>
-        </div>
-        <p style="margin: 0; font-size: 11px;">Hak Cipta &copy; 2026 TNI AU. All rights reserved.</p>
-    </footer>
+    <?php include __DIR__ . '/includes/public_footer.php'; ?>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const tabs = document.querySelectorAll('.category-tab');
+        const searchForm = document.querySelector('.search-form');
+        const searchInput = document.querySelector('.search-input');
+        const featuredContainer = document.getElementById('featuredContainer');
+        const newsGridContainer = document.getElementById('newsGridContainer');
+        
+        let debounceTimer;
+        
+        // Function to perform AJAX load
+        async function loadContent(url, updateInput = false) {
+            // Add loading opacity for visual transition feedback
+            if (featuredContainer) featuredContainer.style.opacity = '0.3';
+            if (newsGridContainer) newsGridContainer.style.opacity = '0.3';
+            
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Response error');
+                const html = await response.text();
+                
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // 1. Update Hero/Featured Section
+                const newFeatured = doc.getElementById('featuredContainer');
+                if (featuredContainer && newFeatured) {
+                    featuredContainer.innerHTML = newFeatured.innerHTML;
+                }
+                
+                // 2. Update News Grid
+                const newNewsGrid = doc.getElementById('newsGridContainer');
+                if (newsGridContainer && newNewsGrid) {
+                    newsGridContainer.innerHTML = newNewsGrid.innerHTML;
+                }
+                
+                // 3. Update Active Tab class
+                const docTabs = doc.querySelectorAll('.category-tab');
+                tabs.forEach((tab, index) => {
+                    if (docTabs[index]) {
+                        if (docTabs[index].classList.contains('active')) {
+                            tab.classList.add('active');
+                        } else {
+                            tab.classList.remove('active');
+                        }
+                        // Update target href for active query params
+                        tab.setAttribute('href', docTabs[index].getAttribute('href'));
+                    }
+                });
+                
+                // 4. Update URL params for other tabs
+                if (searchInput) {
+                    const qVal = searchInput.value.trim();
+                    tabs.forEach(tab => {
+                        const href = tab.getAttribute('href');
+                        const urlObj = new URL(href, window.location.origin);
+                        urlObj.searchParams.set('q', qVal);
+                        tab.setAttribute('href', urlObj.search + urlObj.hash);
+                    });
+                }
+                
+                // 5. Optionally update search input value
+                if (updateInput) {
+                    const newSearchInput = doc.querySelector('.search-input');
+                    if (searchInput && newSearchInput) {
+                        searchInput.value = newSearchInput.value;
+                    }
+                }
+                
+                // 6. Update browser history/URL
+                if (window.location.href !== url) {
+                    window.history.pushState({ url: url }, '', url);
+                }
+            } catch (error) {
+                console.error('Error fetching filtered news:', error);
+                window.location.href = url; // fallback
+            } finally {
+                setTimeout(() => {
+                    if (featuredContainer) featuredContainer.style.opacity = '1';
+                    if (newsGridContainer) newsGridContainer.style.opacity = '1';
+                }, 100);
+            }
+        }
+        
+        // Event listeners for tabs
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                const url = tab.getAttribute('href');
+                loadContent(url);
+            });
+        });
+        
+        // Event listener for search input typing (real-time search)
+        if (searchInput) {
+            searchInput.addEventListener('input', () => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    const activeTab = document.querySelector('.category-tab.active');
+                    let media = 'semua';
+                    if (activeTab) {
+                        const urlParams = new URLSearchParams(activeTab.getAttribute('href').split('?')[1]);
+                        media = urlParams.get('media') || 'semua';
+                    }
+                    
+                    const q = searchInput.value.trim();
+                    const url = `?media=${encodeURIComponent(media)}&q=${encodeURIComponent(q)}`;
+                    loadContent(url);
+                }, 300);
+            });
+            
+            // Prevent form submit reloading the page
+            if (searchForm) {
+                searchForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const activeTab = document.querySelector('.category-tab.active');
+                    let media = 'semua';
+                    if (activeTab) {
+                        const urlParams = new URLSearchParams(activeTab.getAttribute('href').split('?')[1]);
+                        media = urlParams.get('media') || 'semua';
+                    }
+                    const q = searchInput.value.trim();
+                    const url = `?media=${encodeURIComponent(media)}&q=${encodeURIComponent(q)}`;
+                    loadContent(url);
+                });
+            }
+        }
+        
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', (e) => {
+            loadContent(window.location.href, true);
+        });
+    });
+    </script>
 
 </body>
 </html>
