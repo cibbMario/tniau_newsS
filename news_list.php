@@ -17,7 +17,7 @@ function timeAgo($datetime) {
 
 // Media filter
 $mediaFilter = $_GET['media'] ?? 'Semua';
-$validMedia = ['Wilayah', 'Semua'];
+$validMedia = ['Wilayah', 'Media Online', 'Media Sosial', 'Semua'];
 if (!in_array($mediaFilter, $validMedia)) $mediaFilter = 'Semua';
 
 // Search
@@ -88,7 +88,7 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
             <!-- ACTION BAR -->
             <div class="action-bar">
                 <div class="action-bar-left">
-                    <?php if (in_array($user['role'], ['A','E'])): ?>
+                    <?php if ($statusFilter !== 'draft' && in_array($user['role'], ['A','E'])): ?>
                         <a href="<?= BASE_URL ?>/news_create.php" class="btn-entry-new">Buat Berita Baru</a>
                     <?php endif; ?>
                     <span class="pagination-info"><?= $total ?> berita ditemukan</span>

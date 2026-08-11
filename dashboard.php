@@ -6,7 +6,7 @@ $user = currentUser();
 
 // Determine requested view
 $view = $_GET['view'] ?? $_GET['media'] ?? 'semua';
-$validViews = ['semua', 'dashboard', 'harian', 'negatif', 'inspiratif', 'konten', 'sentimen'];
+$validViews = ['semua', 'dashboard', 'harian', 'negatif', 'inspiratif', 'konten', 'sentimen', 'wilayah'];
 if (!in_array($view, $validViews)) {
     $view = 'semua';
 }
@@ -57,6 +57,25 @@ $contributorsData = $pdo->query("SELECT u.full_name, u.role, COUNT(n.id) as tota
 $negativeNews = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JOIN users u ON n.created_by = u.id WHERE n.sentiment='Negatif' ORDER BY n.created_at DESC LIMIT 10")->fetchAll();
 $inspiratifNews = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JOIN users u ON n.created_by = u.id WHERE n.sentiment='Positif' ORDER BY n.created_at DESC LIMIT 10")->fetchAll();
 $kontenNews = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JOIN users u ON n.created_by = u.id ORDER BY n.created_at DESC LIMIT 10")->fetchAll();
+
+// 9. Wilayah-specific stats
+if ($view === 'wilayah') {
+    $wilayahTotal = (int)$pdo->query("SELECT COUNT(*) FROM news WHERE media='Wilayah'")->fetchColumn();
+    $wilayahSentData = $pdo->query("SELECT sentiment, COUNT(*) as c FROM news WHERE media='Wilayah' GROUP BY sentiment")->fetchAll();
+    $wilayahSentStats = ['Positif' => 0, 'Negatif' => 0, 'Netral' => 0];
+    $wilayahTotalSent = 0;
+    foreach ($wilayahSentData as $row) {
+        if (isset($wilayahSentStats[$row['sentiment']])) {
+            $wilayahSentStats[$row['sentiment']] = (int)$row['c'];
+            $wilayahTotalSent += (int)$row['c'];
+        }
+    }
+    $wilayahPctP = $wilayahTotalSent ? round(($wilayahSentStats['Positif'] / $wilayahTotalSent) * 100) : 0;
+    $wilayahPctNe = $wilayahTotalSent ? round(($wilayahSentStats['Netral'] / $wilayahTotalSent) * 100) : 0;
+    $wilayahPctN = $wilayahTotalSent ? round(($wilayahSentStats['Negatif'] / $wilayahTotalSent) * 100) : 0;
+
+    $wilayahDistData = $pdo->query("SELECT wilayah, COUNT(*) as c FROM news WHERE media='Wilayah' AND wilayah IS NOT NULL AND wilayah != '' GROUP BY wilayah ORDER BY c DESC LIMIT 6")->fetchAll();
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -264,6 +283,10 @@ $kontenNews = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JO
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                     Sentimen
                 </button>
+                <button type="button" onclick="switchDashboardTab('wilayah')" class="view-tab-btn <?= $view==='wilayah' ? 'active':'' ?>" id="tabbtn-wilayah">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    Berita Wilayah
+                </button>
             </div>
 
             <!-- TAB CONTENT CONTAINER -->
@@ -393,6 +416,91 @@ $kontenNews = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JO
                                     <div><div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:4px"><span>Netral (<?= $sentStats['Netral'] ?>)</span><span><?= $pctNe ?>%</span></div><div style="height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden"><div style="height:100%;background:#3b82f6;width:<?= $pctNe ?>%;transition:width 0.8s ease"></div></div></div>
                                     <div><div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:4px"><span>Negatif (<?= $sentStats['Negatif'] ?>)</span><span><?= $pctN ?>%</span></div><div style="height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden"><div style="height:100%;background:#ef4444;width:<?= $pctN ?>%;transition:width 0.8s ease"></div></div></div>
                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+
+                <div class="tab-pane <?= $view==='wilayah' ? 'active':'' ?>" id="pane-wilayah">
+                    <div class="card smooth-card mb-4" style="background: linear-gradient(135deg, rgba(30, 111, 191, 0.05), rgba(255, 255, 255, 0.9)); border: 1px solid rgba(30,111,191,0.12)">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px">
+                            <div>
+                                <h3 style="font-size:18px;color:var(--navy);margin:0;font-weight:700">📍 Pemantauan Berita Wilayah / Lanud</h3>
+                                <p style="color:var(--text-sec);font-size:12.5px;margin-top:4px">Analisis dan sebaran informasi dari satuan Lanud di seluruh Indonesia.</p>
+                            </div>
+                            <span class="badge badge-gold" style="font-size:12px;padding:6px 12px;font-weight:700">Total: <?= $wilayahTotal ?? 0 ?> Berita</span>
+                        </div>
+
+                        <!-- Grid Info Wilayah -->
+                        <div class="sentiment-grid-responsive" style="margin-bottom: 24px;">
+                            <!-- Sentiment khusus Wilayah -->
+                            <div class="card smooth-card" style="border: 1px solid rgba(30,111,191,0.1); background:#ffffff;">
+                                <h4 style="font-size:13px;color:var(--navy);font-weight:600;margin-bottom:12px;border-bottom:1px solid #eee;padding-bottom:8px">Sentimen Berita Wilayah</h4>
+                                <div class="sentiment-bar-wrap" style="height:12px;margin:10px 0 14px">
+                                    <div class="sentiment-segment sentiment-seg-positive" style="width:<?= $wilayahPctP ?? 0 ?>%" title="Positif: <?= $wilayahPctP ?? 0 ?>%"></div>
+                                    <div class="sentiment-segment sentiment-seg-neutral" style="width:<?= $wilayahPctNe ?? 0 ?>%" title="Netral: <?= $wilayahPctNe ?? 0 ?>%"></div>
+                                    <div class="sentiment-segment sentiment-seg-negative" style="width:<?= $wilayahPctN ?? 0 ?>%" title="Negatif: <?= $wilayahPctN ?? 0 ?>%"></div>
+                                </div>
+                                <div class="sent-legend" style="flex-wrap:wrap;row-gap:6px">
+                                    <div class="sent-legend-item"><span class="legend-dot" style="background:#10b981"></span><span>Positif (<?= $wilayahPctP ?? 0 ?>%)</span></div>
+                                    <div class="sent-legend-item"><span class="legend-dot" style="background:#3b82f6"></span><span>Netral (<?= $wilayahPctNe ?? 0 ?>%)</span></div>
+                                    <div class="sent-legend-item"><span class="legend-dot" style="background:#ef4444"></span><span>Negatif (<?= $wilayahPctN ?? 0 ?>%)</span></div>
+                                </div>
+                            </div>
+
+                            <!-- Distribusi per Lanud teraktif -->
+                            <div class="card smooth-card" style="border: 1px solid rgba(30,111,191,0.1); background:#ffffff;">
+                                <h4 style="font-size:13px;color:var(--navy);font-weight:600;margin-bottom:12px;border-bottom:1px solid #eee;padding-bottom:8px">Sebaran Wilayah Teraktif</h4>
+                                <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(130px, 1fr));gap:10px;">
+                                    <?php if (empty($wilayahDistData)): ?>
+                                        <div style="grid-column: 1/-1; text-align:center; font-size:12px; color:var(--text-sec); padding:10px;">Belum ada sebaran wilayah</div>
+                                    <?php else: ?>
+                                        <?php foreach ($wilayahDistData as $dist): ?>
+                                            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px 12px;text-align:center;box-shadow:0 2px 4px rgba(0,0,0,0.02)">
+                                                <div style="font-size:11px;color:var(--text-sec);text-transform:uppercase;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="<?= e($dist['wilayah']) ?>"><?= e(getLanudInitials($dist['wilayah'])) ?></div>
+                                                <div style="font-size:18px;font-weight:700;color:var(--navy);margin-top:2px"><?= $dist['c'] ?></div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Daftar Berita Wilayah -->
+                        <h4 style="font-size:14px;color:var(--navy);font-weight:600;margin-bottom:12px">Daftar Berita Wilayah Terbaru</h4>
+                        <div class="news-table-wrap">
+                            <div class="table-responsive">
+                                <table class="news-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Subjek Berita</th>
+                                            <th>Wilayah / Satuan</th>
+                                            <th>Sentimen</th>
+                                            <th>Status</th>
+                                            <th>Penulis</th>
+                                            <th>Waktu</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if(empty($regionalNews)): ?>
+                                            <tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text-sec)">Belum ada berita wilayah.</td></tr>
+                                        <?php else: ?>
+                                            <?php foreach($regionalNews as $row): ?>
+                                                <tr>
+                                                    <td class="col-subject"><a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>"><?= e($row['title']) ?></a></td>
+                                                    <td><span class="badge badge-blue" style="background:#e1effe;color:#1e429f;font-weight:600;font-size:11px"><?= e($row['wilayah']) ?></span></td>
+                                                    <td>
+                                                        <?php $sColor = ($row['sentiment'] === 'Positif') ? 'badge-green' : (($row['sentiment'] === 'Negatif') ? 'badge-red' : 'badge-blue'); ?>
+                                                        <span class="badge <?= $sColor ?>"><?= e($row['sentiment']) ?></span>
+                                                    </td>
+                                                    <td><span class="badge <?= statusBadgeClass($row['status']) ?>"><?= statusLabel($row['status']) ?></span></td>
+                                                    <td style="font-size:11.5px;color:var(--text-sec)"><?= e($row['author_name']) ?></td>
+                                                    <td class="col-time"><?= formatTanggal($row['created_at']) ?></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

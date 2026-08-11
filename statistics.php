@@ -96,18 +96,45 @@ if ($view === 'tren') {
         ];
     }
 
+    // Find peak activity day
+    $peakTotal = 0;
+    $peakDate = 'N/A';
+    $dateTotals = [];
+    foreach ($trendDates as $d) {
+        $dateTotals[$d] = 0;
+    }
+    foreach ($trendDatasets as $ds) {
+        foreach ($trendDates as $i => $d) {
+            $dateTotals[$d] += $ds['data'][$i];
+        }
+    }
+    if (!empty($dateTotals)) {
+        $peakDate = array_search(max($dateTotals), $dateTotals);
+        $peakTotal = max($dateTotals);
+        $peakDateFormatted = date('d M Y', strtotime($peakDate));
+    } else {
+        $peakDateFormatted = '-';
+    }
+
+    $totalTrendNews = array_sum(array_column($topAktor, 'total'));
+    $topAktorName = !empty($topAktorNames) ? $topAktorNames[0] : '-';
+    $topAktorCount = !empty($topAktor) ? $topAktor[0]['total'] : 0;
+
     $trendLabelsJson   = json_encode(array_map(fn($d) => date('d M', strtotime($d)), $trendDates));
     $trendDatasetsJson = json_encode(array_map(fn($ds) => [
         'label'                => $ds['label'],
         'data'                 => $ds['data'],
         'borderColor'          => $ds['color'],
-        'backgroundColor'      => $ds['color'] . '22',
-        'pointBackgroundColor' => $ds['color'],
-        'pointRadius'          => 3,
-        'pointHoverRadius'     => 5,
+        'backgroundColor'      => $ds['color'] . '1a', // 10% opacity
+        'pointBackgroundColor' => '#ffffff',
+        'pointBorderColor'     => $ds['color'],
+        'pointBorderWidth'     => 2,
+        'pointRadius'          => 4,
+        'pointHoverRadius'     => 6,
+        'pointHoverBorderWidth'=> 3,
         'tension'              => 0.4,
-        'fill'                 => false,
-        'borderWidth'          => 2,
+        'fill'                 => true,
+        'borderWidth'          => 3,
     ], $trendDatasets));
 }
 
@@ -192,10 +219,84 @@ $pageTitle = $pageTitles[$view] ?? 'Statistik';
     <meta charset="UTF-8">
     <title><?= $pageTitle ?> - Portal Berita TNI AU</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
-    <?php if (in_array($view, ['tren'])): ?>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <?php endif; ?>
     <style>
+        /* Custom Modern Statistics Dashboard Styles */
+        .stats-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        .kpi-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.3s ease;
+        }
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
+        }
+        .kpi-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .kpi-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .kpi-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .kpi-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-top: 4px;
+        }
+        .kpi-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .chart-container-large {
+            position: relative;
+            height: 320px;
+            width: 100%;
+        }
+
+        /* Rank Badge */
+        .rank-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 12px;
+        }
+        .rank-gold { background: linear-gradient(135deg, #ffd700, #ffa500); color: #fff; box-shadow: 0 2px 6px rgba(255,215,0,0.3); }
+        .rank-silver { background: linear-gradient(135deg, #c0c0c0, #a9a9a9); color: #fff; box-shadow: 0 2px 6px rgba(192,192,192,0.3); }
+        .rank-bronze { background: linear-gradient(135deg, #cd7f32, #8b5a2b); color: #fff; box-shadow: 0 2px 6px rgba(205,127,50,0.3); }
+        .rank-normal { background: #f1f3f5; color: var(--text-muted); }
+
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -279,94 +380,159 @@ $pageTitle = $pageTitles[$view] ?? 'Statistik';
                 </p>
             </div>
 
-            <?php /* ====================================================
-                   VIEW: STATISTIK BERITA
-                   ==================================================== */ ?>
             <?php if ($view === 'berita'): ?>
             <?php
             $negatifPct = $totalSent > 0 ? round(($sentStats['Negatif'] / $totalSent) * 100) : 0;
             $netralPct  = $totalSent > 0 ? round(($sentStats['Netral']  / $totalSent) * 100) : 0;
             $positifPct = $totalSent > 0 ? round(($sentStats['Positif'] / $totalSent) * 100) : 0;
             ?>
-            <div class="sentiment-grid">
-                <div class="sentiment-card negatif">
-                    <div class="card-label">Negatif</div>
-                    <div class="card-row">
-                        <span class="card-count"><?= $sentStats['Negatif'] ?></span>
-                        <span class="card-pct"><?= $negatifPct ?>%</span>
+            
+            <!-- Grid KPI -->
+            <div class="stats-kpi-grid">
+                <div class="kpi-card" style="border-left: 4px solid #ef4444;">
+                    <div class="kpi-icon" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">👎</div>
+                    <div class="kpi-info">
+                        <span class="kpi-label">Sentimen Negatif</span>
+                        <span class="kpi-value"><?= $sentStats['Negatif'] ?></span>
+                        <span class="kpi-desc"><?= $negatifPct ?>% dari sebaran</span>
                     </div>
-                    <div class="progress-track"><div class="progress-fill" style="width:<?= $negatifPct ?>%"></div></div>
                 </div>
-                <div class="sentiment-card netral">
-                    <div class="card-label">Netral</div>
-                    <div class="card-row">
-                        <span class="card-count"><?= $sentStats['Netral'] ?></span>
-                        <span class="card-pct"><?= $netralPct ?>%</span>
+                <div class="kpi-card" style="border-left: 4px solid #3b82f6;">
+                    <div class="kpi-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">😐</div>
+                    <div class="kpi-info">
+                        <span class="kpi-label">Sentimen Netral</span>
+                        <span class="kpi-value"><?= $sentStats['Netral'] ?></span>
+                        <span class="kpi-desc"><?= $netralPct ?>% dari sebaran</span>
                     </div>
-                    <div class="progress-track"><div class="progress-fill" style="width:<?= $netralPct ?>%"></div></div>
                 </div>
-                <div class="sentiment-card positif">
-                    <div class="card-label">Positif</div>
-                    <div class="card-row">
-                        <span class="card-count"><?= $sentStats['Positif'] ?></span>
-                        <span class="card-pct"><?= $positifPct ?>%</span>
+                <div class="kpi-card" style="border-left: 4px solid #10b981;">
+                    <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">👍</div>
+                    <div class="kpi-info">
+                        <span class="kpi-label">Sentimen Positif</span>
+                        <span class="kpi-value"><?= $sentStats['Positif'] ?></span>
+                        <span class="kpi-desc"><?= $positifPct ?>% dari sebaran</span>
                     </div>
-                    <div class="progress-track"><div class="progress-fill" style="width:<?= $positifPct ?>%"></div></div>
                 </div>
-                <div class="sentiment-card total">
-                    <div class="card-label">Total</div>
-                    <div class="card-row">
-                        <span class="card-count"><?= $totalSent ?></span>
-                        <span class="card-pct">100%</span>
+                <div class="kpi-card" style="border-left: 4px solid #6c5ce7;">
+                    <div class="kpi-icon" style="background: rgba(108, 92, 231, 0.1); color: #6c5ce7;">📰</div>
+                    <div class="kpi-info">
+                        <span class="kpi-label">Total Publikasi</span>
+                        <span class="kpi-value"><?= $totalSent ?></span>
+                        <span class="kpi-desc">100% data termonitor</span>
                     </div>
-                    <div class="progress-track"><div class="progress-fill" style="width:100%"></div></div>
                 </div>
             </div>
 
+            <!-- Grid Grafik -->
             <div class="stats-grid">
-                <!-- Distribusi Sentimen -->
+                <!-- Doughnut Chart Sentimen -->
                 <div class="stats-card">
-                    <h3>Distribusi Sentimen Berita</h3>
-                    <?php foreach ($sentStats as $label => $val):
-                        $pct   = $totalSent > 0 ? round(($val / $totalSent) * 100) : 0;
-                        $color = '#4b74e0';
-                        if ($label === 'Positif') $color = '#47b275';
-                        if ($label === 'Negatif') $color = '#e2583e';
-                        if ($label === 'Netral')  $color = '#f1b72c';
-                    ?>
-                    <div class="bar-chart-row">
-                        <div class="bar-chart-label">
-                            <span><?= $label ?> (<?= $val ?> Berita)</span>
-                            <strong><?= $pct ?>%</strong>
-                        </div>
-                        <div class="bar-chart-track">
-                            <div class="bar-chart-fill" style="width:<?= $pct ?>%;background-color:<?= $color ?>;"></div>
-                        </div>
+                    <h3 style="font-size:15px;color:var(--navy);font-weight:600;margin-bottom:15px;border-bottom:1px solid #f1f3f5;padding-bottom:10px;">📊 Distribusi Sentimen Publik</h3>
+                    <div class="chart-container-large" style="height: 240px;">
+                        <canvas id="sentimentDoughnutChart"></canvas>
                     </div>
-                    <?php endforeach; ?>
                 </div>
 
-                <!-- Sumber Media -->
+                <!-- Doughnut Chart Sumber Media -->
                 <div class="stats-card">
-                    <h3>Sumber Media Berita</h3>
-                    <?php foreach ($mediaStats as $label => $val):
-                        $pct   = $totalMedia > 0 ? round(($val / $totalMedia) * 100) : 0;
-                        $color = '#4b74e0';
-                        if ($label === 'Media Online')  $color = '#a55eea';
-                        if ($label === 'Media Sosial')  $color = '#ff7675';
-                    ?>
-                    <div class="bar-chart-row">
-                        <div class="bar-chart-label">
-                            <span><?= $label ?> (<?= $val ?> Berita)</span>
-                            <strong><?= $pct ?>%</strong>
-                        </div>
-                        <div class="bar-chart-track">
-                            <div class="bar-chart-fill" style="width:<?= $pct ?>%;background-color:<?= $color ?>;"></div>
-                        </div>
+                    <h3 style="font-size:15px;color:var(--navy);font-weight:600;margin-bottom:15px;border-bottom:1px solid #f1f3f5;padding-bottom:10px;">🌐 Proporsi Sumber Media Berita</h3>
+                    <div class="chart-container-large" style="height: 240px;">
+                        <canvas id="mediaDoughnutChart"></canvas>
                     </div>
-                    <?php endforeach; ?>
                 </div>
             </div>
+
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Chart 1: Sentiment Doughnut
+                const sentimentCtx = document.getElementById('sentimentDoughnutChart').getContext('2d');
+                new Chart(sentimentCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Positif', 'Netral', 'Negatif'],
+                        datasets: [{
+                            data: [<?= $sentStats['Positif'] ?>, <?= $sentStats['Netral'] ?>, <?= $sentStats['Negatif'] ?>],
+                            backgroundColor: ['#10b981', '#3b82f6', '#ef4444'],
+                            borderWidth: 3,
+                            borderColor: '#ffffff',
+                            hoverOffset: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { 
+                                position: 'bottom', 
+                                labels: { 
+                                    font: { family: 'Poppins', size: 11, weight: '500' }, 
+                                    boxWidth: 10, 
+                                    padding: 12,
+                                    color: '#4a5568'
+                                } 
+                            },
+                            tooltip: { 
+                                backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                                titleFont: { family: 'Poppins', size: 12 },
+                                bodyFont: { family: 'Poppins', size: 12 },
+                                padding: 10,
+                                cornerRadius: 8,
+                                callbacks: { 
+                                    label: function(context) { 
+                                        return ' ' + context.label + ': ' + context.raw + ' Berita (' + Math.round(context.raw / <?= max(1, $totalSent) ?> * 100) + '%)'; 
+                                    } 
+                                } 
+                            }
+                        },
+                        cutout: '70%'
+                    }
+                });
+
+                // Chart 2: Media Source Doughnut
+                const mediaCtx = document.getElementById('mediaDoughnutChart').getContext('2d');
+                new Chart(mediaCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Berita Wilayah', 'Media Online', 'Media Sosial'],
+                        datasets: [{
+                            data: [<?= $mediaStats['Wilayah'] ?>, <?= $mediaStats['Media Online'] ?>, <?= $mediaStats['Media Sosial'] ?>],
+                            backgroundColor: ['#4b74e0', '#a55eea', '#ff7675'],
+                            borderWidth: 3,
+                            borderColor: '#ffffff',
+                            hoverOffset: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { 
+                                position: 'bottom', 
+                                labels: { 
+                                    font: { family: 'Poppins', size: 11, weight: '500' }, 
+                                    boxWidth: 10, 
+                                    padding: 12,
+                                    color: '#4a5568'
+                                } 
+                            },
+                            tooltip: { 
+                                backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                                titleFont: { family: 'Poppins', size: 12 },
+                                bodyFont: { family: 'Poppins', size: 12 },
+                                padding: 10,
+                                cornerRadius: 8,
+                                callbacks: { 
+                                    label: function(context) { 
+                                        return ' ' + context.label + ': ' + context.raw + ' Berita (' + Math.round(context.raw / <?= max(1, $totalMedia) ?> * 100) + '%)'; 
+                                    } 
+                                } 
+                            }
+                        },
+                        cutout: '70%'
+                    }
+                });
+            });
+            </script>
             <?php endif; ?>
 
 
@@ -374,9 +540,37 @@ $pageTitle = $pageTitles[$view] ?? 'Statistik';
                    VIEW: TREN
                    ==================================================== */ ?>
             <?php if ($view === 'tren'): ?>
+            <!-- Grid KPI Aktor Tren -->
+            <div class="stats-kpi-grid">
+                <div class="kpi-card" style="border-left: 4px solid #4b74e0;">
+                    <div class="kpi-icon" style="background: rgba(75, 116, 224, 0.1); color: #4b74e0;">📈</div>
+                    <div class="kpi-info">
+                        <span class="kpi-label">Total Aktivitas Tren</span>
+                        <span class="kpi-value"><?= $totalTrendNews ?></span>
+                        <span class="kpi-desc">Kemunculan aktor top</span>
+                    </div>
+                </div>
+                <div class="kpi-card" style="border-left: 4px solid #10b981;">
+                    <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">👑</div>
+                    <div class="kpi-info">
+                        <span class="kpi-label">Aktor Terpopuler</span>
+                        <span class="kpi-value" style="font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;display:block;" title="<?= e($topAktorName) ?>"><?= e($topAktorName) ?></span>
+                        <span class="kpi-desc"><?= $topAktorCount ?> kali dalam berita</span>
+                    </div>
+                </div>
+                <div class="kpi-card" style="border-left: 4px solid #f1b72c;">
+                    <div class="kpi-icon" style="background: rgba(241, 183, 44, 0.1); color: #f1b72c;">⚡</div>
+                    <div class="kpi-info">
+                        <span class="kpi-label">Puncak Publikasi</span>
+                        <span class="kpi-value"><?= $peakDateFormatted ?></span>
+                        <span class="kpi-desc"><?= $peakTotal ?> berita terbit</span>
+                    </div>
+                </div>
+            </div>
+
             <div class="stats-card" style="margin-bottom:20px;">
-                <h3>Tren Berita per Aktor (30 Hari Terakhir)</h3>
-                <div style="position:relative;height:300px;">
+                <h3 style="font-size:15px;color:var(--navy);font-weight:600;margin-bottom:15px;border-bottom:1px solid #f1f3f5;padding-bottom:10px;">📈 Tren Berita per Aktor (30 Hari Terakhir)</h3>
+                <div style="position:relative;height:350px;">
                     <canvas id="trendChart"></canvas>
                 </div>
             </div>
@@ -397,18 +591,30 @@ $pageTitle = $pageTitles[$view] ?? 'Statistik';
                         plugins: {
                             legend: {
                                 position: 'bottom',
-                                labels: { boxWidth:10, font:{size:11}, padding:14 }
+                                labels: { 
+                                    boxWidth:12, 
+                                    font:{ family: 'Poppins', size:11, weight:'500' }, 
+                                    padding:16,
+                                    color: '#4a5568'
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                                titleFont: { family: 'Poppins', size: 12 },
+                                bodyFont: { family: 'Poppins', size: 11 },
+                                padding: 10,
+                                cornerRadius: 8
                             }
                         },
                         scales: {
                             x: {
-                                ticks: { font:{size:10}, maxRotation:45, autoSkip:true, maxTicksLimit:15 },
-                                grid:  { color:'rgba(0,0,0,0.05)' }
+                                ticks: { font:{ family: 'Poppins', size:10 }, maxRotation:45, autoSkip:true, maxTicksLimit:15 },
+                                grid:  { color:'rgba(0,0,0,0.04)' }
                             },
                             y: {
                                 beginAtZero: true,
-                                ticks: { stepSize:1, font:{size:11} },
-                                grid:  { color:'rgba(0,0,0,0.05)' }
+                                ticks: { stepSize:1, font:{ family: 'Poppins', size:11 } },
+                                grid:  { color:'rgba(0,0,0,0.04)' }
                             }
                         }
                     }
@@ -427,28 +633,38 @@ $pageTitle = $pageTitles[$view] ?? 'Statistik';
             <?php
             function renderAktorTable(array $rows, array $colors): void {
                 if (empty($rows)) {
-                    echo '<p style="color:var(--text-muted);padding:12px 0;">Belum ada data aktor.</p>';
+                    echo '<p style="color:var(--text-muted);padding:16px 0;text-align:center;font-size:13px;">Belum ada data aktor.</p>';
                     return;
                 }
                 $max = max(array_column($rows, 'total')) ?: 1;
-                echo '<table class="aktor-table">';
-                echo '<thead><tr>
-                        <th style="width:36px;">No</th>
-                        <th>Nama</th>
-                        <th style="text-align:right;width:70px;">Jumlah</th>
-                        <th style="width:180px;">Chart</th>
+                echo '<table class="aktor-table" style="width:100%;border-collapse:collapse;margin-top:8px;">';
+                echo '<thead><tr style="border-bottom:2px solid #edf2f7;">
+                        <th style="width:50px;padding:12px;font-weight:600;color:#718096;text-align:center;">Pos</th>
+                        <th style="padding:12px;font-weight:600;color:#718096;text-align:left;">Nama Aktor</th>
+                        <th style="width:100px;padding:12px;font-weight:600;color:#718096;text-align:center;">Frekuensi</th>
+                        <th style="padding:12px;font-weight:600;color:#718096;text-align:left;">Sebaran Persentase</th>
                       </tr></thead><tbody>';
                 foreach ($rows as $i => $row) {
                     $pct   = round(($row['total'] / $max) * 100);
                     $color = $colors[$i % count($colors)];
-                    $bg    = $i % 2 === 1 ? 'background:rgba(0,0,0,0.015);' : '';
-                    echo "<tr style=\"$bg\">
-                            <td style=\"color:var(--text-muted);\">" . ($i + 1) . "</td>
-                            <td style=\"font-weight:500;\">" . htmlspecialchars($row['aktor_name'], ENT_QUOTES) . "</td>
-                            <td style=\"text-align:right;font-weight:600;\">" . (int)$row['total'] . "</td>
-                            <td>
-                                <div style=\"background:#f1f3f5;height:12px;border-radius:3px;overflow:hidden;\">
-                                    <div style=\"height:100%;width:{$pct}%;background:{$color};border-radius:3px;transition:width .6s ease;\"></div>
+                    
+                    // Rank Badge
+                    $rankClass = 'rank-normal';
+                    $rankText  = $i + 1;
+                    if ($i === 0) { $rankClass = 'rank-gold'; $rankText = '🥇'; }
+                    elseif ($i === 1) { $rankClass = 'rank-silver'; $rankText = '🥈'; }
+                    elseif ($i === 2) { $rankClass = 'rank-bronze'; $rankText = '🥉'; }
+
+                    echo "<tr style=\"border-bottom:1px solid #edf2f7;transition:background 0.2s ease;\">
+                            <td style=\"text-align:center;padding:12px;\"><span class=\"rank-badge {$rankClass}\">{$rankText}</span></td>
+                            <td style=\"padding:12px;font-weight:600;color:#2d3748;font-size:13.5px;\">" . htmlspecialchars($row['aktor_name'], ENT_QUOTES) . "</td>
+                            <td style=\"text-align:center;padding:12px;font-weight:700;color:var(--navy);font-size:14px;\">" . (int)$row['total'] . "</td>
+                            <td style=\"padding:12px;\">
+                                <div style=\"display:flex;align-items:center;gap:12px;\">
+                                    <div style=\"background:#e2e8f0;height:10px;border-radius:5px;flex:1;overflow:hidden;\">
+                                        <div style=\"height:100%;width:{$pct}%;background:{$color};border-radius:5px;transition:width .8s ease-in-out;\"></div>
+                                    </div>
+                                    <span style=\"font-size:11px;font-weight:600;color:#718096;width:32px;\">{$pct}%</span>
                                 </div>
                             </td>
                           </tr>";
@@ -457,39 +673,100 @@ $pageTitle = $pageTitles[$view] ?? 'Statistik';
             }
             ?>
 
-            <div class="stats-card" style="margin-bottom:16px;">
-                <h3>Aktor</h3>
+            <div class="stats-card" style="margin-bottom:24px;">
+                <h3 style="font-size:15px;color:var(--navy);font-weight:600;margin-bottom:15px;border-bottom:1px solid #f1f3f5;padding-bottom:10px;">📊 Grafik Frekuensi Aktor Utama</h3>
+                <div class="chart-container-large" style="height:320px;">
+                    <canvas id="topAktorBarChart"></canvas>
+                </div>
+            </div>
+
+            <div class="stats-card" style="margin-bottom:24px;">
+                <h3 style="font-size:15px;color:var(--navy);font-weight:600;margin-bottom:15px;border-bottom:1px solid #f1f3f5;padding-bottom:10px;">🏆 Peringkat Aktor Utama (Semua Sentimen)</h3>
                 <?php renderAktorTable($topAktor, $chartColors); ?>
             </div>
 
-            <!-- ── Aktor Negatif (collapsible) ── -->
-            <div>
-                <div class="collapsible-header" onclick="toggleCollapse(this)">
-                    <span>Aktor Negatif</span>
-                    <svg class="chevron-rotate" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            <!-- Collapsible Section Aktor Negatif -->
+            <div style="margin-bottom:12px;">
+                <div class="collapsible-header" onclick="toggleCollapse(this)" style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px 20px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.02)">
+                    <div style="display:flex;align-items:center;">
+                        <span style="font-weight:700;color:#c53030;">Aktor Terkait Sentimen Negatif</span>
+                        <span style="background:#e53e3e;color:#fff;padding:2px 8px;border-radius:20px;font-size:11px;margin-left:10px;font-weight:700;"><?= count($topAktorNegatif) ?> Aktor</span>
+                    </div>
+                    <svg class="chevron-rotate" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </div>
-                <div class="collapsible-body" style="display:none;">
+                <div class="collapsible-body" style="display:none;background:#fff;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 12px 12px;padding:20px;box-shadow:0 8px 24px rgba(0,0,0,0.04)">
                     <?php renderAktorTable($topAktorNegatif, $chartColors); ?>
                 </div>
             </div>
 
-            <!-- ── Aktor Netral (collapsible) ── -->
-            <div style="margin-top:8px;">
-                <div class="collapsible-header" onclick="toggleCollapse(this)">
-                    <span>Aktor Netral</span>
-                    <svg class="chevron-rotate" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            <!-- Collapsible Section Aktor Netral -->
+            <div style="margin-bottom:24px;">
+                <div class="collapsible-header" onclick="toggleCollapse(this)" style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px 20px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.02)">
+                    <div style="display:flex;align-items:center;">
+                        <span style="font-weight:700;color:#dd6b20;">Aktor Terkait Sentimen Netral</span>
+                        <span style="background:#dd6b20;color:#fff;padding:2px 8px;border-radius:20px;font-size:11px;margin-left:10px;font-weight:700;"><?= count($topAktorNetral) ?> Aktor</span>
+                    </div>
+                    <svg class="chevron-rotate" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </div>
-                <div class="collapsible-body" style="display:none;">
+                <div class="collapsible-body" style="display:none;background:#fff;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 12px 12px;padding:20px;box-shadow:0 8px 24px rgba(0,0,0,0.04)">
                     <?php renderAktorTable($topAktorNetral, $chartColors); ?>
                 </div>
             </div>
 
             <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const actorCtx = document.getElementById('topAktorBarChart').getContext('2d');
+                new Chart(actorCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: <?= json_encode(array_column($topAktor, 'aktor_name')) ?>,
+                        datasets: [{
+                            label: 'Kemunculan',
+                            data: <?= json_encode(array_column($topAktor, 'total')) ?>,
+                            backgroundColor: ['#4b74e0', '#3b82f6', '#10b981', '#f1b72c', '#a55eea', '#ff7675', '#00b894', '#fd79a8', '#0984e3', '#6c5ce7'],
+                            borderRadius: 6,
+                            borderWidth: 0,
+                            barPercentage: 0.5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { 
+                                backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                                titleFont: { family: 'Poppins', size: 12 },
+                                bodyFont: { family: 'Poppins', size: 12 },
+                                padding: 10,
+                                cornerRadius: 8
+                            }
+                        },
+                        scales: {
+                            x: { 
+                                ticks: { font: { family: 'Poppins', size: 10, weight: '500' }, maxRotation: 25 }, 
+                                grid: { display: false } 
+                            },
+                            y: { 
+                                beginAtZero: true, 
+                                ticks: { stepSize: 1, font: { family: 'Poppins', size: 11 } }, 
+                                grid: { color: 'rgba(0,0,0,0.04)' } 
+                            }
+                        }
+                    }
+                });
+            });
+
             function toggleCollapse(header) {
                 var body = header.nextElementSibling;
                 var open = body.style.display !== 'none';
                 body.style.display = open ? 'none' : 'block';
                 header.classList.toggle('open', !open);
+                if (!open) {
+                    header.style.borderRadius = "12px 12px 0 0";
+                } else {
+                    header.style.borderRadius = "12px";
+                }
             }
             </script>
             <?php endif; ?>

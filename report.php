@@ -128,7 +128,10 @@ $user = currentUser();
                         <div class="report-filter-row">
                             <label>Filter Media</label>
                             <select name="media">
+                                <option value="">Semua Media</option>
                                 <option value="Wilayah">Berita Wilayah</option>
+                                <option value="Media Online">Media Online</option>
+                                <option value="Media Sosial">Media Sosial</option>
                             </select>
                         </div>
                         <div class="report-filter-row">

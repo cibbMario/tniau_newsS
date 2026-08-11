@@ -572,7 +572,6 @@ $gallery = $images->fetchAll();
             <form method="POST" enctype="multipart/form-data" id="editForm">
                 <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
                 <input type="hidden" name="update_news" value="1">
-                <input type="hidden" name="media" value="<?= e($news['media']) ?>"> <!-- Hidden for media if not in sidebar -->
 
                 <div class="edit-layout-grid">
                     
@@ -706,6 +705,13 @@ $gallery = $images->fetchAll();
                             $selectedWilayah = $_POST['wilayah'] ?? $news['wilayah'];
                             echo render_lanud_select('wilayah', $selectedWilayah, 'class="sidebar-select"');
                             ?>
+
+                            <label class="sidebar-label">Sumber Media</label>
+                            <select name="media" class="sidebar-select">
+                                <option value="Wilayah" <?= $news['media']==='Wilayah'?'selected':'' ?>>Berita Wilayah</option>
+                                <option value="Media Online" <?= $news['media']==='Media Online'?'selected':'' ?>>Media Online</option>
+                                <option value="Media Sosial" <?= $news['media']==='Media Sosial'?'selected':'' ?>>Media Sosial</option>
+                            </select>
 
                             <label class="sidebar-label">Sentimen</label>
                             <div class="sidebar-radio-group">

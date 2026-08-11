@@ -19,19 +19,19 @@ $initials = strtoupper(substr($roleLabel, 0, 1));
                 Semua Sumber
             </a>
             <a href="<?= BASE_URL ?>/dashboard.php?view=wilayah"
-               class="media-tab-item <?= in_array($currentView, ['wilayah']) ? 'active' : '' ?>">
+               class="media-tab-item <?= ($currentView === 'wilayah') ? 'active' : '' ?>">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 Berita Wilayah
             </a>
             <span class="media-tab-divider"></span>
 
-            <a href="<?= BASE_URL ?>/dashboard.php?view=statistics"
-               class="media-tab-item <?= in_array($currentView, ['statistics']) ? 'active' : '' ?>">
+            <a href="<?= BASE_URL ?>/statistics.php"
+               class="media-tab-item <?= ($current === 'statistics') ? 'active' : '' ?>">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
                 Statistik
             </a>
-            <a href="<?= BASE_URL ?>/dashboard.php?view=report"
-               class="media-tab-item <?= in_array($currentView, ['report']) ? 'active' : '' ?>">
+            <a href="<?= BASE_URL ?>/report.php"
+               class="media-tab-item <?= ($current === 'report') ? 'active' : '' ?>">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 Report
             </a>
