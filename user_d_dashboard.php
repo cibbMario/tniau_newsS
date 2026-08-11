@@ -70,7 +70,7 @@ $newsList = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Halaman User D — Persetujuan Kejelasan Berita</title>
+    <title>Halaman Pemantauan Status Berita (User D)</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css?v=<?= time() ?>">
     <style>
         .user-d-header-banner {
@@ -221,9 +221,9 @@ $newsList = $stmt->fetchAll();
                 <div>
                     <h2>
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                        Halaman Persetujuan Kejelasan Berita (User D)
+                        Halaman Pemantauan Status Berita (User D)
                     </h2>
-                    <p>Selamat datang, <strong><?= e($user['full_name']) ?></strong>. Halaman ini khusus bagi Anda untuk menyetujui kejelasan berita sebelum diterbitkan, memberikan komentar, serta melakukan pengeditan pada berita yang dibuat oleh Reporter (User A).</p>
+                    <p>Selamat datang, <strong><?= e($user['full_name']) ?></strong>. Halaman ini berfungsi untuk melihat daftar berita yang dibuat oleh Reporter beserta statusnya (dalam proses maupun sudah diterbitkan).</p>
                 </div>
                 <div class="user-d-badge">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
@@ -350,14 +350,9 @@ $newsList = $stmt->fetchAll();
                                     <td style="text-align:center;" onclick="event.stopPropagation()">
                                         <div class="action-group-d" style="justify-content:center;">
                                             <?php if ($row['status'] !== 'published'): ?>
-                                                <form method="POST" action="<?= BASE_URL ?>/review_action.php" style="display:inline;margin:0;">
-                                                    <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
-                                                    <input type="hidden" name="news_id" value="<?= $row['id'] ?>">
-                                                    <input type="hidden" name="redirect_to" value="<?= BASE_URL ?>/user_d_dashboard.php?filter=<?= $filter ?>">
-                                                    <button type="submit" name="action" value="approve" class="btn btn-warning btn-sm" style="font-size:11px; padding:3px 12px; background:#e67e22; border-color:#d35400; color:#fff; font-weight:700; border-radius:12px;" title="Terbitkan berita ini (Post)">
-                                                        Post
-                                                    </button>
-                                                </form>
+                                                <span style="font-size:11px; color:#e67e22; font-weight:700; padding:3px 12px; background:rgba(230,126,34,0.1); border-radius:12px; border:1px solid rgba(230,126,34,0.2);">
+                                                    Dalam Proses
+                                                </span>
                                             <?php else: ?>
                                                 <span style="font-size:11px; color:#0f9b6e; font-weight:700; padding:3px 12px; background:rgba(15,155,110,0.1); border-radius:12px; border:1px solid rgba(15,155,110,0.2);">
                                                     Posted

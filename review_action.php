@@ -53,11 +53,8 @@ if ($user['role'] === 'B' && $news['status'] === 'pending_b') {
 }
 elseif ($user['role'] === 'C' && $news['status'] === 'pending_c') {
     if ($action === 'approve') {
-        updateNewsStatus($newsId, 'pending_d', $user['id'], 'Disetujui User C, diteruskan ke User D');
-        $stmtD = $pdo->query("SELECT id FROM users WHERE role = 'D'");
-        foreach ($stmtD->fetchAll() as $d) {
-            sendNotification($newsId, $d['id'], "Berita \"{$news['title']}\" telah disetujui User C dan menunggu persetujuan Anda.");
-        }
+        updateNewsStatus($newsId, 'published', $user['id'], 'Disetujui User C, berita dipublikasikan');
+        sendNotification($newsId, $news['created_by'], "Selamat! Berita \"{$news['title']}\" telah disetujui oleh User C dan dipublikasikan.");
     } elseif ($action === 'reject') {
         $note = $rejectionNote ?: 'User C meminta revisi pada berita ini.';
         saveRejectionComment($pdo, $newsId, $user['id'], $note);
@@ -85,11 +82,8 @@ elseif ($user['role'] === 'E' && in_array($news['status'], ['pending_b', 'pendin
                 sendNotification($newsId, $c['id'], "Berita \"{$news['title']}\" telah disetujui User E dan menunggu persetujuan Anda.");
             }
         } elseif ($news['status'] === 'pending_c') {
-            updateNewsStatus($newsId, 'pending_d', $user['id'], 'Disetujui oleh User E sebagai pengganti User C');
-            $stmtD = $pdo->query("SELECT id FROM users WHERE role = 'D'");
-            foreach ($stmtD->fetchAll() as $d) {
-                sendNotification($newsId, $d['id'], "Berita \"{$news['title']}\" telah disetujui User E dan menunggu persetujuan Anda.");
-            }
+            updateNewsStatus($newsId, 'published', $user['id'], 'Disetujui oleh User E (pengganti User C), berita dipublikasikan');
+            sendNotification($newsId, $news['created_by'], "Selamat! Berita \"{$news['title']}\" telah disetujui oleh User E dan dipublikasikan.");
         } else {
             updateNewsStatus($newsId, 'published', $user['id'], 'Disetujui oleh User E, berita dipublikasikan');
             sendNotification($newsId, $news['created_by'], "Selamat! Berita \"{$news['title']}\" telah disetujui oleh User E dan dipublikasikan.");

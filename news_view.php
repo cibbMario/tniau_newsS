@@ -214,7 +214,7 @@ if (!function_exists('timeAgo')) {
                             <div class="form-group">
                                 <textarea name="message" class="form-input" placeholder="Tulis catatan atau instruksi kejelasan..." required></textarea>
                             </div>
-                            <?php if(in_array($user['role'], ['B','C','D','E'])): ?>
+                            <?php if(in_array($user['role'], ['B','C','E'])): ?>
                             <label class="radio-label" style="margin-bottom:12px;display:inline-flex">
                                 <input type="checkbox" name="is_correction" value="1"> Tandai sebagai instruksi koreksi/revisi kejelasan
                             </label>
@@ -273,20 +273,9 @@ if (!function_exists('timeAgo')) {
                             <button type="submit" name="action" value="reject" class="btn btn-danger btn-block" onclick="return confirm('Kembalikan ke User A untuk direvisi?')">Minta Revisi</button>
                         </form>
                     </div>
-                    <?php elseif (in_array($user['role'], ['D','E']) && in_array($news['status'], ['pending_d', 'pending_c'])): ?>
-                    <div class="review-card">
-                        <h3>Persetujuan User D</h3>
-                        <p>Silakan tinjau berita ini. Jika sudah sesuai, setujui untuk dipublikasikan.</p>
-                        <form action="<?= BASE_URL ?>/review_action.php" method="POST" style="display:flex;flex-direction:column;gap:8px">
-                            <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
-                            <input type="hidden" name="news_id" value="<?= $id ?>">
-                            <button type="submit" name="action" value="approve" class="btn btn-success btn-block">Setujui &amp; Terbitkan</button>
-                            <button type="submit" name="action" value="reject" class="btn btn-danger btn-block" onclick="return confirm('Kembalikan ke User A untuk direvisi?')">Minta Revisi</button>
-                        </form>
-                    </div>
-                    <?php endif; ?>
 
-                    <?php if (in_array($user['role'], ['D','E']) && $news['status'] === 'published'): ?>
+
+                    <?php if ($user['role'] === 'E' && $news['status'] === 'published'): ?>
                     <div class="review-card" style="border-color:var(--red);background:var(--red-bg)">
                         <h3 style="color:var(--red)">Tarik Berita</h3>
                         <p>Turunkan berita ini dari publikasi jika ada kesalahan fatal.</p>

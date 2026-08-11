@@ -14,36 +14,92 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $fullName = userDisplayName($user['role']);
-    $oldPass  = $_POST['old_password'] ?? '';
-    $newPass  = $_POST['new_password'] ?? '';
+    $formType = $_POST['form_type'] ?? 'update_profile';
 
-    try {
-        $stmt = $pdo->prepare("UPDATE users SET full_name = ? WHERE id = ?");
-        $stmt->execute([$fullName, $user['id']]);
-        $_SESSION['full_name'] = $fullName;
-        $user['full_name'] = $fullName;
-
-        if ($oldPass && $newPass) {
-            $stmt = $pdo->prepare("SELECT password_hash FROM users WHERE id = ?");
-            $stmt->execute([$user['id']]);
-            $dbPass = $stmt->fetchColumn();
-
-            if (password_verify($oldPass, $dbPass)) {
-                $newHash = password_hash($newPass, PASSWORD_DEFAULT);
-                $stmt = $pdo->prepare("UPDATE users SET password_hash = ? WHERE id = ?");
-                $stmt->execute([$newHash, $user['id']]);
-                $success = "Profil dan Password berhasil diperbarui.";
-            } else {
-                $error = "Password lama tidak sesuai.";
-            }
-        } elseif ($oldPass || $newPass) {
-            $error = "Untuk mengganti password, isi password lama dan baru.";
+    if ($formType === 'add_account') {
+        // Only Superuser (E) can add users
+        if ($user['role'] !== 'E') {
+            $error = "Hanya Admin yang diizinkan untuk menambahkan akun baru.";
         } else {
-            $success = "Profil berhasil diperbarui.";
+            $newUsername = trim($_POST['new_username'] ?? '');
+            $newFullName = trim($_POST['new_full_name'] ?? '');
+            $newPassword = $_POST['new_password'] ?? '';
+            $newRole     = $_POST['new_role'] ?? '';
+
+            if (!$newUsername || !$newFullName || !$newPassword || !$newRole) {
+                $error = "Semua bidang untuk akun baru harus diisi.";
+            } else {
+                try {
+                    // Check duplicate username
+                    $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = ?");
+                    $stmt->execute([$newUsername]);
+                    if ($stmt->fetchColumn() > 0) {
+                        $error = "Username '$newUsername' sudah digunakan.";
+                    } else {
+                        $hash = password_hash($newPassword, PASSWORD_DEFAULT);
+                        $stmt = $pdo->prepare("INSERT INTO users (username, password_hash, full_name, role) VALUES (?, ?, ?, ?)");
+                        $stmt->execute([$newUsername, $hash, $newFullName, $newRole]);
+                        $success = "Akun baru '$newUsername' berhasil ditambahkan.";
+                    }
+                } catch (Exception $e) {
+                    $error = "Gagal menambahkan akun: " . $e->getMessage();
+                }
+            }
         }
-    } catch (Exception $e) {
-        $error = "Gagal mengupdate profil.";
+    } else {
+        // update_profile action
+        $fullName = trim($_POST['full_name'] ?? $user['full_name']);
+        $oldPass  = $_POST['old_password'] ?? '';
+        $newPass  = $_POST['new_password'] ?? '';
+        $usernameChanged = false;
+
+        try {
+            // Update Full Name
+            $stmt = $pdo->prepare("UPDATE users SET full_name = ? WHERE id = ?");
+            $stmt->execute([$fullName, $user['id']]);
+            $_SESSION['full_name'] = $fullName;
+            $user['full_name'] = $fullName;
+
+            // All users can update their own username
+            $newUsername = trim($_POST['username'] ?? '');
+            if ($newUsername && $newUsername !== $user['username']) {
+                // Check duplicate
+                $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = ? AND id != ?");
+                $stmt->execute([$newUsername, $user['id']]);
+                if ($stmt->fetchColumn() > 0) {
+                    $error = "Username '$newUsername' sudah digunakan oleh pengguna lain.";
+                } else {
+                    $stmt = $pdo->prepare("UPDATE users SET username = ? WHERE id = ?");
+                    $stmt->execute([$newUsername, $user['id']]);
+                    $_SESSION['username'] = $newUsername;
+                    $user['username'] = $newUsername;
+                    $usernameChanged = true;
+                }
+            }
+
+            if (!$error) {
+                if ($oldPass && $newPass) {
+                    $stmt = $pdo->prepare("SELECT password_hash FROM users WHERE id = ?");
+                    $stmt->execute([$user['id']]);
+                    $dbPass = $stmt->fetchColumn();
+
+                    if (password_verify($oldPass, $dbPass)) {
+                        $newHash = password_hash($newPass, PASSWORD_DEFAULT);
+                        $stmt = $pdo->prepare("UPDATE users SET password_hash = ? WHERE id = ?");
+                        $stmt->execute([$newHash, $user['id']]);
+                        $success = "Profil dan Password berhasil diperbarui.";
+                    } else {
+                        $error = "Password lama tidak sesuai.";
+                    }
+                } elseif ($oldPass || $newPass) {
+                    $error = "Untuk mengganti password, isi password lama dan baru.";
+                } else {
+                    $success = $usernameChanged ? "Username berhasil diperbarui." : "Profil berhasil diperbarui.";
+                }
+            }
+        } catch (Exception $e) {
+            $error = "Gagal mengupdate profil.";
+        }
     }
 }
 ?>
@@ -102,7 +158,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-weight: 500;
         }
         .profile-form-row input[type="text"],
-        .profile-form-row input[type="password"] {
+        .profile-form-row input[type="password"],
+        .profile-form-row select {
             flex: 1;
             height: 34px;
             border: 1px solid var(--border);
@@ -113,7 +170,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             outline: none;
             transition: border-color var(--transition);
         }
-        .profile-form-row input:focus:not([readonly]) {
+        .profile-form-row select {
+            background-color: #fff;
+            cursor: pointer;
+        }
+        .profile-form-row input:focus:not([readonly]),
+        .profile-form-row select:focus {
             border-color: var(--blue);
         }
         .profile-form-row input[readonly] {
@@ -215,10 +277,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="profile-card">
                     <form method="POST">
                         <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
+                        <input type="hidden" name="form_type" value="update_profile">
                         <div class="profile-form-row">
                             <label>Username</label>
-                            <input type="text" value="<?= e($user['username']) ?>" readonly>
-                            <span class="profile-info-text"></span>
+                            <input type="text" name="username" value="<?= e($user['username']) ?>" required>
+                            <span class="profile-info-text" style="color:var(--blue); font-weight:600;">(Bisa diubah)</span>
                         </div>
                         <div class="profile-form-row">
                             <label>Role</label>
@@ -226,7 +289,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         <div class="profile-form-row">
                             <label>Nama Tampilan</label>
-                            <input type="text" value="<?= e($user['full_name']) ?>" readonly>
+                            <input type="text" name="full_name" value="<?= e($user['full_name']) ?>" required>
                         </div>
 
                         <div class="profile-divider"></div>
@@ -247,6 +310,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </button>
                     </form>
                 </div>
+
+                <?php if ($user['role'] === 'E'): ?>
+                    <div style="height:32px;"></div>
+                    
+                    <div class="profile-header">
+                        <h2>Tambah Akun Baru</h2>
+                        <p>Daftarkan akun pengguna baru ke dalam sistem portal berita</p>
+                    </div>
+
+                    <div class="profile-card" style="margin-bottom:40px;">
+                        <form method="POST">
+                            <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
+                            <input type="hidden" name="form_type" value="add_account">
+                            
+                            <div class="profile-form-row">
+                                <label>Username</label>
+                                <input type="text" name="new_username" placeholder="Masukkan username baru" required>
+                            </div>
+                            
+                            <div class="profile-form-row">
+                                <label>Nama Tampilan</label>
+                                <input type="text" name="new_full_name" placeholder="Masukkan nama lengkap / tampilan" required>
+                            </div>
+                            
+                            <div class="profile-form-row">
+                                <label>Role Akun</label>
+                                <select name="new_role" required>
+                                    <option value="A">Reporter</option>
+                                    <option value="B">Editor</option>
+                                    <option value="C">Petinggi / Approver</option>
+                                    <option value="D">Approver Kejelasan</option>
+                                    <option value="E">Superuser</option>
+                                </select>
+                            </div>
+                            
+                            <div class="profile-form-row">
+                                <label>Password</label>
+                                <input type="password" name="new_password" placeholder="Masukkan password untuk akun baru" required>
+                            </div>
+
+                            <button type="submit" class="btn-save-wide" style="background:var(--navy); color:#fff; border-color:var(--navy);">
+                                ➕ Tambah Akun Baru
+                            </button>
+                        </form>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </main>
