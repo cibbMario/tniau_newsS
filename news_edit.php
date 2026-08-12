@@ -97,29 +97,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_news'])) {
             if ($isAuthorA && !empty($_POST['resubmit_after_edit'])) {
                 $curStat = $news['status'];
                 if ($curStat === 'revision_b') {
-                    updateNewsStatus($id, 'pending_b', $user['id'], 'User A telah menyelesaikan revisi dan mengirim ulang ke User B');
+                    updateNewsStatus($id, 'pending_b', $user['id'], 'Reporter telah menyelesaikan revisi dan mengirim ulang ke Editor');
                     foreach ($pdo->query("SELECT id FROM users WHERE role = 'B'")->fetchAll() as $uTarget) {
-                        sendNotification($id, $uTarget['id'], "Berita \"$title\" telah direvisi oleh User A dan memerlukan review ulang User B.");
+                        sendNotification($id, $uTarget['id'], "Berita \"$title\" telah direvisi oleh Reporter dan memerlukan review ulang Editor.");
                     }
-                    $success = "Berita berhasil diperbarui dan dikirim ulang ke User B.";
+                    $success = "Berita berhasil diperbarui dan dikirim ulang ke Editor.";
                 } elseif ($curStat === 'revision_c') {
-                    updateNewsStatus($id, 'pending_c', $user['id'], 'User A telah menyelesaikan revisi dan mengirim ulang ke User C');
+                    updateNewsStatus($id, 'pending_c', $user['id'], 'Reporter telah menyelesaikan revisi dan mengirim ulang ke Penyetuju');
                     foreach ($pdo->query("SELECT id FROM users WHERE role = 'C'")->fetchAll() as $uTarget) {
-                        sendNotification($id, $uTarget['id'], "Berita \"$title\" telah direvisi oleh User A dan memerlukan persetujuan ulang User C.");
+                        sendNotification($id, $uTarget['id'], "Berita \"$title\" telah direvisi oleh Reporter dan memerlukan persetujuan ulang Penyetuju.");
                     }
-                    $success = "Berita berhasil diperbarui dan dikirim ulang ke User C.";
+                    $success = "Berita berhasil diperbarui dan dikirim ulang ke Penyetuju.";
                 } elseif ($curStat === 'revision_d') {
-                    updateNewsStatus($id, 'pending_d', $user['id'], 'User A telah menyelesaikan revisi dan mengirim ulang ke User D');
+                    updateNewsStatus($id, 'pending_d', $user['id'], 'Reporter telah menyelesaikan revisi dan mengirim ulang ke Peninjau Kejelasan');
                     foreach ($pdo->query("SELECT id FROM users WHERE role = 'D'")->fetchAll() as $uTarget) {
-                        sendNotification($id, $uTarget['id'], "Berita \"$title\" telah direvisi oleh User A dan memerlukan persetujuan ulang User D.");
+                        sendNotification($id, $uTarget['id'], "Berita \"$title\" telah direvisi oleh Reporter dan memerlukan persetujuan ulang Peninjau Kejelasan.");
                     }
-                    $success = "Berita berhasil diperbarui dan dikirim ulang ke User D.";
+                    $success = "Berita berhasil diperbarui dan dikirim ulang ke Peninjau Kejelasan.";
                 } elseif ($curStat === 'draft') {
-                    updateNewsStatus($id, 'pending_b', $user['id'], 'User A telah menyelesaikan berita draft dan mengirim ke User B untuk direview');
+                    updateNewsStatus($id, 'pending_b', $user['id'], 'Reporter telah menyelesaikan berita draft dan mengirim ke Editor untuk direview');
                     foreach ($pdo->query("SELECT id FROM users WHERE role = 'B'")->fetchAll() as $uTarget) {
-                        sendNotification($id, $uTarget['id'], "Berita baru \"$title\" telah selesai dibuat dan dikirim oleh User A untuk direview.");
+                        sendNotification($id, $uTarget['id'], "Berita baru \"$title\" telah selesai dibuat dan dikirim oleh Reporter untuk direview.");
                     }
-                    $_SESSION['flash_success'] = "Berita \"$title\" berhasil dikirim ke User B untuk direview.";
+                    $_SESSION['flash_success'] = "Berita \"$title\" berhasil dikirim ke Editor untuk direview.";
                     header("Location: " . BASE_URL . "/news_list.php");
                     exit;
                 }
@@ -539,15 +539,24 @@ $gallery = $images->fetchAll();
             <div class="top-navbar-left">
                 <button class="hamburger-btn" title="Toggle Menu">&#9776;</button>
                 <div class="media-tabs">
-                    <span class="media-tab-item active" style="color: #4A89DC; border-bottom: 2px solid #4A89DC;"><span class="icon" style="margin-right:5px">📰</span>Berita Wilayah</span>
+                    <span class="media-tab-item active" style="color: #4A89DC; border-bottom: 2px solid #4A89DC;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px; vertical-align:text-bottom;"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16l-2 2z"></path><line x1="14" y1="8" x2="18" y2="8"></line><line x1="14" y1="12" x2="18" y2="12"></line><line x1="10" y1="16" x2="18" y2="16"></line></svg>
+                        Berita Wilayah
+                    </span>
                     <span class="media-tab-item text-muted">Media Online</span>
                     <span class="media-tab-item text-muted">Media Sosial</span>
                     <span class="media-tab-item text-muted">Semua Sumber</span>
                 </div>
             </div>
             <div class="top-navbar-right">
-                <span class="top-action-btn">📅 Hari Ini <span>▼</span></span>
-                <span class="top-action-btn">⚙️ Filter</span>
+                <span class="top-action-btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    Hari Ini <span>▼</span>
+                </span>
+                <span class="top-action-btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    Filter
+                </span>
                 <span class="top-action-btn" style="border:none;background:transparent;color:var(--text-sec)"><?= e(explode(' ',$user['full_name'])[0]) ?> <span>➔</span></span>
             </div>
         </div>
@@ -644,7 +653,10 @@ $gallery = $images->fetchAll();
                                 <div class="toolbar-divider"></div>
                                 <input type="color" id="txtColorPicker" title="Warna Teks" style="width:28px;height:28px;border:1px solid #ced4da;border-radius:4px;padding:2px;cursor:pointer;background:#fff" onchange="fmt('foreColor', this.value)">
                                 <button type="button" class="rich-editor-btn" onclick="insertLink()" title="Sisipkan Link">🔗 Link</button>
-                                <button type="button" class="rich-editor-btn" onclick="document.getElementById('editorImageInput').click()" title="Sisipkan Gambar">🖼️ Gambar</button>
+                                <button type="button" class="rich-editor-btn" onclick="document.getElementById('editorImageInput').click()" title="Sisipkan Gambar">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                                    Gambar
+                                </button>
                                 <input type="file" id="editorImageInput" accept="image/*" hidden onchange="insertImageFile(this)">
                                 <div class="toolbar-divider"></div>
                                 <button type="button" class="rich-editor-btn" onclick="fmt('insertUnorderedList')" title="Bullet List">• Daftar</button>
@@ -767,26 +779,29 @@ $gallery = $images->fetchAll();
                             </div>
 
                             <button type="submit" name="update_news" value="1" class="btn-save-blue" onclick="prepareSubmit()">
-                                💾 Simpan
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                                Simpan
                             </button>
 
                             <?php if ($isAuthorA && $news['status'] === 'draft'): ?>
                                 <button type="submit" name="resubmit_after_edit" value="1" class="btn-save-blue btn-selesai" style="background: linear-gradient(135deg, #27ae60, #1e8449); margin-top:8px; width:100%; justify-content:center; box-shadow: 0 4px 15px rgba(39,174,96,0.35);" onclick="prepareSubmit()">
-                                    ✅ Selesai &amp; Kirim ke User B
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                    Selesai &amp; Kirim ke Editor
                                 </button>
                             <?php endif; ?>
 
                             <?php if ($isAuthorA && in_array($news['status'], ['revision_b', 'revision_c', 'revision_d'])): ?>
                                 <?php
                                 $targetRoleName = match($news['status']) {
-                                    'revision_b' => 'User B',
-                                    'revision_c' => 'User C',
-                                    'revision_d' => 'User D',
+                                    'revision_b' => 'Editor',
+                                    'revision_c' => 'Penyetuju (Approver)',
+                                    'revision_d' => 'Peninjau Kejelasan',
                                     default => 'Reviewer'
                                 };
                                 ?>
                                 <button type="submit" name="resubmit_after_edit" value="1" class="btn-save-blue" style="background:#27ae60; margin-top:8px;" onclick="prepareSubmit()">
-                                    ✅ Simpan &amp; Selesai Revisi (Kirim ke <?= $targetRoleName ?>)
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                    Simpan &amp; Selesai Revisi (Kirim ke <?= $targetRoleName ?>)
                                 </button>
                             <?php endif; ?>
                         </div>

@@ -221,9 +221,9 @@ $newsList = $stmt->fetchAll();
                 <div>
                     <h2>
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                        Halaman Pemantauan Status Berita (User D)
+                        Halaman Pemantauan Status Berita
                     </h2>
-                    <p>Selamat datang, <strong><?= e($user['full_name']) ?></strong>. Halaman ini berfungsi untuk melihat daftar berita yang dibuat oleh Reporter beserta statusnya (dalam proses maupun sudah diterbitkan).</p>
+                    <p>Selamat datang, <strong><?= e($user['full_name']) ?></strong>. Halaman ini berfungsi untuk memantau status berita yang telah disusun oleh Reporter, baik yang masih dalam tahap proses maupun yang sudah diterbitkan.</p>
                 </div>
                 <div class="user-d-badge">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
@@ -249,7 +249,7 @@ $newsList = $stmt->fetchAll();
                     </div>
                     <div>
                         <div class="stat-card-val"><?= $totalUserANews ?></div>
-                        <div class="stat-card-lbl">Berita Dari Reporter (User A)</div>
+                        <div class="stat-card-lbl">Berita dari Reporter</div>
                     </div>
                 </div>
 
@@ -259,7 +259,7 @@ $newsList = $stmt->fetchAll();
                     </div>
                     <div>
                         <div class="stat-card-val"><?= $totalPublished ?></div>
-                        <div class="stat-card-lbl">Berita Disetujui / Terbit</div>
+                        <div class="stat-card-lbl">Berita Dipublikasikan</div>
                     </div>
                 </div>
 
@@ -269,27 +269,27 @@ $newsList = $stmt->fetchAll();
                     </div>
                     <div>
                         <div class="stat-card-val"><?= $totalUserDComments ?></div>
-                        <div class="stat-card-lbl">Catatan &amp; Koreksi Diberikan</div>
+                        <div class="stat-card-lbl">Catatan Evaluasi Diberikan</div>
                     </div>
                 </div>
             </div>
 
             <!-- FILTER TABS & SEARCH -->
             <div class="tab-filter-bar">
+                <a href="<?= BASE_URL ?>/user_d_dashboard.php?filter=all" class="tab-filter-btn <?= $filter==='all'?'active':'' ?>">
+                    Semua Berita
+                </a>
                 <a href="<?= BASE_URL ?>/user_d_dashboard.php?filter=pending" class="tab-filter-btn <?= $filter==='pending'?'active':'' ?>">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                     Menunggu Persetujuan Kejelasan (<?= $totalPending ?>)
                 </a>
                 <a href="<?= BASE_URL ?>/user_d_dashboard.php?filter=user_a" class="tab-filter-btn <?= $filter==='user_a'?'active':'' ?>">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                    Berita User A / Reporter (<?= $totalUserANews ?>)
+                    Berita dari Reporter (<?= $totalUserANews ?>)
                 </a>
                 <a href="<?= BASE_URL ?>/user_d_dashboard.php?filter=published" class="tab-filter-btn <?= $filter==='published'?'active':'' ?>">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                     Berita Dipublikasikan (<?= $totalPublished ?>)
-                </a>
-                <a href="<?= BASE_URL ?>/user_d_dashboard.php?filter=all" class="tab-filter-btn <?= $filter==='all'?'active':'' ?>">
-                    Semua Berita
                 </a>
             </div>
 
@@ -300,7 +300,7 @@ $newsList = $stmt->fetchAll();
                         <thead>
                             <tr>
                                 <th style="width:28%">Judul / Subjek Berita</th>
-                                <th>Reporter (User A)</th>
+                                <th>Reporter</th>
                                 <th>Wilayah &amp; Media</th>
                                 <th>Waktu Dibuat</th>
                                 <th>Status</th>
@@ -327,7 +327,7 @@ $newsList = $stmt->fetchAll();
                                     <td class="col-author">
                                         <strong><?= e($row['author_name']) ?></strong>
                                         <?php if ($row['author_role'] === 'A'): ?>
-                                            <span style="font-size:10px; background:rgba(30,111,191,0.1); color:#1e6fbf; padding:2px 6px; border-radius:10px; font-weight:600;">User A</span>
+                                            <span style="font-size:10px; background:rgba(30,111,191,0.1); color:#1e6fbf; padding:2px 6px; border-radius:10px; font-weight:600;">Reporter</span>
                                         <?php endif; ?>
                                     </td>
                                     <td class="col-muted">

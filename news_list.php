@@ -109,7 +109,7 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
 
             <?php if (!empty($_SESSION['flash_success'])): ?>
                 <div style="background:#eafaf1;color:#1e8449;padding:12px 16px;border-radius:6px;margin-bottom:16px;border:1px solid rgba(39,174,96,.2);display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:500;">
-                    <span style="font-size:16px;">✅</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#27ae60;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                     <?= e($_SESSION['flash_success']) ?>
                 </div>
                 <?php unset($_SESSION['flash_success']); ?>
@@ -183,12 +183,12 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                                             <?php endif; ?>
 
                                             <?php if (($user['role'] === 'B' || $user['role'] === 'E') && $row['status'] === 'pending_b'): ?>
-                                                <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>" class="btn btn-success btn-sm" style="background:#27ae60;color:#fff;">Review B</a>
+                                                <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>" class="btn btn-success btn-sm" style="background:#27ae60;color:#fff;">Review Editor</a>
                                             <?php endif; ?>
 
                                             <?php if (($user['role'] === 'C' || $user['role'] === 'E') && $row['status'] === 'pending_c'): ?>
                                                 <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>" class="btn btn-success btn-sm" style="background:#27ae60;color:#fff;">Setujui</a>
-                                                <form method="POST" action="<?= BASE_URL ?>/review_action.php" onsubmit="return confirm('Minta revisi dari User A?');" style="display:inline;margin:0;">
+                                                <form method="POST" action="<?= BASE_URL ?>/review_action.php" onsubmit="return confirm('Minta revisi dari Reporter?');" style="display:inline;margin:0;">
                                                     <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
                                                     <input type="hidden" name="news_id" value="<?= $row['id'] ?>">
                                                     <input type="hidden" name="action" value="reject">

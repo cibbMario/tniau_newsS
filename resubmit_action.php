@@ -27,22 +27,22 @@ if (!$news) {
 $title = $news["title"];
 
 if ($news["status"] === "revision_b") {
-    updateNewsStatus($newsId, "pending_b", $user["id"], "User A telah menyelesaikan revisi dan mengirim ulang ke User B");
+    updateNewsStatus($newsId, "pending_b", $user["id"], "Reporter telah menyelesaikan revisi dan mengirim ulang ke Editor");
     $targetUsers = $pdo->query("SELECT id FROM users WHERE role = 'B'")->fetchAll();
     foreach ($targetUsers as $uTarget) {
-        sendNotification($newsId, $uTarget["id"], "Berita \"$title\" telah direvisi oleh User A dan memerlukan review ulang User B.");
+        sendNotification($newsId, $uTarget["id"], "Berita \"$title\" telah direvisi oleh Reporter dan memerlukan review ulang Editor.");
     }
 } elseif ($news["status"] === "revision_c") {
-    updateNewsStatus($newsId, "pending_c", $user["id"], "User A telah menyelesaikan revisi dan mengirim ulang ke User C");
+    updateNewsStatus($newsId, "pending_c", $user["id"], "Reporter telah menyelesaikan revisi dan mengirim ulang ke Penyetuju");
     $targetUsers = $pdo->query("SELECT id FROM users WHERE role = 'C'")->fetchAll();
     foreach ($targetUsers as $uTarget) {
-        sendNotification($newsId, $uTarget["id"], "Berita \"$title\" telah direvisi oleh User A dan memerlukan persetujuan ulang User C.");
+        sendNotification($newsId, $uTarget["id"], "Berita \"$title\" telah direvisi oleh Reporter dan memerlukan persetujuan ulang Penyetuju.");
     }
 } elseif ($news["status"] === "revision_d") {
-    updateNewsStatus($newsId, "pending_d", $user["id"], "User A telah menyelesaikan revisi dan mengirim ulang ke User D");
+    updateNewsStatus($newsId, "pending_d", $user["id"], "Reporter telah menyelesaikan revisi dan mengirim ulang ke Peninjau Kejelasan");
     $targetUsers = $pdo->query("SELECT id FROM users WHERE role = 'D'")->fetchAll();
     foreach ($targetUsers as $uTarget) {
-        sendNotification($newsId, $uTarget["id"], "Berita \"$title\" telah direvisi oleh User A dan memerlukan persetujuan ulang User D.");
+        sendNotification($newsId, $uTarget["id"], "Berita \"$title\" telah direvisi oleh Reporter dan memerlukan persetujuan ulang Peninjau Kejelasan.");
     }
 }
 

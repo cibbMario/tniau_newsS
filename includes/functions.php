@@ -93,12 +93,12 @@ function updateNewsStatus($news_id, $newStatus, $actor_user_id, $note = null) {
 function statusLabel($status) {
     $labels = [
         'draft'      => 'Draft',
-        'pending_b'  => 'Menunggu Review User B',
-        'revision_b' => 'Perlu Revisi (dari User B)',
-        'pending_c'  => 'Menunggu Persetujuan User C',
-        'revision_c' => 'Perlu Revisi (dari User C)',
-        'pending_d'  => 'Menunggu Persetujuan User D',
-        'revision_d' => 'Perlu Revisi (dari User D)',
+        'pending_b'  => 'Menunggu Peninjauan Editor',
+        'revision_b' => 'Perlu Revisi (dari Editor)',
+        'pending_c'  => 'Menunggu Persetujuan (Approver)',
+        'revision_c' => 'Perlu Revisi (dari Penyetuju)',
+        'pending_d'  => 'Menunggu Peninjauan Kejelasan',
+        'revision_d' => 'Perlu Revisi (dari Peninjau Kejelasan)',
         'published'  => 'Sudah Dipublikasikan',
     ];
     return $labels[$status] ?? $status;
@@ -180,13 +180,13 @@ function e($string) {
 
 function userDisplayName($role) {
     $labels = [
-        'A' => 'User A',
-        'B' => 'User B',
-        'C' => 'User C',
-        'D' => 'User D',
-        'E' => 'User E',
+        'A' => 'Reporter',
+        'B' => 'Editor',
+        'C' => 'Penyetuju (Approver)',
+        'D' => 'Peninjau Kejelasan',
+        'E' => 'Administrator',
     ];
-    return $labels[$role] ?? 'User';
+    return $labels[$role] ?? 'Pengguna';
 }
 
 /* =========================================================

@@ -285,7 +285,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         <div class="profile-form-row">
                             <label>Role</label>
-                            <input type="text" value="<?= e(['A'=>'Reporter','B'=>'Editor','C'=>'Petinggi / Approver','D'=>'Approver Kejelasan','E'=>'Superuser'][ $user['role'] ] ?? 'User') ?>" readonly>
+                            <input type="text" value="<?= e(['A'=>'Reporter','B'=>'Editor','C'=>'Penyetuju (Approver)','D'=>'Peninjau Kejelasan','E'=>'Administrator'][ $user['role'] ] ?? 'Pengguna') ?>" readonly>
                         </div>
                         <div class="profile-form-row">
                             <label>Nama Tampilan</label>
@@ -305,8 +305,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <input type="password" name="new_password" placeholder="Masukkan password baru">
                         </div>
 
-                        <button type="submit" class="btn-save-wide">
-                            💾 Simpan Perubahan
+                        <button type="submit" class="btn-save-wide" style="display:inline-flex; justify-content:center; align-items:center;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                            Simpan Perubahan
                         </button>
                     </form>
                 </div>
@@ -339,9 +340,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <select name="new_role" required>
                                     <option value="A">Reporter</option>
                                     <option value="B">Editor</option>
-                                    <option value="C">Petinggi / Approver</option>
-                                    <option value="D">Approver Kejelasan</option>
-                                    <option value="E">Superuser</option>
+                                    <option value="C">Penyetuju (Approver)</option>
+                                    <option value="D">Peninjau Kejelasan</option>
+                                    <option value="E">Administrator</option>
                                 </select>
                             </div>
                             
@@ -350,8 +351,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <input type="password" name="new_password" placeholder="Masukkan password untuk akun baru" required>
                             </div>
 
-                            <button type="submit" class="btn-save-wide" style="background:var(--navy); color:#fff; border-color:var(--navy);">
-                                ➕ Tambah Akun Baru
+                            <button type="submit" class="btn-save-wide" style="background:var(--navy); color:#fff; border-color:var(--navy); display:inline-flex; justify-content:center; align-items:center;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                Tambah Akun Baru
                             </button>
                         </form>
                     </div>
