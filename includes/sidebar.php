@@ -7,9 +7,12 @@ $roleName = userDisplayName($user['role']);
 
 <aside class="sidebar" id="appSidebar">
     <!-- SIDEBAR BRAND HEADER -->
-    <div class="sidebar-brand">
-        <img src="<?= BASE_URL ?>/assets/img/logo-tniau.png" alt="TNI AU" class="logo" onerror="this.src='<?= BASE_URL ?>/assets/img/logo-new.png'">
-        <div class="brand-text"></div>    
+    <div class="sidebar-brand" style="justify-content: center; display: flex; align-items: center; gap: 12px; padding: 10px 14px;">
+        <img src="<?= BASE_URL ?>/assets/img/logo-tniau-transparent.png" alt="TNI AU" class="logo" style="height: 44px; width: auto; max-width: 100%; object-fit: contain;">
+        <div class="brand-text" style="display: flex; flex-direction: column; text-align: left;">
+            <span style="font-size: 16px; font-weight: 500; color: #ffffff; letter-spacing: 0; word-spacing: -1px; line-height: 1.1;">NEWS PORTAL</span>
+            <span style="font-size: 18px; font-weight: 400; color: #c9a227; letter-spacing: 0; word-spacing: -1px; line-height: 1.1;">TNI AU</span>
+        </div>
     </div>
 
     <!-- SIDEBAR NAVIGATION -->
@@ -92,6 +95,15 @@ $roleName = userDisplayName($user['role']);
             </span>
             <span class="label">Profile</span>
         </a>
+        <a href="<?= BASE_URL ?>/change_password.php" class="<?= $current==='change_password' ? 'active' : '' ?>">
+            <span class="icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+            </span>
+            <span class="label">Ganti Password</span>
+        </a>
 
         <!-- 5. Accordion: Report -->
         <div class="sidebar-accordion <?= $current==='report' ? 'open' : '' ?>">
@@ -110,7 +122,18 @@ $roleName = userDisplayName($user['role']);
             </div>
         </div>
 
-        <!-- 6. Notifikasi -->
+        <!-- 6. Riwayat Berita -->
+        <a href="<?= BASE_URL ?>/news_history.php" class="<?= $current==='news_history' ? 'active' : '' ?>">
+            <span class="icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 20h9"/>
+                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                </svg>
+            </span>
+            <span class="label">Riwayat Berita</span>
+        </a>
+
+        <!-- 7. Notifikasi -->
         <a href="<?= BASE_URL ?>/notifications.php" class="<?= $current==='notif' ? 'active' : '' ?>">
             <span class="icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

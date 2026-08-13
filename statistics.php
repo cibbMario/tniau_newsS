@@ -414,7 +414,7 @@ $pageTitle = $pageTitles[$view] ?? 'Statistik';
                     </div>
                 </div>
                 <div class="kpi-card" style="border-left: 4px solid #6c5ce7;">
-                    <div class="kpi-icon" style="background: rgba(108, 92, 231, 0.1); color: #6c5ce7;">📰</div>
+                    <div class="kpi-icon" style="background: rgba(108, 92, 231, 0.1); color: #6c5ce7;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16l-2 2z"/><line x1="14" y1="8" x2="18" y2="8"/><line x1="14" y1="12" x2="18" y2="12"/><line x1="10" y1="16" x2="18" y2="16"/></svg></div>
                     <div class="kpi-info">
                         <span class="kpi-label">Total Publikasi</span>
                         <span class="kpi-value"><?= $totalSent ?></span>
@@ -427,7 +427,7 @@ $pageTitle = $pageTitles[$view] ?? 'Statistik';
             <div class="stats-grid">
                 <!-- Doughnut Chart Sentimen -->
                 <div class="stats-card">
-                    <h3 style="font-size:15px;color:var(--navy);font-weight:600;margin-bottom:15px;border-bottom:1px solid #f1f3f5;padding-bottom:10px;">📊 Distribusi Sentimen Publik</h3>
+                    <h3 style="font-size:15px;color:var(--navy);font-weight:600;margin-bottom:15px;border-bottom:1px solid #f1f3f5;padding-bottom:10px;display:flex;align-items:center;gap:7px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--blue);"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg> Distribusi Sentimen Publik</h3>
                     <div class="chart-container-large" style="height: 240px;">
                         <canvas id="sentimentDoughnutChart"></canvas>
                     </div>
@@ -435,7 +435,7 @@ $pageTitle = $pageTitles[$view] ?? 'Statistik';
 
                 <!-- Doughnut Chart Sumber Media -->
                 <div class="stats-card">
-                    <h3 style="font-size:15px;color:var(--navy);font-weight:600;margin-bottom:15px;border-bottom:1px solid #f1f3f5;padding-bottom:10px;">🌐 Proporsi Sumber Media Berita</h3>
+                    <h3 style="font-size:15px;color:var(--navy);font-weight:600;margin-bottom:15px;border-bottom:1px solid #f1f3f5;padding-bottom:10px;display:flex;align-items:center;gap:7px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--blue);"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> Proporsi Sumber Media Berita</h3>
                     <div class="chart-container-large" style="height: 240px;">
                         <canvas id="mediaDoughnutChart"></canvas>
                     </div>
@@ -543,7 +543,7 @@ $pageTitle = $pageTitles[$view] ?? 'Statistik';
             <!-- Grid KPI Aktor Tren -->
             <div class="stats-kpi-grid">
                 <div class="kpi-card" style="border-left: 4px solid #4b74e0;">
-                    <div class="kpi-icon" style="background: rgba(75, 116, 224, 0.1); color: #4b74e0;">📈</div>
+                    <div class="kpi-icon" style="background: rgba(75, 116, 224, 0.1); color: #4b74e0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
                     <div class="kpi-info">
                         <span class="kpi-label">Total Aktivitas Tren</span>
                         <span class="kpi-value"><?= $totalTrendNews ?></span>
@@ -551,7 +551,7 @@ $pageTitle = $pageTitles[$view] ?? 'Statistik';
                     </div>
                 </div>
                 <div class="kpi-card" style="border-left: 4px solid #10b981;">
-                    <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">👑</div>
+                    <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
                     <div class="kpi-info">
                         <span class="kpi-label">Aktor Terpopuler</span>
                         <span class="kpi-value" style="font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;display:block;" title="<?= e($topAktorName) ?>"><?= e($topAktorName) ?></span>
@@ -559,7 +559,7 @@ $pageTitle = $pageTitles[$view] ?? 'Statistik';
                     </div>
                 </div>
                 <div class="kpi-card" style="border-left: 4px solid #f1b72c;">
-                    <div class="kpi-icon" style="background: rgba(241, 183, 44, 0.1); color: #f1b72c;">⚡</div>
+                    <div class="kpi-icon" style="background: rgba(241, 183, 44, 0.1); color: #f1b72c;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
                     <div class="kpi-info">
                         <span class="kpi-label">Puncak Publikasi</span>
                         <span class="kpi-value"><?= $peakDateFormatted ?></span>
@@ -569,7 +569,7 @@ $pageTitle = $pageTitles[$view] ?? 'Statistik';
             </div>
 
             <div class="stats-card" style="margin-bottom:20px;">
-                <h3 style="font-size:15px;color:var(--navy);font-weight:600;margin-bottom:15px;border-bottom:1px solid #f1f3f5;padding-bottom:10px;">📈 Tren Berita per Aktor (30 Hari Terakhir)</h3>
+                <h3 style="font-size:15px;color:var(--navy);font-weight:600;margin-bottom:15px;border-bottom:1px solid #f1f3f5;padding-bottom:10px;display:flex;align-items:center;gap:7px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--blue);"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg> Tren Berita per Aktor (30 Hari Terakhir)</h3>
                 <div style="position:relative;height:350px;">
                     <canvas id="trendChart"></canvas>
                 </div>
@@ -651,9 +651,9 @@ $pageTitle = $pageTitles[$view] ?? 'Statistik';
                     // Rank Badge
                     $rankClass = 'rank-normal';
                     $rankText  = $i + 1;
-                    if ($i === 0) { $rankClass = 'rank-gold'; $rankText = '🥇'; }
-                    elseif ($i === 1) { $rankClass = 'rank-silver'; $rankText = '🥈'; }
-                    elseif ($i === 2) { $rankClass = 'rank-bronze'; $rankText = '🥉'; }
+                    if ($i === 0) { $rankClass = 'rank-gold'; $rankText = '1'; }
+                    elseif ($i === 1) { $rankClass = 'rank-silver'; $rankText = '2'; }
+                    elseif ($i === 2) { $rankClass = 'rank-bronze'; $rankText = '3'; }
 
                     echo "<tr style=\"border-bottom:1px solid #edf2f7;transition:background 0.2s ease;\">
                             <td style=\"text-align:center;padding:12px;\"><span class=\"rank-badge {$rankClass}\">{$rankText}</span></td>
@@ -674,14 +674,14 @@ $pageTitle = $pageTitles[$view] ?? 'Statistik';
             ?>
 
             <div class="stats-card" style="margin-bottom:24px;">
-                <h3 style="font-size:15px;color:var(--navy);font-weight:600;margin-bottom:15px;border-bottom:1px solid #f1f3f5;padding-bottom:10px;">📊 Grafik Frekuensi Aktor Utama</h3>
+                <h3 style="font-size:15px;color:var(--navy);font-weight:600;margin-bottom:15px;border-bottom:1px solid #f1f3f5;padding-bottom:10px;display:flex;align-items:center;gap:7px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--blue);"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Grafik Frekuensi Aktor Utama</h3>
                 <div class="chart-container-large" style="height:320px;">
                     <canvas id="topAktorBarChart"></canvas>
                 </div>
             </div>
 
             <div class="stats-card" style="margin-bottom:24px;">
-                <h3 style="font-size:15px;color:var(--navy);font-weight:600;margin-bottom:15px;border-bottom:1px solid #f1f3f5;padding-bottom:10px;">🏆 Peringkat Aktor Utama (Semua Sentimen)</h3>
+                <h3 style="font-size:15px;color:var(--navy);font-weight:600;margin-bottom:15px;border-bottom:1px solid #f1f3f5;padding-bottom:10px;display:flex;align-items:center;gap:7px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--gold);"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Peringkat Aktor Utama (Semua Sentimen)</h3>
                 <?php renderAktorTable($topAktor, $chartColors); ?>
             </div>
 

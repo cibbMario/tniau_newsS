@@ -55,8 +55,23 @@ $contributorsData = $pdo->query("SELECT u.full_name, u.role, COUNT(n.id) as tota
 
 // 8. View-specific datasets
 $negativeNews = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JOIN users u ON n.created_by = u.id WHERE n.sentiment='Negatif' ORDER BY n.created_at DESC LIMIT 10")->fetchAll();
-$inspiratifNews = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JOIN users u ON n.created_by = u.id WHERE n.sentiment='Positif' ORDER BY n.created_at DESC LIMIT 10")->fetchAll();
+$inspiratifNews = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JOIN users u ON n.created_by = u.id WHERE n.sentiment='Positif' ORDER BY n.created_at DESC LIMIT 12")->fetchAll();
 $kontenNews = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JOIN users u ON n.created_by = u.id ORDER BY n.created_at DESC LIMIT 10")->fetchAll();
+
+// Konten per-media breakdown
+$kontenWilayah     = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JOIN users u ON n.created_by = u.id WHERE n.media='Wilayah' ORDER BY n.created_at DESC LIMIT 6")->fetchAll();
+$kontenOnline      = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JOIN users u ON n.created_by = u.id WHERE n.media='Media Online' ORDER BY n.created_at DESC LIMIT 6")->fetchAll();
+$kontenSosial      = $pdo->query("SELECT n.*, u.full_name AS author_name FROM news n JOIN users u ON n.created_by = u.id WHERE n.media='Media Sosial' ORDER BY n.created_at DESC LIMIT 6")->fetchAll();
+$kontenMediaCounts = [
+    'Wilayah'      => (int)$pdo->query("SELECT COUNT(*) FROM news WHERE media='Wilayah'")->fetchColumn(),
+    'Media Online' => (int)$pdo->query("SELECT COUNT(*) FROM news WHERE media='Media Online'")->fetchColumn(),
+    'Media Sosial' => (int)$pdo->query("SELECT COUNT(*) FROM news WHERE media='Media Sosial'")->fetchColumn(),
+];
+
+// Inspiratif stats
+$inspiratifTotal   = (int)$pdo->query("SELECT COUNT(*) FROM news WHERE sentiment='Positif'")->fetchColumn();
+$inspiratifPubl    = (int)$pdo->query("SELECT COUNT(*) FROM news WHERE sentiment='Positif' AND status='published'")->fetchColumn();
+$inspiratifThisWk  = (int)$pdo->query("SELECT COUNT(*) FROM news WHERE sentiment='Positif' AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)")->fetchColumn();
 
 // 9. Wilayah-specific stats
 if ($view === 'wilayah') {
@@ -370,22 +385,180 @@ if ($view === 'wilayah') {
                 </div>
 
                 <div class="tab-pane <?= $view==='inspiratif' ? 'active':'' ?>" id="pane-inspiratif">
-                    <div class="card smooth-card mb-4">
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-                            <h3 style="font-size:15px;color:var(--navy);margin:0;font-weight:600">Konten Inspiratif</h3>
-                            <span class="badge badge-green"><?= count($inspiratifNews) ?> Berita Ditemukan</span>
+                    <!-- KPI strip -->
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;">
+                        <div style="background:linear-gradient(135deg,#ecfdf5,#d1fae5);border:1px solid #6ee7b7;border-radius:14px;padding:16px 18px;display:flex;align-items:center;gap:12px;">
+                            <div style="width:40px;height:40px;border-radius:10px;background:rgba(16,185,129,0.15);display:flex;align-items:center;justify-content:center;color:#059669;flex-shrink:0;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L14.39 8.26L21 9.27L16 14.14L17.18 21L12 17.77L6.82 21L8 14.14L3 9.27L9.61 8.26Z"/></svg>
+                            </div>
+                            <div>
+                                <div style="font-size:22px;font-weight:800;color:#065f46;line-height:1"><?= $inspiratifTotal ?></div>
+                                <div style="font-size:11px;color:#047857;font-weight:500;margin-top:2px">Total Konten Positif</div>
+                            </div>
                         </div>
-                        <div class="news-table-wrap"><div class="table-responsive"><table class="news-table"><thead><tr><th>Judul</th><th>Media</th><th>Status</th><th>Penulis</th><th>Waktu</th></tr></thead><tbody><?php if(empty($inspiratifNews)): ?><tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-sec)">Belum ada konten inspiratif.</td></tr><?php else: ?><?php foreach($inspiratifNews as $row): ?><tr><td class="col-subject"><a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>"><?= e($row['title']) ?></a></td><td><span class="badge badge-gray"><?= e($row['media']) ?></span></td><td><span class="badge <?= statusBadgeClass($row['status']) ?>"><?= statusLabel($row['status']) ?></span></td><td style="font-size:11.5px"><?= e($row['author_name']) ?></td><td class="col-time"><?= formatTanggal($row['created_at']) ?></td></tr><?php endforeach; ?><?php endif; ?></tbody></table></div></div>
+                        <div style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1px solid #fcd34d;border-radius:14px;padding:16px 18px;display:flex;align-items:center;gap:12px;">
+                            <div style="width:40px;height:40px;border-radius:10px;background:rgba(245,158,11,0.15);display:flex;align-items:center;justify-content:center;color:#d97706;flex-shrink:0;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            </div>
+                            <div>
+                                <div style="font-size:22px;font-weight:800;color:#92400e;line-height:1"><?= $inspiratifPubl ?></div>
+                                <div style="font-size:11px;color:#b45309;font-weight:500;margin-top:2px">Sudah Dipublikasi</div>
+                            </div>
+                        </div>
+                        <div style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #93c5fd;border-radius:14px;padding:16px 18px;display:flex;align-items:center;gap:12px;">
+                            <div style="width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,0.12);display:flex;align-items:center;justify-content:center;color:#2563eb;flex-shrink:0;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                            </div>
+                            <div>
+                                <div style="font-size:22px;font-weight:800;color:#1e3a8a;line-height:1"><?= $inspiratifThisWk ?></div>
+                                <div style="font-size:11px;color:#1d4ed8;font-weight:500;margin-top:2px">Pekan Ini</div>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Header -->
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                        <div>
+                            <h3 style="font-size:15px;color:var(--navy);margin:0;font-weight:700;">Konten Inspiratif &amp; Positif</h3>
+                            <p style="font-size:12px;color:var(--text-sec);margin:3px 0 0;">Berita bersentimen positif yang menginspirasi</p>
+                        </div>
+                        <a href="<?= BASE_URL ?>/news_list.php?sentiment=Positif" style="font-size:11.5px;color:var(--blue);font-weight:600;text-decoration:none;">Lihat Semua →</a>
+                    </div>
+
+                    <!-- Magazine card grid -->
+                    <?php if (empty($inspiratifNews)): ?>
+                        <div style="text-align:center;padding:40px;color:var(--text-sec);font-size:13px;">Belum ada konten inspiratif.</div>
+                    <?php else: ?>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;">
+                        <?php foreach ($inspiratifNews as $i => $row):
+                            $isFirst = ($i === 0);
+                        ?>
+                        <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>" style="text-decoration:none;display:block;background:#fff;border-radius:14px;border:1px solid #e2e8f0;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.04);transition:transform 0.2s ease,box-shadow 0.2s ease;<?= $isFirst ? 'grid-column:span 2;' : '' ?>" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.09)'" onmouseout="this.style.transform='';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.04)'">
+                            <!-- Colored accent strip -->
+                            <div style="height:5px;background:linear-gradient(90deg,#10b981,#34d399);"></div>
+                            <div style="padding:14px 16px;">
+                                <!-- Tag row -->
+                                <div style="display:flex;align-items:center;gap:7px;margin-bottom:10px;">
+                                    <span style="background:#ecfdf5;color:#059669;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:0.5px;">POSITIF</span>
+                                    <span style="background:#f1f5f9;color:#64748b;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;"><?= e($row['media']) ?></span>
+                                </div>
+                                <!-- Title -->
+                                <p style="font-size:<?= $isFirst ? '14px' : '12.5px' ?>;font-weight:<?= $isFirst ? '700' : '600' ?>;color:var(--navy);margin:0 0 10px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:<?= $isFirst ? '3' : '2' ?>;-webkit-box-orient:vertical;overflow:hidden;"><?= e($row['title']) ?></p>
+                                <!-- Footer -->
+                                <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #f1f5f9;padding-top:9px;">
+                                    <span style="font-size:11px;color:#64748b;font-weight:500;">
+                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:3px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                        <?= e($row['author_name']) ?>
+                                    </span>
+                                    <span style="font-size:10.5px;color:#94a3b8;"><?= formatTanggal($row['created_at']) ?></span>
+                                </div>
+                            </div>
+                        </a>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php endif; ?>
                 </div>
 
                 <div class="tab-pane <?= $view==='konten' ? 'active':'' ?>" id="pane-konten">
-                    <div class="card smooth-card mb-4">
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-                            <h3 style="font-size:15px;color:var(--navy);margin:0;font-weight:600">Konten</h3>
-                            <span class="badge badge-blue"><?= count($kontenNews) ?> Konten Terbaru</span>
+                    <!-- Header -->
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+                        <div>
+                            <h3 style="font-size:15px;color:var(--navy);margin:0;font-weight:700;">Monitoring Konten Media</h3>
+                            <p style="font-size:12px;color:var(--text-sec);margin:3px 0 0;">Sebaran publikasi berita berdasarkan platform media</p>
                         </div>
-                        <div class="news-table-wrap"><div class="table-responsive"><table class="news-table"><thead><tr><th>Judul Konten</th><th>Media</th><th>Sentimen</th><th>Penulis</th><th>Waktu</th></tr></thead><tbody><?php foreach($kontenNews as $row): ?><tr><td class="col-subject"><a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>"><?= e($row['title']) ?></a></td><td><span class="badge badge-gray"><?= e($row['media']) ?></span></td><td><span class="badge <?= ($row['sentiment']==='Positif')?'badge-green':(($row['sentiment']==='Negatif')?'badge-red':'badge-blue') ?>"><?= e($row['sentiment']) ?></span></td><td style="font-size:11.5px"><?= e($row['author_name']) ?></td><td class="col-time"><?= formatTanggal($row['created_at']) ?></td></tr><?php endforeach; ?></tbody></table></div></div>
+                        <a href="<?= BASE_URL ?>/news_list.php" style="font-size:11.5px;color:var(--blue);font-weight:600;text-decoration:none;">Lihat Semua →</a>
+                    </div>
+
+                    <!-- 3-column kanban -->
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start;">
+
+                        <!-- Column: Wilayah -->
+                        <div style="background:#f8fafc;border-radius:14px;border:1px solid #e2e8f0;overflow:hidden;">
+                            <div style="background:linear-gradient(135deg,#1e3a8a,#2563eb);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <div style="width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                    </div>
+                                    <span style="color:#fff;font-weight:700;font-size:13px;">Berita Wilayah</span>
+                                </div>
+                                <span style="background:rgba(255,255,255,0.22);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;"><?= $kontenMediaCounts['Wilayah'] ?></span>
+                            </div>
+                            <div style="padding:10px 12px;display:flex;flex-direction:column;gap:8px;">
+                                <?php if (empty($kontenWilayah)): ?>
+                                    <p style="font-size:12px;color:var(--text-sec);text-align:center;padding:16px 0;">Belum ada data</p>
+                                <?php else: ?>
+                                <?php foreach ($kontenWilayah as $row): ?>
+                                <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>" style="text-decoration:none;display:block;background:#fff;border-radius:10px;padding:10px 12px;border:1px solid #e9eef6;transition:box-shadow 0.18s;" onmouseover="this.style.boxShadow='0 4px 14px rgba(37,99,235,0.1)'" onmouseout="this.style.boxShadow='none'">
+                                    <p style="font-size:12px;font-weight:600;color:var(--navy);margin:0 0 6px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;"><?= e($row['title']) ?></p>
+                                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                                        <?php $sc = ($row['sentiment']==='Positif') ? '#10b981' : (($row['sentiment']==='Negatif') ? '#ef4444' : '#3b82f6'); ?>
+                                        <span style="font-size:10px;font-weight:700;color:<?= $sc ?>;background:<?= $sc ?>18;padding:2px 7px;border-radius:20px;"><?= e($row['sentiment']) ?></span>
+                                        <span style="font-size:10.5px;color:#94a3b8;"><?= formatTanggal($row['created_at']) ?></span>
+                                    </div>
+                                </a>
+                                <?php endforeach; ?>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <!-- Column: Media Online -->
+                        <div style="background:#f8fafc;border-radius:14px;border:1px solid #e2e8f0;overflow:hidden;">
+                            <div style="background:linear-gradient(135deg,#0e7490,#06b6d4);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <div style="width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                                    </div>
+                                    <span style="color:#fff;font-weight:700;font-size:13px;">Media Online</span>
+                                </div>
+                                <span style="background:rgba(255,255,255,0.22);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;"><?= $kontenMediaCounts['Media Online'] ?></span>
+                            </div>
+                            <div style="padding:10px 12px;display:flex;flex-direction:column;gap:8px;">
+                                <?php if (empty($kontenOnline)): ?>
+                                    <p style="font-size:12px;color:var(--text-sec);text-align:center;padding:16px 0;">Belum ada data</p>
+                                <?php else: ?>
+                                <?php foreach ($kontenOnline as $row): ?>
+                                <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>" style="text-decoration:none;display:block;background:#fff;border-radius:10px;padding:10px 12px;border:1px solid #e9eef6;transition:box-shadow 0.18s;" onmouseover="this.style.boxShadow='0 4px 14px rgba(6,182,212,0.12)'" onmouseout="this.style.boxShadow='none'">
+                                    <p style="font-size:12px;font-weight:600;color:var(--navy);margin:0 0 6px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;"><?= e($row['title']) ?></p>
+                                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                                        <?php $sc = ($row['sentiment']==='Positif') ? '#10b981' : (($row['sentiment']==='Negatif') ? '#ef4444' : '#3b82f6'); ?>
+                                        <span style="font-size:10px;font-weight:700;color:<?= $sc ?>;background:<?= $sc ?>18;padding:2px 7px;border-radius:20px;"><?= e($row['sentiment']) ?></span>
+                                        <span style="font-size:10.5px;color:#94a3b8;"><?= formatTanggal($row['created_at']) ?></span>
+                                    </div>
+                                </a>
+                                <?php endforeach; ?>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <!-- Column: Media Sosial -->
+                        <div style="background:#f8fafc;border-radius:14px;border:1px solid #e2e8f0;overflow:hidden;">
+                            <div style="background:linear-gradient(135deg,#7c3aed,#a78bfa);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;">
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <div style="width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                                    </div>
+                                    <span style="color:#fff;font-weight:700;font-size:13px;">Media Sosial</span>
+                                </div>
+                                <span style="background:rgba(255,255,255,0.22);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;"><?= $kontenMediaCounts['Media Sosial'] ?></span>
+                            </div>
+                            <div style="padding:10px 12px;display:flex;flex-direction:column;gap:8px;">
+                                <?php if (empty($kontenSosial)): ?>
+                                    <p style="font-size:12px;color:var(--text-sec);text-align:center;padding:16px 0;">Belum ada data</p>
+                                <?php else: ?>
+                                <?php foreach ($kontenSosial as $row): ?>
+                                <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>" style="text-decoration:none;display:block;background:#fff;border-radius:10px;padding:10px 12px;border:1px solid #e9eef6;transition:box-shadow 0.18s;" onmouseover="this.style.boxShadow='0 4px 14px rgba(124,58,237,0.1)'" onmouseout="this.style.boxShadow='none'">
+                                    <p style="font-size:12px;font-weight:600;color:var(--navy);margin:0 0 6px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;"><?= e($row['title']) ?></p>
+                                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                                        <?php $sc = ($row['sentiment']==='Positif') ? '#10b981' : (($row['sentiment']==='Negatif') ? '#ef4444' : '#3b82f6'); ?>
+                                        <span style="font-size:10px;font-weight:700;color:<?= $sc ?>;background:<?= $sc ?>18;padding:2px 7px;border-radius:20px;"><?= e($row['sentiment']) ?></span>
+                                        <span style="font-size:10.5px;color:#94a3b8;"><?= formatTanggal($row['created_at']) ?></span>
+                                    </div>
+                                </a>
+                                <?php endforeach; ?>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -425,7 +598,7 @@ if ($view === 'wilayah') {
                     <div class="card smooth-card mb-4" style="background: linear-gradient(135deg, rgba(30, 111, 191, 0.05), rgba(255, 255, 255, 0.9)); border: 1px solid rgba(30,111,191,0.12)">
                         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px">
                             <div>
-                                <h3 style="font-size:18px;color:var(--navy);margin:0;font-weight:700">📍 Pemantauan Berita Wilayah / Lanud</h3>
+                                <h3 style="font-size:18px;color:var(--navy);margin:0;font-weight:700;display:flex;align-items:center;gap:8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--blue);flex-shrink:0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Pemantauan Berita Wilayah / Lanud</h3>
                                 <p style="color:var(--text-sec);font-size:12.5px;margin-top:4px">Analisis dan sebaran informasi dari satuan Lanud di seluruh Indonesia.</p>
                             </div>
                             <span class="badge badge-gold" style="font-size:12px;padding:6px 12px;font-weight:700">Total: <?= $wilayahTotal ?? 0 ?> Berita</span>

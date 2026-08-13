@@ -91,7 +91,10 @@ if (!function_exists('timeAgo')) {
                                     Ditandai Sebagai
                                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
                                 </span>
-                                <span class="btn-tool active" style="border-radius:4px;background:var(--navy);color:#fff;border-color:var(--navy)">Riwayat Catatan</span>
+                                <a href="<?= BASE_URL ?>/news_history.php?news_id=<?= $id ?>" class="btn-tool active" style="border-radius:4px;background:var(--navy);color:#fff;border-color:var(--navy);text-decoration:none">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><polyline points="12 8 8 12 12 16"></polyline><line x1="20" y1="12" x2="8" y2="12"></line></svg>
+                                    Riwayat Catatan
+                                </a>
                             </div>
                             <div class="detail-toolbar-right">
                                 <button class="btn-tool" style="border-radius:4px;color:var(--blue);background:rgba(30,111,191,0.08);border-color:transparent;" title="Salin tautan">

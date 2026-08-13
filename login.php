@@ -11,17 +11,21 @@ if (isLoggedIn()) {
     exit;
 }
 
-$csrfToken = generate_csrf_token();
-$error = '';
+$csrfToken   = generate_csrf_token();
+$error       = '';
+$lockSeconds = 0;
+$postedUser  = '';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $token = $_POST['csrf_token'] ?? '';
+    $token    = $_POST['csrf_token'] ?? '';
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
+    $postedUser = $username;
 
     if (!verify_csrf_token($token)) {
         $error = 'Sesi login tidak valid. Silakan refresh halaman dan coba lagi.';
-    } elseif (isLoginLocked()) {
-        $error = 'Terlalu banyak percobaan login. Silakan tunggu beberapa menit lalu coba lagi.';
+    } elseif (($lockSeconds = isLoginLocked()) > 0) {
+        $error = 'Terlalu banyak percobaan login gagal. Akun sementara dikunci.';
     } elseif ($username && $password && login($username, $password)) {
         $u = currentUser();
         if (($u['role'] ?? '') === 'D') {
@@ -31,7 +35,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         exit;
     } else {
-        $error = 'Username atau password salah.';
+        if (!$username || !$password) {
+            $error = 'Username dan password wajib diisi.';
+        } else {
+            $lockSeconds = isLoginLocked();
+            if ($lockSeconds > 0) {
+                $error = 'Terlalu banyak percobaan login gagal. Akun sementara dikunci.';
+            } else {
+                $error = 'Username atau password salah.';
+            }
+        }
+    }
+} else {
+    // Cek kunci saat halaman dibuka (bukan hanya setelah POST)
+    $lockSeconds = isLoginLocked();
+    if ($lockSeconds > 0) {
+        $error = 'IP Anda sementara dikunci karena terlalu banyak percobaan login gagal.';
     }
 }
 ?>
@@ -46,25 +65,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
 <div class="login-bg">
     <div class="login-box">
-        <img src="<?= BASE_URL ?>/assets/img/logo-new.png" alt="TNI AU" class="login-logo" onerror="this.src='<?= BASE_URL ?>/assets/img/logo-tniau.png'">
+        <img src="<?= BASE_URL ?>/assets/img/logo-tniau-transparent.png" alt="TNI AU" class="login-logo">
         <h1>Portal Berita TNI AU</h1>
         <p class="sub">Sistem Monitoring &amp; Manajemen Berita<br>TNI Angkatan Udara — <em>Swa Bhuwana Paksa</em></p>
 
         <?php if ($error): ?>
-            <div class="error-msg"><?= e($error) ?></div>
+            <div class="error-msg" id="errorMsg"><?= e($error) ?></div>
+        <?php endif; ?>
+
+        <?php if ($lockSeconds > 0): ?>
+            <div class="error-msg" id="lockMsg" style="background:#fff3cd; color:#856404; border-color:#ffeeba;">
+                Akun/IP Anda dikunci sementara. Silakan tunggu <span id="countdown"><?= $lockSeconds ?></span> detik.
+            </div>
         <?php endif; ?>
 
         <form method="POST" style="text-align:left" id="loginForm" onsubmit="showLoginLoader()">
             <input type="hidden" name="csrf_token" value="<?= e($csrfToken) ?>">
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" class="form-input" placeholder="Masukkan username" autofocus required value="<?= e($_POST['username'] ?? '') ?>">
+                <input type="text" id="username" name="username" class="form-input" placeholder="Masukkan username" autofocus required value="<?= e($postedUser) ?>" <?= $lockSeconds > 0 ? 'disabled' : '' ?>>
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" class="form-input" placeholder="Masukkan password" required>
+                <input type="password" id="password" name="password" class="form-input" placeholder="Masukkan password" required <?= $lockSeconds > 0 ? 'disabled' : '' ?>>
             </div>
-            <button type="submit" id="loginBtn" class="btn btn-primary btn-block" style="height:42px;font-size:14px;margin-top:8px">
+            <button type="submit" id="loginBtn" class="btn btn-primary btn-block" style="height:42px;font-size:14px;margin-top:8px" <?= $lockSeconds > 0 ? 'disabled' : '' ?>>
                 <span id="loginBtnText">Masuk</span>
                 <span id="loginBtnLoader" style="display:none">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation:spin 1s linear infinite">
@@ -90,6 +115,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             document.getElementById('loginBtnLoader').style.display = 'inline-flex';
             document.getElementById('loginBtn').disabled = true;
         }
+
+        <?php if ($lockSeconds > 0): ?>
+        (function() {
+            var seconds = <?= $lockSeconds ?>;
+            var countdownEl = document.getElementById('countdown');
+            var timer = setInterval(function() {
+                seconds--;
+                if (seconds <= 0) {
+                    clearInterval(timer);
+                    var lockMsg = document.getElementById('lockMsg');
+                    if (lockMsg) lockMsg.style.display = 'none';
+                    var errorMsg = document.getElementById('errorMsg');
+                    if (errorMsg) errorMsg.style.display = 'none';
+                    document.getElementById('username').disabled = false;
+                    document.getElementById('password').disabled = false;
+                    document.getElementById('loginBtn').disabled = false;
+                } else {
+                    if (countdownEl) countdownEl.textContent = seconds;
+                }
+            }, 1000);
+        })();
+        <?php endif; ?>
         </script>
 
         <div class="credits">
