@@ -112,6 +112,53 @@ try {
     ");
     echo "New tables (statistik, galeri_media, berita_wilayah, media_online, media_sosial) checked/created.<br>";
 
+    // 3c. Create DAM, Media Monitoring, and Audit Logs tables
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS digital_assets (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            category VARCHAR(100) NOT NULL DEFAULT 'Kegiatan',
+            tags VARCHAR(255) DEFAULT NULL,
+            file_path VARCHAR(255) NOT NULL,
+            file_size INT DEFAULT 0,
+            lanud VARCHAR(100) DEFAULT 'Mabes TNI AU',
+            uploaded_by INT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            CONSTRAINT fk_assets_user FOREIGN KEY (uploaded_by) REFERENCES users(id) ON DELETE SET NULL
+        ) ENGINE=InnoDB;
+
+        CREATE TABLE IF NOT EXISTS media_monitoring (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            news_id INT DEFAULT NULL,
+            portal_name VARCHAR(150) NOT NULL,
+            article_title VARCHAR(255) NOT NULL,
+            article_url VARCHAR(255) NOT NULL,
+            published_date DATE DEFAULT NULL,
+            sentiment ENUM('Positif', 'Negatif', 'Netral') NOT NULL DEFAULT 'Positif',
+            reach_estimate INT DEFAULT 0,
+            notes TEXT DEFAULT NULL,
+            created_by INT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            CONSTRAINT fk_monitoring_news FOREIGN KEY (news_id) REFERENCES news(id) ON DELETE SET NULL,
+            CONSTRAINT fk_monitoring_user FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+        ) ENGINE=InnoDB;
+
+        CREATE TABLE IF NOT EXISTS audit_logs (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT DEFAULT NULL,
+            action VARCHAR(100) NOT NULL,
+            details TEXT DEFAULT NULL,
+            ip_address VARCHAR(45) DEFAULT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            CONSTRAINT fk_audit_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+        ) ENGINE=InnoDB;
+    ");
+    echo "Tables <strong>digital_assets</strong>, <strong>media_monitoring</strong>, and <strong>audit_logs</strong> checked/created.<br>";
+
+    // Add lanud and is_active to users table
+    addColumnIfNotExist($pdo, 'users', 'lanud', "VARCHAR(100) DEFAULT 'Lanud Atang Sendjaja'");
+    addColumnIfNotExist($pdo, 'users', 'is_active', "TINYINT(1) NOT NULL DEFAULT 1");
+
     // 4. Alter users table role column to allow 'E' and seed default users: reporter1, editor1, approver1, dian, user_e
     try {
         $pdo->exec("ALTER TABLE users MODIFY COLUMN role ENUM('A', 'B', 'C', 'D', 'E') NOT NULL");
@@ -124,10 +171,11 @@ try {
     $hash = password_hash($defaultPassword, PASSWORD_DEFAULT);
 
     $users = [
-        ['username' => 'reporter1', 'full_name' => 'Reporter (Mario)',          'role' => 'A'],
-        ['username' => 'editor1',   'full_name' => 'Editor (Saksak)',           'role' => 'B'],
-        ['username' => 'approver1', 'full_name' => 'Approver (Kadis)',          'role' => 'C'],
-        ['username' => 'dian',      'full_name' => 'Dian (Approver Kejelasan)',   'role' => 'D'],
+        ['username' => 'reporter1', 'full_name' => 'Reporter (Mario)',          'role' => 'A', 'lanud' => 'Lanud Atang Sendjaja'],
+        ['username' => 'editor1',   'full_name' => 'Editor (Saksak)',           'role' => 'B', 'lanud' => 'Lanud Halim Perdanakusuma'],
+        ['username' => 'approver1', 'full_name' => 'Approver (Kadis)',          'role' => 'C', 'lanud' => 'Mabes TNI AU'],
+        ['username' => 'dian',      'full_name' => 'Dian (Approver Kejelasan)',   'role' => 'D', 'lanud' => 'Mabes TNI AU'],
+        ['username' => 'admin_dispen', 'full_name' => 'Administrator Dispenau', 'role' => 'E', 'lanud' => 'Mabes TNI AU'],
     ];
 
     foreach ($users as $u) {
@@ -135,9 +183,9 @@ try {
         $check->execute([$u['username']]);
         if (!$check->fetch()) {
             $stmt = $pdo->prepare(
-                "INSERT INTO users (username, password_hash, full_name, role) VALUES (?, ?, ?, ?)"
+                "INSERT INTO users (username, password_hash, full_name, role, lanud) VALUES (?, ?, ?, ?, ?)"
             );
-            $stmt->execute([$u['username'], $hash, $u['full_name'], $u['role']]);
+            $stmt->execute([$u['username'], $hash, $u['full_name'], $u['role'], $u['lanud']]);
             echo "Seeded user: <strong>{$u['username']}</strong>.<br>";
         } else {
             echo "User: <strong>{$u['username']}</strong> already exists, skipping.<br>";

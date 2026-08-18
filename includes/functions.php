@@ -250,3 +250,21 @@ function getLanudInitials($lanudName) {
     return 'PEN ATS';
 }
 
+/* =========================================================
+   AUDIT LOGGING
+   ========================================================= */
+function logAudit($action, $details = null, $userId = null) {
+    global $pdo;
+    try {
+        if ($userId === null && function_exists('currentUser')) {
+            $u = currentUser();
+            $userId = $u['id'] ?? null;
+        }
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+        $stmt = $pdo->prepare("INSERT INTO audit_logs (user_id, action, details, ip_address) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$userId, $action, $details, $ip]);
+    } catch (Exception $e) {
+        // fail silently for audit
+    }
+}
+

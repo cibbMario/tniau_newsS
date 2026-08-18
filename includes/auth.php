@@ -133,6 +133,11 @@ function login(string $username, string $password): bool {
     $stmt->execute([$username]);
     $user = $stmt->fetch();
 
+    if ($user && isset($user['is_active']) && (int)$user['is_active'] === 0) {
+        // Akun nonaktif
+        return false;
+    }
+
     if ($user && password_verify($password, $user['password_hash'])) {
         // Login berhasil — bersihkan semua catatan gagal
         clearLoginAttempts($ip);
@@ -142,15 +147,24 @@ function login(string $username, string $password): bool {
         session_regenerate_id(true);
         $_SESSION['user_id']       = $user['id'];
         $_SESSION['username']      = $user['username'];
-        $_SESSION['full_name']     = userDisplayName($user['role']);
+        $_SESSION['full_name']     = $user['full_name'];
         $_SESSION['role']          = $user['role'];
+        $_SESSION['lanud']         = $user['lanud'] ?? 'Lanud Atang Sendjaja';
         $_SESSION['login_time']    = time();
         $_SESSION['last_activity'] = time();
+
+        if (function_exists('logAudit')) {
+            logAudit('LOGIN', 'User ' . $user['username'] . ' (' . $user['full_name'] . ') berhasil login', $user['id']);
+        }
+
         return true;
     }
 
     // Login gagal — catat ke DB
     recordFailedAttempt($ip, $username);
+    if (function_exists('logAudit')) {
+        logAudit('LOGIN_FAILED', 'Gagal login untuk username: ' . $username, null);
+    }
 
     // Fallback session counter (untuk kompatibilitas)
     $attempts = (int)($_SESSION['login_attempts'] ?? 0) + 1;
@@ -163,6 +177,9 @@ function login(string $username, string $password): bool {
 }
 
 function logout(): void {
+    if (isset($_SESSION['user_id']) && function_exists('logAudit')) {
+        logAudit('LOGOUT', 'User logout dari sesi', $_SESSION['user_id']);
+    }
     $_SESSION = [];
     if (session_status() === PHP_SESSION_ACTIVE) {
         session_destroy();

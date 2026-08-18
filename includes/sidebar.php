@@ -70,7 +70,7 @@ $roleName = userDisplayName($user['role']);
         </div>
 
         <!-- 3. Accordion: Statistik -->
-        <?php $statsViews = ['berita','tren','aktor']; $isStatsActive = $current==='statistics'; ?>
+        <?php $statsViews = ['berita','tren','aktor','peta']; $isStatsActive = $current==='statistics'; ?>
         <div class="sidebar-accordion <?= $isStatsActive ? 'open' : '' ?>">
             <div class="accordion-header <?= $isStatsActive ? 'active' : '' ?>" onclick="toggleSidebarAccordion(this)">
                 <span class="icon">
@@ -85,8 +85,25 @@ $roleName = userDisplayName($user['role']);
                 <a href="<?= BASE_URL ?>/statistics.php?view=berita" class="<?= ($current==='statistics' && ($_GET['view']??'berita')==='berita') ? 'active' : '' ?>">Statistik Berita</a>
                 <a href="<?= BASE_URL ?>/statistics.php?view=tren"   class="<?= ($current==='statistics' && ($_GET['view']??'')==='tren')   ? 'active' : '' ?>">Tren</a>
                 <a href="<?= BASE_URL ?>/statistics.php?view=aktor"  class="<?= ($current==='statistics' && ($_GET['view']??'')==='aktor')  ? 'active' : '' ?>">Top Aktor</a>
+                <a href="<?= BASE_URL ?>/statistics.php?view=peta"   class="<?= ($current==='statistics' && ($_GET['view']??'')==='peta')   ? 'active' : '' ?>">Peta Sebaran Lanud</a>
             </div>
         </div>
+
+        <!-- 3b. Digital Asset Management (DAM) -->
+        <a href="<?= BASE_URL ?>/media_library.php" class="<?= $current==='media_library' ? 'active' : '' ?>">
+            <span class="icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+            </span>
+            <span class="label">Media Library (DAM)</span>
+        </a>
+
+        <!-- 3c. Media Monitoring -->
+        <a href="<?= BASE_URL ?>/media_monitoring.php" class="<?= $current==='media_monitoring' ? 'active' : '' ?>">
+            <span class="icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+            </span>
+            <span class="label">Media Monitoring</span>
+        </a>
 
         <!-- 4. Profile -->
         <a href="<?= BASE_URL ?>/profile.php" class="<?= $current==='profile' ? 'active' : '' ?>">
@@ -122,7 +139,17 @@ $roleName = userDisplayName($user['role']);
             </div>
         </div>
 
-        <!-- 6. Riwayat Berita -->
+        <!-- 6. Manajemen Pengguna & Audit Trail (Role C, E) -->
+        <?php if (in_array($user['role'], ['C', 'E'])): ?>
+        <a href="<?= BASE_URL ?>/users_management.php" class="<?= in_array($current, ['users_management', 'audit_log']) ? 'active' : '' ?>">
+            <span class="icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </span>
+            <span class="label">Manajemen Pengguna</span>
+        </a>
+        <?php endif; ?>
+
+        <!-- 7. Riwayat Berita -->
         <a href="<?= BASE_URL ?>/news_history.php" class="<?= $current==='news_history' ? 'active' : '' ?>">
             <span class="icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -133,7 +160,7 @@ $roleName = userDisplayName($user['role']);
             <span class="label">Riwayat Berita</span>
         </a>
 
-        <!-- 7. Notifikasi -->
+        <!-- 8. Notifikasi -->
         <a href="<?= BASE_URL ?>/notifications.php" class="<?= $current==='notif' ? 'active' : '' ?>">
             <span class="icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -147,7 +174,7 @@ $roleName = userDisplayName($user['role']);
             <?php endif; ?>
         </a>
 
-        <!-- 7. Kontak Support -->
+        <!-- 9. Kontak Support -->
         <a href="<?= BASE_URL ?>/support.php" class="<?= $current==='support' ? 'active' : '' ?>">
             <span class="icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>

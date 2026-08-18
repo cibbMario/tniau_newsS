@@ -205,11 +205,30 @@ if ($view === 'aktor') {
     }
 }
 
+// ── VIEW: PETA SEBARAN LANUD ──────────────────────────────────────
+if ($view === 'peta') {
+    $stmtWil = $pdo->query("
+        SELECT wilayah, COUNT(*) as total_news,
+        SUM(CASE WHEN sentiment='Positif' THEN 1 ELSE 0 END) as positif_count,
+        SUM(CASE WHEN sentiment='Negatif' THEN 1 ELSE 0 END) as negatif_count,
+        SUM(CASE WHEN sentiment='Netral' THEN 1 ELSE 0 END) as netral_count
+        FROM news 
+        WHERE wilayah IS NOT NULL AND wilayah != ''
+        GROUP BY wilayah
+    ");
+    $wilData = $stmtWil->fetchAll();
+    $lanudCounts = [];
+    foreach ($wilData as $w) {
+        $lanudCounts[$w['wilayah']] = $w;
+    }
+}
+
 // Titles per view
 $pageTitles = [
     'berita' => 'Statistik Berita',
     'tren'   => 'Tren',
     'aktor'  => 'Top Aktor',
+    'peta'   => 'Peta Sebaran Berita Lanud',
 ];
 $pageTitle = $pageTitles[$view] ?? 'Statistik';
 ?>
@@ -220,6 +239,8 @@ $pageTitle = $pageTitles[$view] ?? 'Statistik';
     <title><?= $pageTitle ?> - Portal Berita TNI AU</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         /* Custom Modern Statistics Dashboard Styles */
         .stats-kpi-grid {
@@ -768,6 +789,123 @@ $pageTitle = $pageTitles[$view] ?? 'Statistik';
                     header.style.borderRadius = "12px";
                 }
             }
+            </script>
+            <?php endif; ?>
+
+            <?php if ($view === 'peta'): ?>
+            <?php
+            $lanudsData = [
+                ['name' => 'Lanud Halim Perdanakusuma', 'city' => 'Jakarta Timur', 'lat' => -6.2655, 'lng' => 106.8906, 'koopsud' => 'Koopsud I'],
+                ['name' => 'Lanud Atang Sendjaja', 'city' => 'Bogor', 'lat' => -6.5414, 'lng' => 106.7515, 'koopsud' => 'Koopsud I'],
+                ['name' => 'Lanud Roesmin Nurjadin', 'city' => 'Pekanbaru', 'lat' => 0.4611, 'lng' => 101.4444, 'koopsud' => 'Koopsud I'],
+                ['name' => 'Lanud Supadio', 'city' => 'Pontianak', 'lat' => -0.1500, 'lng' => 109.4039, 'koopsud' => 'Koopsud I'],
+                ['name' => 'Lanud Soewondo', 'city' => 'Medan', 'lat' => 3.5583, 'lng' => 98.6750, 'koopsud' => 'Koopsud I'],
+                ['name' => 'Lanud Suryadarma', 'city' => 'Subang', 'lat' => -6.5392, 'lng' => 107.6719, 'koopsud' => 'Koopsud I'],
+                ['name' => 'Lanud Iswahjudi', 'city' => 'Madiun', 'lat' => -7.6167, 'lng' => 111.4333, 'koopsud' => 'Koopsud II'],
+                ['name' => 'Lanud Abdulrachman Saleh', 'city' => 'Malang', 'lat' => -7.9269, 'lng' => 112.7144, 'koopsud' => 'Koopsud II'],
+                ['name' => 'Lanud Sultan Hasanuddin', 'city' => 'Makassar', 'lat' => -5.0614, 'lng' => 119.5542, 'koopsud' => 'Koopsud II'],
+                ['name' => 'Lanud Sam Ratulangi', 'city' => 'Manado', 'lat' => 1.5494, 'lng' => 124.9264, 'koopsud' => 'Koopsud II'],
+                ['name' => 'Lanud Dhomber', 'city' => 'Balikpapan', 'lat' => -1.2683, 'lng' => 116.8944, 'koopsud' => 'Koopsud II'],
+                ['name' => 'Lanud El Tari', 'city' => 'Kupang', 'lat' => -10.1714, 'lng' => 123.6706, 'koopsud' => 'Koopsud II'],
+                ['name' => 'Lanud Adisutjipto', 'city' => 'Yogyakarta', 'lat' => -7.7881, 'lng' => 110.4319, 'koopsud' => 'Kodiklatau'],
+                ['name' => 'Lanud Adi Soemarmo', 'city' => 'Solo', 'lat' => -7.5161, 'lng' => 110.7567, 'koopsud' => 'Kodiklatau'],
+                ['name' => 'Lanud Silas Papare', 'city' => 'Jayapura', 'lat' => -2.5769, 'lng' => 140.5161, 'koopsud' => 'Koopsud III'],
+                ['name' => 'Lanud Manuhua', 'city' => 'Biak', 'lat' => -1.1903, 'lng' => 136.1083, 'koopsud' => 'Koopsud III'],
+                ['name' => 'Lanud Pattimura', 'city' => 'Ambon', 'lat' => -3.7103, 'lng' => 128.0894, 'koopsud' => 'Koopsud III'],
+                ['name' => 'Lanud Johanes Abraham Dimara', 'city' => 'Merauke', 'lat' => -8.5203, 'lng' => 140.4181, 'koopsud' => 'Koopsud III'],
+            ];
+
+            $geoJsonPoints = [];
+            foreach ($lanudsData as $l) {
+                $stat = $lanudCounts[$l['name']] ?? ['total_news' => 0, 'positif_count' => 0, 'negatif_count' => 0, 'netral_count' => 0];
+                $geoJsonPoints[] = [
+                    'name'    => $l['name'],
+                    'city'    => $l['city'],
+                    'lat'     => $l['lat'],
+                    'lng'     => $l['lng'],
+                    'koopsud' => $l['koopsud'],
+                    'total'   => (int)$stat['total_news'],
+                    'positif' => (int)$stat['positif_count'],
+                    'negatif' => (int)$stat['negatif_count'],
+                ];
+            }
+            ?>
+
+            <div class="stats-card" style="margin-bottom:24px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                    <h3 style="margin:0; border:none; padding:0; font-size:16px; color:#1e293b;">Peta Sebaran Publikasi Berita Jajaran Lanud TNI AU</h3>
+                    <div style="font-size:12px; color:#64748b;">Klik penanda pada peta untuk melihat detail pangkalan udara</div>
+                </div>
+                <div id="lanudMap" style="height: 520px; width: 100%; border-radius: 12px; z-index: 1;"></div>
+            </div>
+
+            <div class="card" style="padding:20px;">
+                <h4 style="margin-top:0; margin-bottom:14px; font-size:15px; color:#1e293b;">Rekapitulasi Berita per Wilayah Lanud</h4>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Pangkalan Udara (Lanud)</th>
+                                <th>Komando Operasi (Koopsud)</th>
+                                <th>Total Publikasi</th>
+                                <th>Sentimen Positif</th>
+                                <th>Sentimen Negatif</th>
+                                <th>Status Keaktifan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($geoJsonPoints as $pt): ?>
+                                <tr>
+                                    <td><strong><?= e($pt['name']) ?></strong> <span style="font-size:11px; color:#64748b;">(<?= e($pt['city']) ?>)</span></td>
+                                    <td><span class="badge" style="background:#e0f2fe; color:#0369a1;"><?= e($pt['koopsud']) ?></span></td>
+                                    <td><strong><?= $pt['total'] ?></strong> Berita</td>
+                                    <td><span style="color:#16a34a; font-weight:600;"><?= $pt['positif'] ?></span></td>
+                                    <td><span style="color:#dc2626; font-weight:600;"><?= $pt['negatif'] ?></span></td>
+                                    <td>
+                                        <?php if ($pt['total'] > 0): ?>
+                                            <span style="display:inline-flex; align-items:center; gap:5px; color:#16a34a; font-size:12px; font-weight:600;">
+                                                <span style="width:7px; height:7px; background:#16a34a; border-radius:50%;"></span> Aktif Rilis
+                                            </span>
+                                        <?php else: ?>
+                                            <span style="color:#94a3b8; font-size:12px;">Belum Ada Rilis</span>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var map = L.map('lanudMap').setView([-2.5489, 118.0149], 5);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 18,
+                    attribution: '© OpenStreetMap contributors | Portal Berita TNI AU'
+                }).addTo(map);
+
+                var points = <?= json_encode($geoJsonPoints) ?>;
+                points.forEach(function(pt) {
+                    var color = pt.total > 0 ? '#10b981' : '#3b82f6';
+                    var circle = L.circleMarker([pt.lat, pt.lng], {
+                        color: color,
+                        fillColor: color,
+                        fillOpacity: 0.8,
+                        radius: pt.total > 0 ? 10 + Math.min(pt.total * 2, 16) : 7
+                    }).addTo(map);
+
+                    var popupHtml = '<div style="font-family:sans-serif; min-width:180px;">' +
+                        '<strong style="font-size:13px; color:#1e293b;">' + pt.name + '</strong><br>' +
+                        '<span style="font-size:11px; color:#64748b;">' + pt.koopsud + ' - ' + pt.city + '</span>' +
+                        '<hr style="margin:8px 0; border:none; border-top:1px solid #e2e8f0;">' +
+                        '<div style="font-size:12px;"><strong>Total Rilis:</strong> ' + pt.total + ' Berita</div>' +
+                        '<div style="font-size:11px; color:#16a34a;">Positif: ' + pt.positif + '</div>' +
+                        '<div style="font-size:11px; color:#dc2626;">Negatif: ' + pt.negatif + '</div>' +
+                        '</div>';
+                    circle.bindPopup(popupHtml);
+                });
+            });
             </script>
             <?php endif; ?>
 

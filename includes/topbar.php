@@ -149,15 +149,38 @@ $initials = strtoupper(substr($roleLabel, 0, 1));
         badge.style.display = unread > 0 ? 'inline-flex' : 'none';
     }
 
+    function playAudioAlert() {
+        try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            const ctx = new AudioContext();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+            osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1); // A5
+            gain.gain.setValueAtTime(0.15, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.35);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.35);
+        } catch (e) {
+            // Web Audio not permitted until user interaction
+        }
+    }
+
     function showInlineNotice(item) {
         if (!inlineHint) return;
         inlineHint.textContent = item.message;
         inlineHint.hidden = false;
+        playAudioAlert();
 
         if ('Notification' in window && Notification.permission === 'granted') {
             try {
-                new Notification('Notifikasi Baru', {
+                new Notification('Notifikasi Baru - TNI AU News', {
                     body: item.message,
+                    icon: baseUrl + '/assets/img/logo-tniau-transparent.png',
                     tag: 'tniau-notif-' + (item.id || Date.now())
                 });
             } catch (error) {
@@ -168,7 +191,7 @@ $initials = strtoupper(substr($roleLabel, 0, 1));
         clearTimeout(showInlineNotice.timer);
         showInlineNotice.timer = setTimeout(() => {
             inlineHint.hidden = true;
-        }, 2600);
+        }, 3200);
     }
 
     function publishNotificationPayload(payload) {

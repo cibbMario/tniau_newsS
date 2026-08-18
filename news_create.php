@@ -187,55 +187,78 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
 
                             <div class="form-group">
-                        <label for="content">Isi Berita <span style="color:#c0392b">*</span></label>
-                        <div class="editor-wrap">
-                            <div class="editor-toolbar">
-                                <button type="button" class="editor-btn" onclick="fmt('bold')" title="Bold"><strong>B</strong></button>
-                                <button type="button" class="editor-btn" onclick="fmt('italic')" title="Italic"><em>I</em></button>
-                                <button type="button" class="editor-btn" onclick="fmt('underline')" title="Underline"><u>U</u></button>
-                                <div style="width:1px;height:20px;background:#ced4da;margin:0 4px;"></div>
-                                <select class="editor-select" id="createFontFamily" onchange="applyFont(this.value)" title="Font">
-                                    <option value="Poppins">Poppins</option>
-                                    <option value="Arial">Arial</option>
-                                    <option value="Times New Roman">Times New Roman</option>
-                                    <option value="Verdana">Verdana</option>
-                                    <option value="Georgia">Georgia</option>
-                                    <option value="Courier New">Courier New</option>
-                                    <option value="Trebuchet MS">Trebuchet MS</option>
-                                    <option value="Tahoma">Tahoma</option>
-                                    <option value="Impact">Impact</option>
-                                    <option value="Comic Sans MS">Comic Sans MS</option>
-                                    <option value="Palatino">Palatino</option>
-                                    <option value="Garamond">Garamond</option>
-                                </select>
-                                <select class="editor-select" onchange="fmt('fontSize', this.value)" title="Ukuran">
-                                    <option value="1">8</option>
-                                    <option value="2">10</option>
-                                    <option value="3" selected>12</option>
-                                    <option value="4">14</option>
-                                    <option value="5">18</option>
-                                    <option value="6">24</option>
-                                    <option value="7">36</option>
-                                </select>
-                                <div style="width:1px;height:20px;background:#ced4da;margin:0 4px;"></div>
-                                <input type="color" title="Warna Teks" style="width:28px;height:28px;border:1px solid #ced4da;border-radius:4px;padding:2px;cursor:pointer" onchange="fmt('foreColor', this.value)">
-                                <div style="width:1px;height:20px;background:#ced4da;margin:0 4px;"></div>
-                                <button type="button" class="editor-btn" onclick="fmt('insertUnorderedList')" title="Bullet List">• List</button>
-                                <button type="button" class="editor-btn" onclick="fmt('insertOrderedList')" title="Numbered List">1. List</button>
-                                <button type="button" class="editor-btn" onclick="fmt('formatBlock','h3')" title="Heading">H3</button>
-                                <button type="button" class="editor-btn" onclick="fmt('formatBlock','blockquote')" title="Quote">❝</button>
-                                <div style="width:1px;height:20px;background:#ced4da;margin:0 4px;"></div>
-                                <button type="button" class="editor-btn" onclick="insertLinkCreate()" title="Link">🔗 Link</button>
-                                <button type="button" class="editor-btn" onclick="insertTableCreate()" title="Tabel">⊞ Tabel</button>
-                                <div style="width:1px;height:20px;background:#ced4da;margin:0 4px;"></div>
-                                <button type="button" class="editor-btn" onclick="fmt('justifyLeft')" title="Kiri">⬅</button>
-                                <button type="button" class="editor-btn" onclick="fmt('justifyCenter')" title="Tengah">≡</button>
-                                <button type="button" class="editor-btn" onclick="fmt('justifyRight')" title="Kanan">➡</button>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                                    <label for="content" style="margin:0;">Isi Berita <span style="color:#c0392b">*</span></label>
+                                    <div id="autoSaveIndicator" style="font-size:11px; color:#64748b; display:flex; align-items:center; gap:6px;">
+                                        <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#10b981;"></span>
+                                        <span>Draft tersimpan otomatis di browser</span>
+                                        <button type="button" id="restoreDraftBtn" style="display:none; background:none; border:none; color:#2563eb; text-decoration:underline; font-size:11px; cursor:pointer;" onclick="restoreLocalDraft()">Pulihkan Draft</button>
+                                    </div>
+                                </div>
+                                <div class="editor-wrap" id="mainEditorWrap">
+                                    <div class="editor-toolbar">
+                                        <button type="button" class="editor-btn" onclick="fmt('bold')" title="Bold"><strong>B</strong></button>
+                                        <button type="button" class="editor-btn" onclick="fmt('italic')" title="Italic"><em>I</em></button>
+                                        <button type="button" class="editor-btn" onclick="fmt('underline')" title="Underline"><u>U</u></button>
+                                        <button type="button" class="editor-btn" onclick="fmt('strikeThrough')" title="Strikethrough"><s>S</s></button>
+                                        <div style="width:1px;height:20px;background:#ced4da;margin:0 4px;"></div>
+                                        <select class="editor-select" id="createFontFamily" onchange="applyFont(this.value)" title="Font">
+                                            <option value="Poppins">Poppins</option>
+                                            <option value="Arial">Arial</option>
+                                            <option value="Times New Roman">Times New Roman</option>
+                                            <option value="Verdana">Verdana</option>
+                                            <option value="Georgia">Georgia</option>
+                                            <option value="Courier New">Courier New</option>
+                                            <option value="Trebuchet MS">Trebuchet MS</option>
+                                            <option value="Tahoma">Tahoma</option>
+                                            <option value="Impact">Impact</option>
+                                        </select>
+                                        <select class="editor-select" onchange="fmt('fontSize', this.value)" title="Ukuran">
+                                            <option value="1">8pt</option>
+                                            <option value="2">10pt</option>
+                                            <option value="3" selected>12pt</option>
+                                            <option value="4">14pt</option>
+                                            <option value="5">18pt</option>
+                                            <option value="6">24pt</option>
+                                            <option value="7">36pt</option>
+                                        </select>
+                                        <div style="width:1px;height:20px;background:#ced4da;margin:0 4px;"></div>
+                                        <input type="color" title="Warna Teks" style="width:26px;height:26px;border:1px solid #ced4da;border-radius:4px;padding:2px;cursor:pointer" onchange="fmt('foreColor', this.value)">
+                                        <input type="color" title="Highlight Warna Latar" value="#ffffff" style="width:26px;height:26px;border:1px solid #ced4da;border-radius:4px;padding:2px;cursor:pointer" onchange="fmt('hiliteColor', this.value)">
+                                        <div style="width:1px;height:20px;background:#ced4da;margin:0 4px;"></div>
+                                        <button type="button" class="editor-btn" onclick="fmt('insertUnorderedList')" title="Bullet List">• List</button>
+                                        <button type="button" class="editor-btn" onclick="fmt('insertOrderedList')" title="Numbered List">1. List</button>
+                                        <button type="button" class="editor-btn" onclick="fmt('formatBlock','h2')" title="Heading 2">H2</button>
+                                        <button type="button" class="editor-btn" onclick="fmt('formatBlock','h3')" title="Heading 3">H3</button>
+                                        <button type="button" class="editor-btn" onclick="fmt('formatBlock','blockquote')" title="Quote">❝</button>
+                                        <div style="width:1px;height:20px;background:#ced4da;margin:0 4px;"></div>
+                                        <button type="button" class="editor-btn" onclick="insertLinkCreate()" title="Link">🔗 Link</button>
+                                        <button type="button" class="editor-btn" onclick="insertTableCreate()" title="Tabel">⊞ Tabel</button>
+                                        <button type="button" class="editor-btn" onclick="fmt('removeFormat')" title="Hapus Format">🧹 Bersihkan</button>
+                                        <div style="width:1px;height:20px;background:#ced4da;margin:0 4px;"></div>
+                                        <button type="button" class="editor-btn" onclick="fmt('justifyLeft')" title="Kiri">⬅</button>
+                                        <button type="button" class="editor-btn" onclick="fmt('justifyCenter')" title="Tengah">≡</button>
+                                        <button type="button" class="editor-btn" onclick="fmt('justifyRight')" title="Kanan">➡</button>
+                                        <button type="button" class="editor-btn" onclick="fmt('justifyFull')" title="Rata Kanan Kiri">↔</button>
+                                        <div style="margin-left:auto;">
+                                            <button type="button" class="editor-btn" onclick="toggleFullscreenEditor()" title="Mode Layar Penuh">⛶ Layar Penuh</button>
+                                        </div>
+                                    </div>
+                                    <div class="editor-body" id="editorBody" contenteditable="true" data-placeholder="Tulis isi berita di sini..." oninput="updateStatsAndAutoSave()"><?= e($_POST['content'] ?? '') ?></div>
+                                    <!-- Stats Bar -->
+                                    <div style="padding:6px 14px; background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; font-size:12px; color:#64748b;">
+                                        <div style="display:flex; gap:16px;">
+                                            <span><strong>Kata:</strong> <span id="wordCount">0</span></span>
+                                            <span><strong>Karakter:</strong> <span id="charCount">0</span></span>
+                                            <span><strong>Waktu Baca:</strong> ~<span id="readTime">0</span> mnt</span>
+                                        </div>
+                                        <div>
+                                            <a href="<?= BASE_URL ?>/media_library.php" target="_blank" style="color:#2563eb; text-decoration:none; font-size:11px;">🖼️ Buka Media Library (DAM)</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <textarea name="content" id="hiddenContent" hidden></textarea>
                             </div>
-                            <div class="editor-body" id="editorBody" contenteditable="true" data-placeholder="Tulis isi berita di sini..."><?= e($_POST['content'] ?? '') ?></div>
-                        </div>
-                        <textarea name="content" id="hiddenContent" hidden></textarea>
-                    </div>
 
                             <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid #e2e6ea">
                                 <button type="submit" name="action" value="draft" class="btn btn-outline" onclick="prepareSubmit()">
@@ -309,16 +332,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 function fmt(cmd, val) {
     document.getElementById('editorBody').focus();
     document.execCommand(cmd, false, val !== undefined ? val : null);
+    updateStatsAndAutoSave();
 }
 function applyFont(font) {
     document.getElementById('editorBody').focus();
     document.execCommand('fontName', false, font);
+    updateStatsAndAutoSave();
 }
 function insertLinkCreate() {
     var url = prompt('Masukkan URL link:', 'https://');
     if (url) {
         document.getElementById('editorBody').focus();
         document.execCommand('createLink', false, url);
+        updateStatsAndAutoSave();
     }
 }
 function insertTableCreate() {
@@ -336,9 +362,77 @@ function insertTableCreate() {
     html += '</table><br>';
     document.getElementById('editorBody').focus();
     document.execCommand('insertHTML', false, html);
+    updateStatsAndAutoSave();
 }
+function toggleFullscreenEditor() {
+    var wrap = document.getElementById('mainEditorWrap');
+    wrap.classList.toggle('editor-fullscreen');
+    if (wrap.classList.contains('editor-fullscreen')) {
+        wrap.style.position = 'fixed';
+        wrap.style.inset = '0';
+        wrap.style.zIndex = '99999';
+        wrap.style.background = '#fff';
+        wrap.style.height = '100vh';
+        wrap.style.display = 'flex';
+        wrap.style.flexDirection = 'column';
+        document.getElementById('editorBody').style.flex = '1';
+        document.getElementById('editorBody').style.maxHeight = 'none';
+    } else {
+        wrap.removeAttribute('style');
+        document.getElementById('editorBody').removeAttribute('style');
+    }
+}
+
+// Auto-Save & Word Counting
+var saveTimeout = null;
+function updateStatsAndAutoSave() {
+    var body = document.getElementById('editorBody');
+    var text = body.innerText || '';
+    var trimmed = text.trim();
+    var words = trimmed ? trimmed.split(/\s+/).length : 0;
+    var chars = text.length;
+    var readTime = Math.ceil(words / 180);
+
+    document.getElementById('wordCount').textContent = words;
+    document.getElementById('charCount').textContent = chars;
+    document.getElementById('readTime').textContent = readTime;
+
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(function() {
+        var title = document.getElementById('title')?.value || '';
+        var html = body.innerHTML;
+        if (title || html) {
+            localStorage.setItem('tniau_draft_create_title', title);
+            localStorage.setItem('tniau_draft_create_content', html);
+            localStorage.setItem('tniau_draft_create_time', new Date().toLocaleTimeString());
+            document.getElementById('autoSaveIndicator').querySelector('span:nth-child(2)').textContent = 'Tersimpan otomatis (' + new Date().toLocaleTimeString() + ')';
+        }
+    }, 1000);
+}
+
+function restoreLocalDraft() {
+    var title = localStorage.getItem('tniau_draft_create_title');
+    var content = localStorage.getItem('tniau_draft_create_content');
+    if (title && document.getElementById('title')) document.getElementById('title').value = title;
+    if (content && document.getElementById('editorBody')) document.getElementById('editorBody').innerHTML = content;
+    document.getElementById('restoreDraftBtn').style.display = 'none';
+    updateStatsAndAutoSave();
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+    updateStatsAndAutoSave();
+    var savedContent = localStorage.getItem('tniau_draft_create_content');
+    var bodyContent = document.getElementById('editorBody').innerHTML.trim();
+    if (savedContent && !bodyContent) {
+        var restoreBtn = document.getElementById('restoreDraftBtn');
+        if (restoreBtn) restoreBtn.style.display = 'inline';
+    }
+});
+
 function prepareSubmit() {
     document.getElementById('hiddenContent').value = document.getElementById('editorBody').innerHTML;
+    localStorage.removeItem('tniau_draft_create_title');
+    localStorage.removeItem('tniau_draft_create_content');
 }
 document.getElementById('createForm').addEventListener('submit', function() {
     prepareSubmit();

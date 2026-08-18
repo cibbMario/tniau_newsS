@@ -95,9 +95,13 @@ if (!function_exists('timeAgo')) {
                                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><polyline points="12 8 8 12 12 16"></polyline><line x1="20" y1="12" x2="8" y2="12"></line></svg>
                                     Riwayat Catatan
                                 </a>
+                                <a href="<?= BASE_URL ?>/press_release_print.php?id=<?= $id ?>" target="_blank" class="btn-tool" style="border-radius:4px;background:#0369a1;color:#fff;border-color:#0369a1;text-decoration:none;" title="Cetak Format Siaran Pers TNI AU">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                                    Format Siaran Pers
+                                </a>
                             </div>
                             <div class="detail-toolbar-right">
-                                <button class="btn-tool" style="border-radius:4px;color:var(--blue);background:rgba(30,111,191,0.08);border-color:transparent;" title="Salin tautan">
+                                <button class="btn-tool" style="border-radius:4px;color:var(--blue);background:rgba(30,111,191,0.08);border-color:transparent;" title="Salin tautan" onclick="navigator.clipboard.writeText(window.location.href); alert('Tautan berita disalin ke clipboard!');">
                                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
                                 </button>
                             </div>
