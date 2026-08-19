@@ -37,17 +37,6 @@ $comments = $pdo->prepare("SELECT c.*, u.full_name FROM comments c JOIN users u 
 $comments->execute([$id]);
 $commentsList = $comments->fetchAll();
 
-// Helper waktu relatif (lokal, aman jika belum ada di functions.php)
-if (!function_exists('timeAgo')) {
-    function timeAgo($datetime) {
-        $diff = time() - strtotime($datetime);
-        if ($diff < 60)     return 'Baru saja';
-        if ($diff < 3600)   return floor($diff / 60) . ' menit lalu';
-        if ($diff < 86400)  return floor($diff / 3600) . ' jam lalu';
-        if ($diff < 604800) return floor($diff / 86400) . ' hari lalu';
-        return formatTanggal($datetime);
-    }
-}
 ?>
 <!DOCTYPE html>
 <html lang="id">

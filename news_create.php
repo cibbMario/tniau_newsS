@@ -145,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <input type="text" id="title" name="title" class="form-input" placeholder="Masukkan judul berita..." required value="<?= e($_POST['title'] ?? '') ?>" style="font-size:15px;font-weight:600;padding:12px 14px">
                             </div>
 
-                                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+                            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
                                 <div class="form-group">
                                     <label for="wilayah">Wilayah / Satuan</label>
                                     <?php
@@ -169,13 +169,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
 
                             <div class="form-group">
-                        <label>Gambar Utama Berita</label>
-                        <div class="upload-dropzone" onclick="document.getElementById('imageInput').click()">
-                            <span class="plus-icon">Upload</span>
-                            <span id="fileLabel">Klik untuk memilih gambar (JPG, PNG, WEBP, maks 5MB)</span>
-                            <input type="file" id="imageInput" name="image" accept="image/*" hidden onchange="document.getElementById('fileLabel').textContent = this.files[0]?.name || 'Pilih gambar...'">
-                        </div>
-                    </div>
+                                <label>Gambar Utama Berita</label>
+                                <div class="upload-dropzone" onclick="document.getElementById('imageInput').click()">
+                                    <span class="plus-icon">Upload</span>
+                                    <span id="fileLabel">Klik untuk memilih gambar (JPG, PNG, WEBP, maks 5MB)</span>
+                                    <input type="file" id="imageInput" name="image" accept="image/*" hidden onchange="document.getElementById('fileLabel').textContent = this.files[0]?.name || 'Pilih gambar...'">
+                                </div>
+                            </div>
 
                             <div class="form-group">
                                 <label>Gambar Pendukung (Galeri)</label>

@@ -8,18 +8,6 @@ $user = currentUser();
 $filter = $_GET['filter'] ?? 'pending'; // 'pending', 'user_a', 'all', 'published'
 $search = trim($_GET['q'] ?? '');
 
-// Helper waktu relatif
-if (!function_exists('timeAgo')) {
-    function timeAgo($datetime) {
-        $diff = time() - strtotime($datetime);
-        if ($diff < 60) return 'Baru saja';
-        if ($diff < 3600) return floor($diff / 60) . ' menit lalu';
-        if ($diff < 86400) return floor($diff / 3600) . ' jam lalu';
-        if ($diff < 604800) return floor($diff / 86400) . ' hari lalu';
-        return formatTanggal($datetime);
-    }
-}
-
 // Queries untuk Statistik
 $statPendingStmt = $pdo->query("SELECT COUNT(*) FROM news WHERE status IN ('pending_d', 'pending_c', 'pending_b', 'draft', 'revision_b', 'revision_c', 'revision_d')");
 $totalPending = (int)$statPendingStmt->fetchColumn();

@@ -174,6 +174,16 @@ function formatTanggal($datetime) {
     return date('d', $ts) . ' ' . $bulan[(int)date('n', $ts)] . ' ' . date('Y H:i', $ts);
 }
 
+function timeAgo($datetime) {
+    if (!$datetime) return '-';
+    $diff = time() - strtotime($datetime);
+    if ($diff < 60) return 'Baru saja';
+    if ($diff < 3600) return floor($diff / 60) . ' menit lalu';
+    if ($diff < 86400) return floor($diff / 3600) . ' jam lalu';
+    if ($diff < 604800) return floor($diff / 86400) . ' hari lalu';
+    return formatTanggal($datetime);
+}
+
 function e($string) {
     return htmlspecialchars($string ?? '', ENT_QUOTES, 'UTF-8');
 }

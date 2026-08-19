@@ -5,16 +5,6 @@ $statusFilter = $_GET['status'] ?? '';
 $current = $statusFilter === 'draft' ? 'draft' : 'list';
 $user = currentUser();
 
-// Helper: waktu relatif
-function timeAgo($datetime) {
-    $diff = time() - strtotime($datetime);
-    if ($diff < 60) return 'Baru saja';
-    if ($diff < 3600) return floor($diff / 60) . ' menit lalu';
-    if ($diff < 86400) return floor($diff / 3600) . ' jam lalu';
-    if ($diff < 604800) return floor($diff / 86400) . ' hari lalu';
-    return formatTanggal($datetime);
-}
-
 // Media filter
 $mediaFilter = $_GET['media'] ?? 'Semua';
 $validMedia = ['Wilayah', 'Media Online', 'Media Sosial', 'Semua'];
