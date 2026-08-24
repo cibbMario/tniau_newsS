@@ -89,21 +89,7 @@ $roleName = userDisplayName($user['role']);
             </div>
         </div>
 
-        <!-- 3b. Digital Asset Management (DAM) -->
-        <a href="<?= BASE_URL ?>/media_library.php" class="<?= $current==='media_library' ? 'active' : '' ?>">
-            <span class="icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-            </span>
-            <span class="label">Media Library (DAM)</span>
-        </a>
 
-        <!-- 3c. Media Monitoring -->
-        <a href="<?= BASE_URL ?>/media_monitoring.php" class="<?= $current==='media_monitoring' ? 'active' : '' ?>">
-            <span class="icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-            </span>
-            <span class="label">Media Monitoring</span>
-        </a>
 
         <!-- 4. Profile -->
         <a href="<?= BASE_URL ?>/profile.php" class="<?= $current==='profile' ? 'active' : '' ?>">

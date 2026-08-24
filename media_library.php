@@ -281,25 +281,33 @@ include_once __DIR__ . '/includes/lanud_list.php';
                             <div class="dam-body">
                                 <div class="dam-title"><?= e($ast['title']) ?></div>
                                 <div class="dam-meta">
-                                    <span>📍 <?= e($ast['lanud'] ?? 'Mabes TNI AU') ?></span>
-                                    <span>👤 <?= e($ast['uploader_name'] ?? 'Penerangan') ?> &bull; <?= date('d M Y', strtotime($ast['created_at'])) ?></span>
-                                    <?php if ($kb > 0): ?><span>💾 <?= $kb ?> KB</span><?php endif; ?>
+                                    <span>
+                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                        <?= e($ast['lanud'] ?? 'Mabes TNI AU') ?></span>
+                                    <span>
+                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                        <?= e($ast['uploader_name'] ?? 'Penerangan') ?> &bull; <?= date('d M Y', strtotime($ast['created_at'])) ?></span>
+                                    <?php if ($kb > 0): ?><span>
+                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px"><rect x="2" y="2" width="20" height="20" rx="2" ry="2"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="12" y1="8" x2="12" y2="16"/></svg>
+                                        <?= $kb ?> KB</span><?php endif; ?>
                                 </div>
                             </div>
                             <div class="dam-footer">
                                 <button type="button" class="btn btn-outline" style="font-size:11px; padding:4px 8px;" onclick="copyAssetUrl('<?= $imgUrl ?>')">
-                                    📋 Salin URL
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                    Salin URL
                                 </button>
                                 <a href="<?= $imgUrl ?>" target="_blank" download class="btn btn-outline" style="font-size:11px; padding:4px 8px;">
-                                    ⬇ Download
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                    Download
                                 </a>
                                 <?php if ($user['role'] === 'E' || $user['id'] == $ast['uploaded_by']): ?>
                                     <form method="POST" style="display:inline;" onsubmit="return confirm('Hapus aset foto ini?')">
                                         <input type="hidden" name="csrf_token" value="<?= generate_csrf_token() ?>">
                                         <input type="hidden" name="delete_asset" value="1">
                                         <input type="hidden" name="asset_id" value="<?= $ast['id'] ?>">
-                                        <button type="submit" class="btn btn-outline" style="font-size:11px; padding:4px 8px; color:#e53e3e;">
-                                            🗑
+                                        <button type="submit" class="btn btn-outline" style="font-size:11px; padding:4px 8px; color:#C0392B;">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
                                         </button>
                                     </form>
                                 <?php endif; ?>
