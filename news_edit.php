@@ -559,7 +559,7 @@ $gallery = $images->fetchAll();
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                     Filter
                 </span>
-                <span class="top-action-btn" style="border:none;background:transparent;color:var(--text-sec)"><?= e(explode(' ',$user['full_name'])[0]) ?> <span>➔</span></span>
+                <span class="top-action-btn" style="border:none;background:transparent;color:var(--text-sec);display:inline-flex;align-items:center;gap:4px;"><?= e(explode(' ',$user['full_name'])[0]) ?> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></span>
             </div>
         </div>
 
@@ -654,7 +654,7 @@ $gallery = $images->fetchAll();
                                 </select>
                                 <div class="toolbar-divider"></div>
                                 <input type="color" id="txtColorPicker" title="Warna Teks" style="width:28px;height:28px;border:1px solid #ced4da;border-radius:4px;padding:2px;cursor:pointer;background:#fff" onchange="fmt('foreColor', this.value)">
-                                <button type="button" class="rich-editor-btn" onclick="insertLink()" title="Sisipkan Link">🔗 Link</button>
+                                <button type="button" class="rich-editor-btn" onclick="insertLink()" title="Sisipkan Link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:2px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg> Link</button>
                                 <button type="button" class="rich-editor-btn" onclick="document.getElementById('editorImageInput').click()" title="Sisipkan Gambar">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
                                     Gambar
@@ -663,11 +663,11 @@ $gallery = $images->fetchAll();
                                 <div class="toolbar-divider"></div>
                                 <button type="button" class="rich-editor-btn" onclick="fmt('insertUnorderedList')" title="Bullet List">• Daftar</button>
                                 <button type="button" class="rich-editor-btn" onclick="fmt('insertOrderedList')" title="Numbered List">1. Urutan</button>
-                                <button type="button" class="rich-editor-btn" onclick="insertTable()" title="Sisipkan Tabel">⊞ Tabel</button>
+                                <button type="button" class="rich-editor-btn" onclick="insertTable()" title="Sisipkan Tabel"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:2px;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="12" y1="3" x2="12" y2="21"/></svg> Tabel</button>
                                 <div class="toolbar-divider"></div>
-                                <button type="button" class="rich-editor-btn" onclick="fmt('justifyLeft')" title="Kiri">⬅</button>
-                                <button type="button" class="rich-editor-btn" onclick="fmt('justifyCenter')" title="Tengah">≡</button>
-                                <button type="button" class="rich-editor-btn" onclick="fmt('justifyRight')" title="Kanan">➡</button>
+                                <button type="button" class="rich-editor-btn" onclick="fmt('justifyLeft')" title="Kiri"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg></button>
+                                <button type="button" class="rich-editor-btn" onclick="fmt('justifyCenter')" title="Tengah"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="10" x2="6" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="18" y1="18" x2="6" y2="18"/></svg></button>
+                                <button type="button" class="rich-editor-btn" onclick="fmt('justifyRight')" title="Kanan"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" y1="10" x2="7" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="7" y2="18"/></svg></button>
                             </div>
                             <div class="rich-editor-body" id="editorBody" contenteditable="true"><?= $news['content'] ?></div>
                             <textarea name="content" id="hiddenContent" hidden></textarea>
@@ -682,7 +682,7 @@ $gallery = $images->fetchAll();
                                         Tidak ada gambar cover saat ini
                                     </div>
                                 <?php endif; ?>
-                                <button type="button" class="btn btn-outline" onclick="document.getElementById('imageInput').click()">📷 Unggah Gambar Cover</button>
+                                <button type="button" class="btn btn-outline" onclick="document.getElementById('imageInput').click()" style="display:inline-flex;align-items:center;gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg> Unggah Gambar Cover</button>
                             </div>
 
                             <?php foreach($gallery as $img): ?>

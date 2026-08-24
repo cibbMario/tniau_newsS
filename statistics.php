@@ -411,7 +411,9 @@ $pageTitle = $pageTitles[$view] ?? 'Statistik';
             <!-- Grid KPI -->
             <div class="stats-kpi-grid">
                 <div class="kpi-card" style="border-left: 4px solid #ef4444;">
-                    <div class="kpi-icon" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">👎</div>
+                    <div class="kpi-icon" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
+                    </div>
                     <div class="kpi-info">
                         <span class="kpi-label">Sentimen Negatif</span>
                         <span class="kpi-value"><?= $sentStats['Negatif'] ?></span>
@@ -419,7 +421,9 @@ $pageTitle = $pageTitles[$view] ?? 'Statistik';
                     </div>
                 </div>
                 <div class="kpi-card" style="border-left: 4px solid #3b82f6;">
-                    <div class="kpi-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">😐</div>
+                    <div class="kpi-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="15" x2="16" y2="15"></line><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+                    </div>
                     <div class="kpi-info">
                         <span class="kpi-label">Sentimen Netral</span>
                         <span class="kpi-value"><?= $sentStats['Netral'] ?></span>
@@ -427,7 +431,9 @@ $pageTitle = $pageTitles[$view] ?? 'Statistik';
                     </div>
                 </div>
                 <div class="kpi-card" style="border-left: 4px solid #10b981;">
-                    <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">👍</div>
+                    <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                    </div>
                     <div class="kpi-info">
                         <span class="kpi-label">Sentimen Positif</span>
                         <span class="kpi-value"><?= $sentStats['Positif'] ?></span>
@@ -435,7 +441,7 @@ $pageTitle = $pageTitles[$view] ?? 'Statistik';
                     </div>
                 </div>
                 <div class="kpi-card" style="border-left: 4px solid #6c5ce7;">
-                    <div class="kpi-icon" style="background: rgba(108, 92, 231, 0.1); color: #6c5ce7;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16l-2 2z"/><line x1="14" y1="8" x2="18" y2="8"/><line x1="14" y1="12" x2="18" y2="12"/><line x1="10" y1="16" x2="18" y2="16"/></svg></div>
+                    <div class="kpi-icon" style="background: rgba(108, 92, 231, 0.1); color: #6c5ce7;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16l-2 2z"/><line x1="14" y1="8" x2="18" y2="8"/><line x1="14" y1="12" x2="18" y2="12"/><line x1="10" y1="16" x2="18" y2="16"/></svg></div>
                     <div class="kpi-info">
                         <span class="kpi-label">Total Publikasi</span>
                         <span class="kpi-value"><?= $totalSent ?></span>
