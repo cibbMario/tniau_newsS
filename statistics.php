@@ -236,7 +236,7 @@ $pageTitle = $pageTitles[$view] ?? 'Statistik';
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title><?= $pageTitle ?> - Portal Berita TNI AU</title>
+    <title><?= $pageTitle ?> Portal Berita TNI AU</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />

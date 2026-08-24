@@ -17,7 +17,7 @@ $notifs = getNotifications($user['id']);
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Notifikasi - Portal Berita TNI AU</title>
+    <title>Notifikasi Portal Berita TNI AU</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
 </head>
 <body>

@@ -76,7 +76,7 @@ $initials = strtoupper(substr($roleLabel, 0, 1));
         <?php endif; ?>
 
         <!-- User badge -->
-        <div class="topbar-user-badge" title="<?= e($user['full_name']) ?> — <?= $roleLabel ?>">
+        <div class="topbar-user-badge" title="<?= e($user['full_name']) ?> <?= $roleLabel ?>">
             <div class="topbar-avatar"><?= $initials ?></div>
             <div class="topbar-user-info">
                 <span class="topbar-user-name"><?= e($user['full_name']) ?></span>

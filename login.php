@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login — Portal Berita TNI AU</title>
+    <title>Login Portal Berita TNI AU</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css?v=<?= time() ?>">
 </head>
 <body>
@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="login-box">
         <img src="<?= BASE_URL ?>/assets/img/logo-tniau-transparent.png" alt="TNI AU" class="login-logo">
         <h1>Portal Berita TNI AU</h1>
-        <p class="sub">Sistem Monitoring &amp; Manajemen Berita<br>TNI Angkatan Udara — <em>Swa Bhuwana Paksa</em></p>
+        <p class="sub">Sistem Monitoring &amp; Manajemen Berita<br>TNI Angkatan Udara <em>Swa Bhuwana Paksa</em></p>
 
         <?php if ($error): ?>
             <div class="error-msg" id="errorMsg"><?= e($error) ?></div>
@@ -140,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </script>
 
         <div class="credits">
-            Dibuat oleh <strong>Dispen</strong> — &copy; <?= date('Y') ?> TNI Angkatan Udara
+            Created by Mario & Saksak &copy; <?= date('Y') ?> TNI Angkatan Udara
         </div>
     </div>
 </div>

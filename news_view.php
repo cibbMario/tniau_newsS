@@ -43,7 +43,7 @@ $commentsList = $comments->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= e($news['title']) ?> — Portal Berita TNI AU</title>
+    <title><?= e($news['title']) ?> Portal Berita TNI AU</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css?v=<?= time() ?>">
 </head>
 <body>

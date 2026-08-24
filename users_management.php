@@ -127,7 +127,7 @@ include_once __DIR__ . '/includes/lanud_list.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manajemen Pengguna & Hierarki Satuan — Portal Berita TNI AU</title>
+    <title>Manajemen Pengguna & Hierarki Satuan Portal Berita TNI AU</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css?v=<?= time() ?>">
     <style>
         .badge-active { background: #d4edda; color: #155724; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; }
@@ -308,11 +308,11 @@ include_once __DIR__ . '/includes/lanud_list.php';
             <div class="form-group">
                 <label>Hak Akses / Peran</label>
                 <select name="role" class="form-input" required>
-                    <option value="A">User A — Reporter (Pembuat Berita)</option>
-                    <option value="B">User B — Editor (Pemeriksa Tingkat 1)</option>
-                    <option value="C">User C — Approver / Petinggi (Persetujuan Terbit)</option>
-                    <option value="D">User D — Peninjau Kejelasan</option>
-                    <option value="E">User E — Administrator Sistem</option>
+                    <option value="A">User A Reporter (Pembuat Berita)</option>
+                    <option value="B">User B Editor (Pemeriksa Tingkat 1)</option>
+                    <option value="C">User C Approver / Petinggi (Persetujuan Terbit)</option>
+                    <option value="D">User D Peninjau Kejelasan</option>
+                    <option value="E">User E Administrator Sistem</option>
                 </select>
             </div>
             <div class="form-group">
@@ -344,11 +344,11 @@ include_once __DIR__ . '/includes/lanud_list.php';
             <div class="form-group">
                 <label>Hak Akses / Peran</label>
                 <select name="role" id="edit_role" class="form-input" required>
-                    <option value="A">User A — Reporter (Pembuat Berita)</option>
-                    <option value="B">User B — Editor (Pemeriksa Tingkat 1)</option>
-                    <option value="C">User C — Approver / Petinggi (Persetujuan Terbit)</option>
-                    <option value="D">User D — Peninjau Kejelasan</option>
-                    <option value="E">User E — Administrator Sistem</option>
+                    <option value="A">User A Reporter (Pembuat Berita)</option>
+                    <option value="B">User B Editor (Pemeriksa Tingkat 1)</option>
+                    <option value="C">User C Approver / Petinggi (Persetujuan Terbit)</option>
+                    <option value="D">User D Peninjau Kejelasan</option>
+                    <option value="E">User E Administrator Sistem</option>
                 </select>
             </div>
             <div class="form-group">

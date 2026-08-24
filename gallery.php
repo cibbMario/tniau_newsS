@@ -39,7 +39,7 @@ foreach ($galleryImages as $img) {
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Galeri Foto - Portal Berita TNI AU</title>
+    <title>Galeri Foto Portal Berita TNI AU</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
     <style>
         .gallery-layout-grid {

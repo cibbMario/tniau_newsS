@@ -62,7 +62,7 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Berita — Portal Berita TNI AU</title>
+    <title>Daftar Berita Portal Berita TNI AU</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css?v=<?= time() ?>">
 </head>
 <body>

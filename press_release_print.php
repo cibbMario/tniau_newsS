@@ -31,7 +31,7 @@ $nomorRilis  = "SP / " . date('m', $releaseDate) . " / " . date('Y', $releaseDat
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIARAN PERS: <?= e($news['title']) ?> — TNI AU</title>
+    <title>SIARAN PERS: <?= e($news['title']) ?> TNI AU</title>
     <style>
         * { box-sizing: border-box; }
         body {
@@ -241,7 +241,7 @@ $nomorRilis  = "SP / " . date('m', $releaseDate) . " / " . date('Y', $releaseDat
     <!-- CONTENT -->
     <div class="article-content">
         <p>
-            <span class="lead-location"><?= e($tempat) ?> (PEN AU)</span> — <?= strip_tags($news['content'], '<p><br><strong><b><em><i><u><ul><ol><li><blockquote>') ?>
+            <span class="lead-location"><?= e($tempat) ?> (PEN AU)</span> <?= strip_tags($news['content'], '<p><br><strong><b><em><i><u><ul><ol><li><blockquote>') ?>
         </p>
     </div>
 

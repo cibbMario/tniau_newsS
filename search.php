@@ -43,7 +43,7 @@ if ($q !== '') {
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Cari Berita - Portal Berita TNI AU</title>
+    <title>Cari Berita Portal Berita TNI AU</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
 </head>
 <body>
