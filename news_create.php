@@ -147,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
                                 <div class="form-group">
-                                    <label for="wilayah">Wilayah / Satuan</label>
+                                    <label for="wilayah">Wilayah & Satuan</label>
                                     <?php
                                     include_once __DIR__ . '/includes/lanud_list.php';
                                     $selectedWilayah = $_POST['wilayah'] ?? 'Lanud Atang Sendjaja';
@@ -196,50 +196,138 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     </div>
                                 </div>
                                 <div class="editor-wrap" id="mainEditorWrap">
-                                    <div class="editor-toolbar">
+                                    <div class="editor-toolbar" style="position:relative; flex-wrap:wrap; gap:4px;">
+                                        <!-- Formatting Basics -->
                                         <button type="button" class="editor-btn" onclick="fmt('bold')" title="Bold"><strong>B</strong></button>
                                         <button type="button" class="editor-btn" onclick="fmt('italic')" title="Italic"><em>I</em></button>
                                         <button type="button" class="editor-btn" onclick="fmt('underline')" title="Underline"><u>U</u></button>
-                                        <button type="button" class="editor-btn" onclick="fmt('strikeThrough')" title="Strikethrough"><s>S</s></button>
-                                        <div style="width:1px;height:20px;background:#ced4da;margin:0 4px;"></div>
-                                        <select class="editor-select" id="createFontFamily" onchange="applyFont(this.value)" title="Font">
-                                            <option value="Poppins">Poppins</option>
-                                            <option value="Arial">Arial</option>
-                                            <option value="Times New Roman">Times New Roman</option>
-                                            <option value="Verdana">Verdana</option>
-                                            <option value="Georgia">Georgia</option>
-                                            <option value="Courier New">Courier New</option>
-                                            <option value="Trebuchet MS">Trebuchet MS</option>
-                                            <option value="Tahoma">Tahoma</option>
-                                            <option value="Impact">Impact</option>
+                                        
+                                        <!-- Eraser / Remove Font Style (CTRL+\) -->
+                                        <button type="button" class="editor-btn" onclick="removeFontStyle()" title="Remove Font Style (CTRL+\)">
+                                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 21-4-4 8-8 4 4-8 8Z"/><path d="M11 7 15 3l6 6-4 4"/><path d="M2 21h18"/></svg>
+                                        </button>
+
+                                        <div style="width:1px;height:20px;background:#ced4da;margin:0 2px;"></div>
+
+                                        <!-- Font Family Dropdown -->
+                                        <select class="editor-select" id="createFontFamily" onchange="applyFont(this.value)" title="Font Family">
+                                            <option value="Arial" style="font-family:Arial">Arial</option>
+                                            <option value="Arial Black" style="font-family:'Arial Black'">Arial Black</option>
+                                            <option value="Comic Sans MS" style="font-family:'Comic Sans MS'">Comic Sans MS</option>
+                                            <option value="Courier New" style="font-family:'Courier New'">Courier New</option>
+                                            <option value="Helvetica" style="font-family:Helvetica">Helvetica</option>
+                                            <option value="Impact" style="font-family:Impact">Impact</option>
+                                            <option value="Tahoma" style="font-family:Tahoma">Tahoma</option>
+                                            <option value="Times New Roman" style="font-family:'Times New Roman'">Times New Roman</option>
+                                            <option value="Verdana" style="font-family:Verdana">Verdana</option>
+                                            <option value="Inter" style="font-family:Inter">Inter</option>
                                         </select>
-                                        <select class="editor-select" onchange="fmt('fontSize', this.value)" title="Ukuran">
-                                            <option value="1">8pt</option>
-                                            <option value="2">10pt</option>
-                                            <option value="3" selected>12pt</option>
-                                            <option value="4">14pt</option>
-                                            <option value="5">18pt</option>
-                                            <option value="6">24pt</option>
-                                            <option value="7">36pt</option>
+
+                                        <!-- Font Size Dropdown -->
+                                        <select class="editor-select" onchange="fmt('fontSize', this.value)" title="Font Size">
+                                            <option value="1">8</option>
+                                            <option value="2">10</option>
+                                            <option value="3" selected>12</option>
+                                            <option value="4">14</option>
+                                            <option value="5">18</option>
+                                            <option value="6">24</option>
+                                            <option value="7">36</option>
                                         </select>
-                                        <div style="width:1px;height:20px;background:#ced4da;margin:0 4px;"></div>
-                                        <input type="color" title="Warna Teks" style="width:26px;height:26px;border:1px solid #ced4da;border-radius:4px;padding:2px;cursor:pointer" onchange="fmt('foreColor', this.value)">
-                                        <input type="color" title="Highlight Warna Latar" value="#ffffff" style="width:26px;height:26px;border:1px solid #ced4da;border-radius:4px;padding:2px;cursor:pointer" onchange="fmt('hiliteColor', this.value)">
-                                        <div style="width:1px;height:20px;background:#ced4da;margin:0 4px;"></div>
-                                        <button type="button" class="editor-btn" onclick="fmt('insertUnorderedList')" title="Bullet List">• List</button>
-                                        <button type="button" class="editor-btn" onclick="fmt('insertOrderedList')" title="Numbered List">1. List</button>
-                                        <button type="button" class="editor-btn" onclick="fmt('formatBlock','h2')" title="Heading 2">H2</button>
-                                        <button type="button" class="editor-btn" onclick="fmt('formatBlock','h3')" title="Heading 3">H3</button>
-                                        <button type="button" class="editor-btn" onclick="fmt('formatBlock','blockquote')" title="Quote"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/></svg></button>
-                                        <div style="width:1px;height:20px;background:#ced4da;margin:0 4px;"></div>
-                                        <button type="button" class="editor-btn" onclick="insertLinkCreate()" title="Link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:2px"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg> Link</button>
-                                        <button type="button" class="editor-btn" onclick="insertTableCreate()" title="Tabel"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:2px"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="12" y1="3" x2="12" y2="21"/></svg> Tabel</button>
-                                        <button type="button" class="editor-btn" onclick="fmt('removeFormat')" title="Hapus Format"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:2px"><path d="M18 6L6 18M6 6l12 12"/></svg> Bersihkan</button>
-                                        <div style="width:1px;height:20px;background:#ced4da;margin:0 4px;"></div>
+
+                                        <!-- Text & Background Color Picker Modal Trigger -->
+                                        <div class="rte-popover-container" style="position:relative; display:inline-block;">
+                                            <button type="button" class="editor-btn" onclick="toggleColorPickerModal()" title="Color Picker (Text & Background)" style="font-weight:bold; display:inline-flex; align-items:center; gap:3px;">
+                                                <span style="position:relative; display:inline-block; border-bottom:3px solid #ffff00; padding:0 2px;">A</span>
+                                                <span style="font-size:9px;">▼</span>
+                                            </button>
+
+                                            <!-- Color Picker Popover Modal -->
+                                            <div class="rte-popover" id="rteColorPopover">
+                                                <div class="rte-color-tabs">
+                                                    <button type="button" class="rte-color-tab active" id="tabBgBtn" onclick="switchColorTab('bg')">Background Color</button>
+                                                    <button type="button" class="rte-color-tab" id="tabTextBtn" onclick="switchColorTab('text')">Text Color</button>
+                                                </div>
+
+                                                <!-- Action button depending on active tab -->
+                                                <button type="button" class="rte-color-action-btn" id="actionBtnBg" onclick="applyColorAction('transparent')">Transparent</button>
+                                                <button type="button" class="rte-color-action-btn" id="actionBtnText" onclick="applyColorAction('resetText')" style="display:none;">Reset to default</button>
+
+                                                <!-- Preset Grid (8x5) -->
+                                                <div class="rte-color-grid">
+                                                    <!-- Row 1 -->
+                                                    <button type="button" class="rte-color-swatch" style="background:#000000" onclick="selectPresetColor('#000000')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#434343" onclick="selectPresetColor('#434343')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#666666" onclick="selectPresetColor('#666666')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#999999" onclick="selectPresetColor('#999999')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#b7b7b7" onclick="selectPresetColor('#b7b7b7')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#cccccc" onclick="selectPresetColor('#cccccc')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#d9d9d9" onclick="selectPresetColor('#d9d9d9')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#ffffff" onclick="selectPresetColor('#ffffff')"></button>
+                                                    <!-- Row 2 -->
+                                                    <button type="button" class="rte-color-swatch" style="background:#980000" onclick="selectPresetColor('#980000')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#ff0000" onclick="selectPresetColor('#ff0000')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#ff9900" onclick="selectPresetColor('#ff9900')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#ffff00" onclick="selectPresetColor('#ffff00')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#00ff00" onclick="selectPresetColor('#00ff00')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#00ffff" onclick="selectPresetColor('#00ffff')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#4a86e8" onclick="selectPresetColor('#4a86e8')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#0000ff" onclick="selectPresetColor('#0000ff')"></button>
+                                                    <!-- Row 3 -->
+                                                    <button type="button" class="rte-color-swatch" style="background:#9900ff" onclick="selectPresetColor('#9900ff')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#ff00ff" onclick="selectPresetColor('#ff00ff')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#e6b8af" onclick="selectPresetColor('#e6b8af')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#fce5cd" onclick="selectPresetColor('#fce5cd')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#fff2cc" onclick="selectPresetColor('#fff2cc')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#d9ead3" onclick="selectPresetColor('#d9ead3')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#d0e0e3" onclick="selectPresetColor('#d0e0e3')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#c9daf8" onclick="selectPresetColor('#c9daf8')"></button>
+                                                    <!-- Row 4 -->
+                                                    <button type="button" class="rte-color-swatch" style="background:#cfe2f3" onclick="selectPresetColor('#cfe2f3')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#d9d2e9" onclick="selectPresetColor('#d9d2e9')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#ead1dc" onclick="selectPresetColor('#ead1dc')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#dd7e6b" onclick="selectPresetColor('#dd7e6b')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#f6b26b" onclick="selectPresetColor('#f6b26b')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#ffd966" onclick="selectPresetColor('#ffd966')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#93c47d" onclick="selectPresetColor('#93c47d')"></button>
+                                                    <button type="button" class="rte-color-swatch" style="background:#76a5af" onclick="selectPresetColor('#76a5af')"></button>
+                                                </div>
+
+                                                <!-- Custom Color Trigger -->
+                                                <button type="button" class="rte-color-action-btn" onclick="triggerCustomColorPicker()">Select</button>
+                                                <input type="color" id="rteCustomColorInput" hidden onchange="applyCustomColor(this.value)">
+                                            </div>
+                                        </div>
+
+                                        <div style="width:1px;height:20px;background:#ced4da;margin:0 2px;"></div>
+
+                                        <!-- Link, Lists, Alignments -->
+                                        <button type="button" class="editor-btn" onclick="insertLinkCreate()" title="Link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></button>
+                                        <button type="button" class="editor-btn" onclick="fmt('insertUnorderedList')" title="Bullet List">•</button>
+                                        <button type="button" class="editor-btn" onclick="fmt('insertOrderedList')" title="Numbered List">1.</button>
                                         <button type="button" class="editor-btn" onclick="fmt('justifyLeft')" title="Kiri"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg></button>
                                         <button type="button" class="editor-btn" onclick="fmt('justifyCenter')" title="Tengah"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="10" x2="6" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="18" y1="18" x2="6" y2="18"/></svg></button>
                                         <button type="button" class="editor-btn" onclick="fmt('justifyRight')" title="Kanan"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" y1="10" x2="7" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="7" y2="18"/></svg></button>
-                                        <button type="button" class="editor-btn" onclick="fmt('justifyFull')" title="Rata Kanan Kiri"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="3" y2="18"/></svg></button>
+                                        
+                                        <!-- Clear Format (X) -->
+                                        <button type="button" class="editor-btn" onclick="fmt('removeFormat')" title="Clear Format">✕</button>
+
+                                        <!-- Line Height Dropdown Trigger (TI Icon) -->
+                                        <div class="rte-popover-container" style="position:relative; display:inline-block;">
+                                            <button type="button" class="editor-btn" onclick="toggleLineHeightDropdown()" title="Line Height" style="display:inline-flex; align-items:center; gap:2px; font-weight:bold;">
+                                                <span>T<span style="font-size:10px;">I</span></span>
+                                                <span style="font-size:9px;">▼</span>
+                                            </button>
+                                            <div class="rte-dropdown-menu" id="rteLineHeightDropdown">
+                                                <div class="rte-dropdown-item" data-value="1.2" onclick="setLineHeight('1.2')"><span>1.2</span><span class="check-icon" style="display:none;">✓</span></div>
+                                                <div class="rte-dropdown-item active" data-value="1.4" onclick="setLineHeight('1.4')"><span>1.4</span><span class="check-icon" style="display:inline;">✓</span></div>
+                                                <div class="rte-dropdown-item" data-value="1.5" onclick="setLineHeight('1.5')"><span>1.5</span><span class="check-icon" style="display:none;">✓</span></div>
+                                                <div class="rte-dropdown-item" data-value="1.6" onclick="setLineHeight('1.6')"><span>1.6</span><span class="check-icon" style="display:none;">✓</span></div>
+                                                <div class="rte-dropdown-item" data-value="1.8" onclick="setLineHeight('1.8')"><span>1.8</span><span class="check-icon" style="display:none;">✓</span></div>
+                                                <div class="rte-dropdown-item" data-value="2.0" onclick="setLineHeight('2.0')"><span>2.0</span><span class="check-icon" style="display:none;">✓</span></div>
+                                                <div class="rte-dropdown-item" data-value="3.0" onclick="setLineHeight('3.0')"><span>3.0</span><span class="check-icon" style="display:none;">✓</span></div>
+                                            </div>
+                                        </div>
+
                                         <div style="margin-left:auto;">
                                             <button type="button" class="editor-btn" onclick="toggleFullscreenEditor()" title="Mode Layar Penuh"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:2px"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg> Layar Penuh</button>
                                         </div>
@@ -339,6 +427,133 @@ function applyFont(font) {
     document.execCommand('fontName', false, font);
     updateStatsAndAutoSave();
 }
+function removeFontStyle() {
+    document.execCommand('removeFormat', false, null);
+    const sel = window.getSelection();
+    if (sel.rangeCount > 0) {
+        let node = sel.getRangeAt(0).commonAncestorContainer;
+        if (node.nodeType === 3) node = node.parentNode;
+        while (node && node.id !== 'editorBody') {
+            if (node.style) {
+                node.style.fontFamily = '';
+                node.style.color = '';
+                node.style.backgroundColor = '';
+                node.style.lineHeight = '';
+            }
+            node = node.parentNode;
+        }
+    }
+    updateStatsAndAutoSave();
+}
+
+let activeColorTab = 'bg';
+function toggleColorPickerModal() {
+    const popover = document.getElementById('rteColorPopover');
+    if (!popover) return;
+    const isVisible = popover.classList.contains('active');
+    closeAllRtePopovers();
+    if (!isVisible) {
+        popover.classList.add('active');
+    }
+}
+
+function switchColorTab(tabName) {
+    activeColorTab = tabName;
+    document.querySelectorAll('#rteColorPopover .rte-color-tab').forEach(t => t.classList.remove('active'));
+    if (tabName === 'bg') {
+        document.getElementById('tabBgBtn').classList.add('active');
+        document.getElementById('actionBtnBg').style.display = 'block';
+        document.getElementById('actionBtnText').style.display = 'none';
+    } else {
+        document.getElementById('tabTextBtn').classList.add('active');
+        document.getElementById('actionBtnBg').style.display = 'none';
+        document.getElementById('actionBtnText').style.display = 'block';
+    }
+}
+
+function selectPresetColor(hex) {
+    if (activeColorTab === 'bg') {
+        document.execCommand('hiliteColor', false, hex);
+    } else {
+        document.execCommand('foreColor', false, hex);
+    }
+    closeAllRtePopovers();
+    updateStatsAndAutoSave();
+}
+
+function applyColorAction(type) {
+    if (type === 'transparent') {
+        document.execCommand('hiliteColor', false, 'transparent');
+    } else if (type === 'resetText') {
+        document.execCommand('foreColor', false, 'inherit');
+    }
+    closeAllRtePopovers();
+    updateStatsAndAutoSave();
+}
+
+function triggerCustomColorPicker() {
+    const inp = document.getElementById('rteCustomColorInput');
+    if (inp) inp.click();
+}
+
+function applyCustomColor(hex) {
+    selectPresetColor(hex);
+}
+
+function toggleLineHeightDropdown() {
+    const dropdown = document.getElementById('rteLineHeightDropdown');
+    if (!dropdown) return;
+    const isVisible = dropdown.classList.contains('active');
+    closeAllRtePopovers();
+    if (!isVisible) {
+        dropdown.classList.add('active');
+    }
+}
+
+function setLineHeight(lh) {
+    const sel = window.getSelection();
+    if (sel.rangeCount > 0) {
+        let node = sel.getRangeAt(0).commonAncestorContainer;
+        if (node.nodeType === 3) node = node.parentNode;
+        while (node && node.id !== 'editorBody' && !['P','DIV','H1','H2','H3','H4','LI'].includes(node.tagName)) {
+            node = node.parentNode;
+        }
+        if (node && node.id !== 'editorBody') {
+            node.style.lineHeight = lh;
+        } else {
+            document.execCommand('formatBlock', false, 'p');
+            const newSel = window.getSelection();
+            let parentP = newSel.getRangeAt(0).commonAncestorContainer;
+            if (parentP.nodeType === 3) parentP = parentP.parentNode;
+            if (parentP && parentP.id !== 'editorBody') parentP.style.lineHeight = lh;
+        }
+    }
+    
+    document.querySelectorAll('#rteLineHeightDropdown .rte-dropdown-item').forEach(item => {
+        const val = item.getAttribute('data-value');
+        if (val === String(lh)) {
+            item.classList.add('active');
+            item.querySelector('.check-icon').style.display = 'inline';
+        } else {
+            item.classList.remove('active');
+            item.querySelector('.check-icon').style.display = 'none';
+        }
+    });
+
+    closeAllRtePopovers();
+    updateStatsAndAutoSave();
+}
+
+function closeAllRtePopovers() {
+    document.querySelectorAll('.rte-popover, .rte-dropdown-menu').forEach(el => el.classList.remove('active'));
+}
+
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.rte-popover-container')) {
+        closeAllRtePopovers();
+    }
+});
+
 function insertLinkCreate() {
     var url = prompt('Masukkan URL link:', 'https://');
     if (url) {

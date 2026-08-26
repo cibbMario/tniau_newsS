@@ -135,24 +135,23 @@ $publishedNews = $pdo->query("SELECT id, title FROM news WHERE status='published
                     <div class="kpi-value"><?= number_format($totalClippings) ?> Artikel</div>
                 </div>
                 <div class="kpi-card">
-                    <div class="kpi-label">Estimasi Total Reach / Pembaca</div>
-                    <div class="kpi-value"><?= number_format($totalReach) ?> Pembaca</div>
+                    <div class="kpi-label">Estimasi Total Reach (Pembaca)</div>
+                    <div class="kpi-value"><?= number_format($totalReach) ?></div>
+                    <div class="kpi-sub">Dari total <?= $totalNews ?> liputan</div>
                 </div>
+
                 <div class="kpi-card">
-                    <div class="kpi-label">Sentimen Positif Media Luar</div>
-                    <div class="kpi-value" style="color:#16a34a;"><?= number_format($posCount) ?></div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-label">Sentimen Netral & Negatif</div>
-                    <div class="kpi-value" style="color:#475569;"><?= $netCount ?> Netral / <span style="color:#dc2626;"><?= $negCount ?> Negatif</span></div>
+                    <div class="kpi-label">Distribusi Sentimen</div>
+                    <div class="kpi-value" style="color:#059669;"><?= $posCount ?> Positif</div>
+                    <div class="kpi-value" style="color:#475569; font-size:14px; margin-top:2px;"><?= $netCount ?> Netral & <span style="color:#dc2626;"><?= $negCount ?> Negatif</span></div>
                 </div>
             </div>
 
-            <!-- Filter Card -->
+            <!-- SEARCH & FILTER -->
             <div class="card" style="padding:16px; margin-bottom:20px;">
                 <form method="GET" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) 120px; gap:12px; align-items:end;">
                     <div class="form-group" style="margin:0;">
-                        <label style="font-size:12px; margin-bottom:4px;">Cari Portal / Judul Liputan</label>
+                        <label style="font-size:12px; margin-bottom:4px;">Cari Portal atau Judul Liputan</label>
                         <input type="text" name="q" class="form-input" placeholder="Contoh: Kompas, Antara, Latma..." value="<?= e($searchQuery) ?>">
                     </div>
                     <div class="form-group" style="margin:0;">
@@ -269,7 +268,7 @@ $publishedNews = $pdo->query("SELECT id, title FROM news WHERE status='published
             </div>
 
             <div class="form-group">
-                <label>URL / Tautan Berita Online</label>
+                <label>Tautan URL Berita Online</label>
                 <input type="url" name="article_url" class="form-input" required placeholder="https://www.detik.com/...">
             </div>
 
@@ -289,7 +288,7 @@ $publishedNews = $pdo->query("SELECT id, title FROM news WHERE status='published
             </div>
 
             <div class="form-group">
-                <label>Estimasi Jumlah Pembaca / Reach</label>
+                <label>Estimasi Jumlah Pembaca</label>
                 <input type="number" name="reach_estimate" class="form-input" placeholder="Contoh: 15000" min="0" value="0">
             </div>
 
@@ -304,7 +303,7 @@ $publishedNews = $pdo->query("SELECT id, title FROM news WHERE status='published
             </div>
 
             <div class="form-group">
-                <label>Catatan / Kutipan Utama</label>
+                <label>Catatan dan Kutipan Utama</label>
                 <textarea name="notes" class="form-input" rows="2" placeholder="Catatan sudut pandang wartawan atau kutipan narasumber..."></textarea>
             </div>
 

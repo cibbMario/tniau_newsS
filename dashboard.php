@@ -598,7 +598,7 @@ if ($view === 'wilayah') {
                     <div class="card smooth-card mb-4" style="background: linear-gradient(135deg, rgba(30, 111, 191, 0.05), rgba(255, 255, 255, 0.9)); border: 1px solid rgba(30,111,191,0.12)">
                         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:12px">
                             <div>
-                                <h3 style="font-size:18px;color:var(--navy);margin:0;font-weight:700;display:flex;align-items:center;gap:8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--blue);flex-shrink:0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Pemantauan Berita Wilayah / Lanud</h3>
+                                <h3 style="font-size:18px;color:var(--navy);margin:0;font-weight:700;display:flex;align-items:center;gap:8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--blue);flex-shrink:0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Pemantauan Berita Wilayah & Lanud</h3>
                                 <p style="color:var(--text-sec);font-size:12.5px;margin-top:4px">Analisis dan sebaran informasi dari satuan Lanud di seluruh Indonesia.</p>
                             </div>
                             <span class="badge badge-gold" style="font-size:12px;padding:6px 12px;font-weight:700">Total: <?= $wilayahTotal ?? 0 ?> Berita</span>
@@ -647,7 +647,7 @@ if ($view === 'wilayah') {
                                     <thead>
                                         <tr>
                                             <th>Subjek Berita</th>
-                                            <th>Wilayah / Satuan</th>
+                                            <th>Wilayah & Satuan</th>
                                             <th>Sentimen</th>
                                             <th>Status</th>
                                             <th>Penulis</th>

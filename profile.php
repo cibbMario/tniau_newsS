@@ -702,11 +702,11 @@ $recentActivities = $activityStmt->fetchAll();
                                         <input type="text" name="username" value="<?= e($userDb['username']) ?>" required>
                                     </div>
                                     <div class="input-group">
-                                        <label>Nama Tampilan / Lengkap</label>
+                                        <label>Nama Tampilan</label>
                                         <input type="text" name="full_name" value="<?= e($userDb['full_name']) ?>" required>
                                     </div>
                                     <div class="input-group">
-                                        <label>Hak Akses / Peran</label>
+                                        <label>Hak Akses</label>
                                         <input type="text" value="<?= e(userDisplayName($userDb['role'])) ?>" readonly>
                                     </div>
                                     <div class="input-group" style="justify-content: flex-end;">
@@ -850,12 +850,12 @@ $recentActivities = $activityStmt->fetchAll();
                                         </div>
                                         
                                         <div class="input-group">
-                                            <label>Nama Tampilan / Lengkap</label>
+                                            <label>Nama Tampilan</label>
                                             <input type="text" name="new_full_name" placeholder="Masukkan nama lengkap" required>
                                         </div>
                                         
                                         <div class="input-group">
-                                            <label>Hak Akses / Peran</label>
+                                            <label>Hak Akses</label>
                                             <select name="new_role" required>
                                                 <option value="A">Reporter</option>
                                                 <option value="B">Editor</option>

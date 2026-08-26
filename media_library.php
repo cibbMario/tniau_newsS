@@ -236,7 +236,7 @@ include_once __DIR__ . '/includes/lanud_list.php';
             <div class="card" style="padding:16px; margin-bottom:20px;">
                 <form method="GET" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) 120px; gap:12px; align-items:end;">
                     <div class="form-group" style="margin:0;">
-                        <label style="font-size:12px; margin-bottom:4px;">Cari Judul / Tag Aset</label>
+                        <label style="font-size:12px; margin-bottom:4px;">Cari Judul atau Tag Aset</label>
                         <input type="text" name="q" class="form-input" placeholder="Contoh: Sukhoi, Danlanud, Upacara..." value="<?= e($searchQuery) ?>">
                     </div>
                     <div class="form-group" style="margin:0;">
@@ -248,7 +248,7 @@ include_once __DIR__ . '/includes/lanud_list.php';
                             <option value="Upacara" <?= $filterCategory==='Upacara'?'selected':'' ?>>Upacara & Sertijab</option>
                             <option value="Operasi & Latihan" <?= $filterCategory==='Operasi & Latihan'?'selected':'' ?>>Operasi & Latihan</option>
                             <option value="Kunjungan Kerja" <?= $filterCategory==='Kunjungan Kerja'?'selected':'' ?>>Kunjungan Kerja</option>
-                            <option value="Human Interest" <?= $filterCategory==='Human Interest'?'selected':'' ?>>Human Interest / Bakti Sosial</option>
+                            <option value="Human Interest" <?= $filterCategory==='Human Interest'?'selected':'' ?>>Human Interest dan Bakti Sosial</option>
                         </select>
                     </div>
                     <div class="form-group" style="margin:0;">
@@ -332,7 +332,7 @@ include_once __DIR__ . '/includes/lanud_list.php';
             <input type="hidden" name="upload_asset" value="1">
             
             <div class="form-group">
-                <label>Judul / Keterangan Foto</label>
+                <label>Judul & Keterangan Foto</label>
                 <input type="text" name="title" class="form-input" required placeholder="Contoh: Pesawat Tempur F-16 Siap Takeoff di Runway Lanud Iswahjudi">
             </div>
 
@@ -344,17 +344,17 @@ include_once __DIR__ . '/includes/lanud_list.php';
                     <option value="Upacara">Upacara & Sertijab</option>
                     <option value="Operasi & Latihan">Operasi & Latihan</option>
                     <option value="Kunjungan Kerja">Kunjungan Kerja</option>
-                    <option value="Human Interest">Human Interest / Bakti Sosial</option>
+                    <option value="Human Interest">Human Interest & Bakti Sosial</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label>Satuan / Lanud</label>
+                <label>Satuan & Lanud</label>
                 <?= render_lanud_select('lanud', $user['lanud'] ?? 'Lanud Atang Sendjaja', 'class="form-input"') ?>
             </div>
 
             <div class="form-group">
-                <label>Tag / Kata Kunci (Dipisahkan Koma)</label>
+                <label>Tag & Kata Kunci (Dipisahkan Koma)</label>
                 <input type="text" name="tags" class="form-input" placeholder="Contoh: f16, latihan tempur, penerbang">
             </div>
 

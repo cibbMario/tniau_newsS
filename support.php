@@ -9,105 +9,165 @@ $user = currentUser();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bantuan & Dukungan Portal Berita TNI AU</title>
+    <title>Kontak Support & Panduan Pengguna — Portal Berita TNI AU</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css?v=<?= time() ?>">
     <style>
-        .support-page-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: calc(100vh - 120px);
-            padding: 40px 20px;
+        .support-grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 24px;
+            margin-top: 16px;
         }
         
-        .support-header {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-        .support-header h2 {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 8px;
-        }
-        .support-header p {
-            font-size: 13.5px;
-            color: var(--text-sec);
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
         .support-card {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            width: 100%;
-            max-width: 600px;
-            border: 1px solid var(--border-light);
-            overflow: hidden;
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            padding: 24px;
+            margin-bottom: 24px;
         }
 
-        .support-item {
+        .support-section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid var(--border-light);
-            transition: background var(--transition);
-            cursor: pointer;
+            gap: 8px;
         }
-        .support-item:last-child {
+
+        .doc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 16px 0;
+        }
+
+        .doc-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 13px;
+            color: #334155;
+        }
+        .doc-item:last-child {
             border-bottom: none;
         }
-        .support-item:hover {
-            background: #f9f9f9;
-        }
-        
-        .support-icon {
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #eaf2f8;
-            color: #1a73e8;
-            border-radius: 12px;
-            margin-right: 16px;
-            flex-shrink: 0;
-        }
-        .support-content {
-            flex: 1;
-        }
-        .support-title {
-            font-size: 14px;
+        .doc-item .num {
             font-weight: 600;
-            color: var(--text);
-            margin-bottom: 4px;
-        }
-        .support-desc {
-            font-size: 12px;
-            color: var(--text-sec);
-        }
-        .support-arrow {
-            font-size: 16px;
-            color: #c7c7cc;
+            color: var(--teal-mid);
         }
 
-        .btn-contact {
-            display: block;
-            width: 100%;
-            background: var(--blue);
-            color: #fff;
-            text-align: center;
-            padding: 12px;
-            border: none;
+        .faq-accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .faq-item {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f8fafc;
+            transition: all 0.2s ease;
+        }
+
+        .faq-header {
+            padding: 14px 16px;
             font-size: 13.5px;
             font-weight: 600;
+            color: #1e293b;
             cursor: pointer;
-            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            user-select: none;
+            background: #ffffff;
         }
-        .btn-contact:hover {
-            background: #005bb5;
+
+        .faq-header:hover {
+            background: #f8fafc;
+            color: var(--teal-mid);
+        }
+
+        .faq-header .faq-chevron {
+            transition: transform 0.2s ease;
+            color: #94a3b8;
+            flex-shrink: 0;
+        }
+
+        .faq-item.active .faq-chevron {
+            transform: rotate(180deg);
+            color: var(--teal-mid);
+        }
+
+        .faq-body {
+            display: none;
+            padding: 14px 16px;
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.6;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .faq-item.active .faq-body {
+            display: block;
+        }
+
+        .guide-steps {
+            margin: 10px 0 0 0;
+            padding-left: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .guide-steps li {
+            margin-bottom: 2px;
+        }
+
+        .contact-box {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .btn-whatsapp {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 12px 20px;
+            background: #25D366;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 14px;
+            border-radius: 30px;
+            text-decoration: none;
+            box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3);
+            transition: all 0.2s ease;
+            margin-top: 16px;
+        }
+
+        .btn-whatsapp:hover {
+            background: #1ebc57;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+            color: #ffffff;
+        }
+
+        @media (max-width: 992px) {
+            .support-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -118,70 +178,149 @@ $user = currentUser();
     <main class="main-content">
         <div class="top-navbar" style="height:56px">
             <div class="top-navbar-left">
-                <button class="hamburger-btn" title="Toggle Menu" aria-label="Toggle menu">
+                <button class="hamburger-btn" id="hamburgerBtn" title="Toggle Menu" aria-label="Toggle menu">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
                 </button>
                 <div class="media-tabs">
-                    <span class="media-tab-item active" style="border:none">Bantuan & Dukungan</span>
+                    <span class="media-tab-item active" style="border:none">Contact Support Information</span>
                 </div>
             </div>
             <div class="top-navbar-right">
-                <div class="user-dropdown-btn">
-                    <?= e($user['full_name']) ?>
+                <div class="topbar-user-badge">
+                    <div class="topbar-avatar"><?= strtoupper(substr($user['full_name'], 0, 1)) ?></div>
+                    <div class="topbar-user-info">
+                        <span class="topbar-user-name"><?= e($user['full_name']) ?></span>
+                        <span class="topbar-user-role"><?= e(userDisplayName($user['role'])) ?></span>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="page-container" style="background:var(--bg-body)">
-            <div class="support-page-container">
+            <div class="support-grid">
                 
-                <div class="support-header">
-                    <h2>Pusat Bantuan</h2>
-                    <p>Temukan panduan penggunaan sistem atau hubungi tim dukungan kami jika Anda mengalami masalah.</p>
+                <!-- LEFT COLUMN: DOKUMEN PANDUAN & FAQ -->
+                <div>
+                    <!-- DOKUMEN PANDUAN -->
+                    <div class="support-card">
+                        <h3 class="support-section-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--teal-mid);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                            Dokumen Panduan
+                        </h3>
+                        <ul class="doc-list">
+                            <li class="doc-item">
+                                <span class="num">1.</span>
+                                <span>Panduan Pengguna Portal Berita TNI AU (untuk pengguna Satuan)</span>
+                            </li>
+                            <li class="doc-item">
+                                <span class="num">2.</span>
+                                <span>Materi Pelatihan Teknis Profesi Penerangan - 10 Maret 2023</span>
+                            </li>
+                        </ul>
+                        <div style="font-size:12.5px; color:#64748b;">
+                            Dapat diakses <a href="#" onclick="alert('Mengunduh dokumen panduan PDF...'); return false;" style="color:var(--teal-mid); font-weight:600; text-decoration:underline;">Disini</a>
+                        </div>
+                    </div>
+
+                    <!-- FAQ -->
+                    <div class="support-card">
+                        <h3 class="support-section-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--teal-mid);"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            FAQ
+                        </h3>
+
+                        <div class="faq-accordion">
+                            <!-- Q1 -->
+                            <div class="faq-item">
+                                <div class="faq-header" onclick="toggleFaq(this)">
+                                    <span>Sudah input username dan password, tapi tidak dapat masuk ke aplikasi?</span>
+                                    <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                                </div>
+                                <div class="faq-body">
+                                    <p>• Mohon dipastikan username dan password tidak terdapat spasi di depan/belakang.</p>
+                                </div>
+                            </div>
+
+                            <!-- Q2 -->
+                            <div class="faq-item">
+                                <div class="faq-header" onclick="toggleFaq(this)">
+                                    <span>Kenapa sudah input berita, namun tidak tampil di halaman list berita?</span>
+                                    <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                                </div>
+                                <div class="faq-body">
+                                    <p>• List berita yang di tampilkan adalah default per hari ini</p>
+                                </div>
+                            </div>
+
+                            <!-- Q3 -->
+                            <div class="faq-item">
+                                <div class="faq-header" onclick="toggleFaq(this)">
+                                    <span>Berita yang sudah di input kemarin tidak tampil di halaman berita</span>
+                                    <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                                </div>
+                                <div class="faq-body">
+                                    <ol style="margin-left: 18px; padding: 0;">
+                                        <li>Klik filter tanggal</li>
+                                        <li>Ubah filter menjadi sesuai yang kita inginkan</li>
+                                    </ol>
+                                </div>
+                            </div>
+
+                            <!-- Q4: PANDUAN UPLOAD BERITA -->
+                            <div class="faq-item active">
+                                <div class="faq-header" onclick="toggleFaq(this)">
+                                    <span>Bagaimana caranya input berita ?</span>
+                                    <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                                </div>
+                                <div class="faq-body">
+                                    <p style="font-weight:600; color:#1e293b; margin-bottom:8px;">Untuk input berita bisa dilakukan dengan cara :</p>
+                                    <ol class="guide-steps">
+                                        <li>Login aplikasi</li>
+                                        <li>Input user name</li>
+                                        <li>Input Password</li>
+                                        <li>Klik Menu Wilayah / Daftar Berita</li>
+                                        <li>Klik "Entry New" / "Buat Berita Baru"</li>
+                                        <li>Isi Judul Berita, Wilayah & Satuan, Sumber Media, dan Tanggal Terbit</li>
+                                        <li>Upload Gambar Utama Berita dan Gambar Pendukung (Galeri)</li>
+                                        <li>Tulis Isi Berita menggunakan Rich Text Editor (sesuai format font, warna, line height, dll.)</li>
+                                        <li>Tentukan Sentimen, Prioritas, Klasifikasi, Aktor, Tag & Topik</li>
+                                        <li>Klik "Simpan Draft" atau "Ajukan Review" untuk diverifikasi Editor</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="support-card">
-                    <div class="support-item">
-                        <div class="support-icon">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                        </div>
-                        <div class="support-content">
-                            <div class="support-title">Panduan Pengguna (Manual)</div>
-                            <div class="support-desc">Pelajari cara membuat, mengedit, dan mempublikasikan berita.</div>
-                        </div>
-                        <div class="support-arrow">›</div>
-                    </div>
-                    
-                    <div class="support-item">
-                        <div class="support-icon">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                        </div>
-                        <div class="support-content">
-                            <div class="support-title">Pertanyaan yang Sering Diajukan (FAQ)</div>
-                            <div class="support-desc">Jawaban untuk pertanyaan umum terkait proses persetujuan dan peran.</div>
-                        </div>
-                        <div class="support-arrow">›</div>
-                    </div>
+                <!-- RIGHT COLUMN: KONTAK SUPPORT -->
+                <div>
+                    <div class="contact-box">
+                        <h3 class="support-section-title">Kontak (informasi support)</h3>
+                        <p style="font-size:13px; color:#475569; line-height:1.6;">
+                            Untuk Informasi, konsultasi penggunaan aplikasi single window silakan chat nomor support berikut :
+                        </p>
 
-                    <div class="support-item">
-                        <div class="support-icon">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        <a href="https://wa.me/6281234567890?text=Halo%20Tim%20Support%20Portal%20Berita%20TNI%20AU" target="_blank" class="btn-whatsapp">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                            Chat on WhatsApp
+                        </a>
+
+                        <div style="margin-top:18px; font-size:12px; color:#64748b; text-align:center;">
+                            waktu layanan : hari dan jam kerja (08.00 s.d 17.00 WIB)
                         </div>
-                        <div class="support-content">
-                            <div class="support-title">Pengaturan Akun & Keamanan</div>
-                            <div class="support-desc">Informasi tentang pengelolaan kata sandi dan keamanan akun Anda.</div>
-                        </div>
-                        <div class="support-arrow">›</div>
                     </div>
-                    
-                    <button class="btn-contact" onclick="alert('Membuka form kontak tim dukungan teknis...')">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg> Hubungi Dukungan Teknis
-                    </button>
                 </div>
 
             </div>
         </div>
     </main>
 </div>
+
+<script>
+function toggleFaq(el) {
+    const parent = el.closest('.faq-item');
+    parent.classList.toggle('active');
+}
+</script>
 </body>
 </html>
