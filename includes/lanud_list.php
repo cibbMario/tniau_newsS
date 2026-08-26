@@ -1,5 +1,4 @@
 <?php
-// Shared list of Lanud options and helper to render a select
 $LANUD_OPTIONS = [
     'Lanud Halim Perdanakusuma',
     'Lanud Roesmin Nurjadin',
