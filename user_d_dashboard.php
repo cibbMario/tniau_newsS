@@ -61,59 +61,51 @@ $newsList = $stmt->fetchAll();
     <title>Halaman Pemantauan Status Berita (User D)</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css?v=<?= time() ?>">
     <style>
-        .user-d-header-banner {
-            background: linear-gradient(135deg, #0b2545 0%, #134074 60%, #1a5296 100%);
-            color: #fff;
-            padding: 24px 28px;
-            border-radius: 16px;
-            margin-bottom: 24px;
-            box-shadow: 0 10px 30px rgba(11, 37, 69, 0.15);
+        .user-d-page { max-width: 1280px; margin: 0 auto; }
+        .user-d-intro {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 4px 0 20px;
+            border-bottom: 1px solid var(--border-cream);
         }
-        .user-d-header-banner h2 {
-            font-size: 20px;
+        .user-d-eyebrow {
+            color: #486581;
+            font-size: 11px;
             font-weight: 700;
+            letter-spacing: .7px;
+            text-transform: uppercase;
             margin-bottom: 6px;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
-        .user-d-header-banner p {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.85);
-            max-width: 650px;
-            margin: 0;
-        }
-        .user-d-badge {
-            background: rgba(201, 162, 39, 0.2);
-            border: 1px solid #c9a227;
-            color: #f0c84a;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
+        .user-d-intro h1 { margin: 0; color: var(--navy); font-size: 24px; line-height: 1.2; }
+        .user-d-intro p { margin: 7px 0 0; color: var(--text-sec); font-size: 13px; max-width: 720px; }
+        .user-d-scope {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 7px;
+            white-space: nowrap;
+            color: var(--navy);
+            background: #fff;
+            border: 1px solid var(--border-cream);
+            border-radius: var(--radius);
+            padding: 9px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            box-shadow: var(--shadow-sm);
         }
         .stats-grid-d {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 16px;
-            margin-bottom: 24px;
+            margin: 20px 0;
         }
         .stat-card-d {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.97);
+            border: 1px solid var(--border-cream);
             padding: 18px;
-            border-radius: 14px;
-            box-shadow: 0 4px 16px rgba(11, 37, 69, 0.06);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
             display: flex;
             align-items: center;
             gap: 16px;
@@ -127,28 +119,44 @@ $newsList = $stmt->fetchAll();
             justify-content: center;
             flex-shrink: 0;
         }
-        .icon-blue { background: rgba(30, 111, 191, 0.12); color: #1e6fbf; }
-        .icon-green { background: rgba(15, 155, 110, 0.12); color: #0f9b6e; }
-        .icon-gold { background: rgba(201, 162, 39, 0.15); color: #c9a227; }
-        .icon-purple { background: rgba(111, 66, 193, 0.12); color: #6f42c1; }
+        .icon-blue { background: #e8eef4; color: #345b7d; }
+        .icon-green { background: #e8f0ed; color: #3f6f60; }
+        .icon-gold { background: #f1eee5; color: #806b3e; }
+        .icon-slate { background: #edf0f2; color: #536572; }
         
         .stat-card-val { font-size: 22px; font-weight: 700; color: #0d1b2a; line-height: 1.2; }
         .stat-card-lbl { font-size: 12px; color: #3a5a7a; font-weight: 500; }
         
+        .user-d-workspace {
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid var(--border-cream);
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: var(--shadow-sm);
+        }
+        .user-d-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
         .tab-filter-bar {
             display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-            border-bottom: 2px solid rgba(30, 111, 191, 0.1);
-            padding-bottom: 8px;
+            gap: 6px;
             overflow-x: auto;
+            padding: 4px;
+            background: #f5f8fb;
+            border: 1px solid #e6edf3;
+            border-radius: 10px;
         }
         .tab-filter-btn {
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 13px;
+            padding: 8px 11px;
+            border-radius: 7px;
+            font-size: 12px;
             font-weight: 600;
-            color: #3a5a7a;
+            color: var(--text-sec);
             background: transparent;
             border: none;
             cursor: pointer;
@@ -159,39 +167,41 @@ $newsList = $stmt->fetchAll();
             gap: 6px;
         }
         .tab-filter-btn:hover {
-            background: rgba(30, 111, 191, 0.08);
-            color: #1e6fbf;
+            background: #edf2f6;
+            color: #345b7d;
         }
         .tab-filter-btn.active {
-            background: #0b2545;
-            color: #ffffff;
-            box-shadow: 0 4px 12px rgba(11, 37, 69, 0.2);
-        }
-        .action-group-d {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        
-        /* Modal Style for Revision Note */
-        .modal-revisi {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(11, 37, 69, 0.6);
-            backdrop-filter: blur(4px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-revisi-box {
             background: #ffffff;
+            color: var(--navy);
+            box-shadow: var(--shadow-sm);
+        }
+        .user-d-search { position: relative; min-width: 230px; }
+        .user-d-search input {
             width: 100%;
-            max-width: 500px;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-cream);
+            border-radius: 8px;
+            padding: 9px 12px 9px 34px;
+            color: var(--text-main);
+            background: #fff;
+            font-size: 12px;
+        }
+        .user-d-search svg { position: absolute; left: 11px; top: 10px; color: var(--text-muted); }
+        .user-d-table-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+        .user-d-table-title h2 { margin: 0; font-size: 15px; color: var(--navy); }
+        .user-d-result-count { color: var(--text-muted); font-size: 11px; }
+        .user-d-table .news-table { min-width: 900px; }
+        .user-d-table .news-table th { white-space: nowrap; }
+        .user-d-table .col-subject a { display: block; max-width: 330px; line-height: 1.45; }
+        .user-d-status-post { font-size: 11px; font-weight: 700; white-space: nowrap; }
+        @media (max-width: 1024px) { .stats-grid-d { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 640px) {
+            .user-d-intro { flex-direction: column; }
+            .user-d-intro h1 { font-size: 21px; }
+            .stats-grid-d { grid-template-columns: 1fr; }
+            .user-d-workspace { padding: 12px; }
+            .user-d-toolbar { align-items: stretch; }
+            .tab-filter-bar { width: 100%; }
+            .user-d-search { width: 100%; }
         }
     </style>
 </head>
@@ -202,22 +212,20 @@ $newsList = $stmt->fetchAll();
     <main class="main-content">
         <?php include __DIR__ . '/includes/topbar.php'; ?>
 
-        <div class="page-container">
+        <div class="page-container user-d-page">
 
-            <!-- HEADER BANNER -->
-            <div class="user-d-header-banner">
+            <!-- PAGE INTRO -->
+            <section class="user-d-intro">
                 <div>
-                    <h2>
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                        Halaman Pemantauan Status Berita
-                    </h2>
-                    <p>Selamat datang, <strong><?= e($user['full_name']) ?></strong>. Halaman ini berfungsi untuk memantau status berita yang telah disusun oleh Reporter, baik yang masih dalam tahap proses maupun yang sudah diterbitkan.</p>
+                    <div class="user-d-eyebrow">Monitoring & Review</div>
+                    <h1>Pemantauan Berita</h1>
+                    <p>Halo, <strong><?= e($user['full_name']) ?></strong>. Pantau alur berita Reporter dan status publikasinya dari satu tempat.</p>
                 </div>
-                <div class="user-d-badge">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                    Wewenang Approver Kejelasan
+                <div class="user-d-scope">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 9.5 8 11 4.5-1.5 8-6 8-11V5l-8-3Z"></path><path d="m9 12 2 2 4-4"></path></svg>
+                    Approver Kejelasan
                 </div>
-            </div>
+            </section>
 
             <!-- STATS CARDS -->
             <div class="stats-grid-d">
@@ -227,7 +235,7 @@ $newsList = $stmt->fetchAll();
                     </div>
                     <div>
                         <div class="stat-card-val"><?= $totalPending ?></div>
-                        <div class="stat-card-lbl">Menunggu Persetujuan Kejelasan</div>
+                        <div class="stat-card-lbl">Berita Dalam Proses</div>
                     </div>
                 </div>
 
@@ -252,7 +260,7 @@ $newsList = $stmt->fetchAll();
                 </div>
 
                 <div class="stat-card-d">
-                    <div class="stat-card-icon icon-purple">
+                    <div class="stat-card-icon icon-slate">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                     </div>
                     <div>
@@ -262,14 +270,16 @@ $newsList = $stmt->fetchAll();
                 </div>
             </div>
 
-            <!-- FILTER TABS & SEARCH -->
-            <div class="tab-filter-bar">
+            <section class="user-d-workspace">
+                <div class="user-d-toolbar">
+                <!-- FILTER TABS -->
+                <div class="tab-filter-bar" role="tablist" aria-label="Filter berita">
                 <a href="<?= BASE_URL ?>/user_d_dashboard.php?filter=all" class="tab-filter-btn <?= $filter==='all'?'active':'' ?>">
                     Semua Berita
                 </a>
                 <a href="<?= BASE_URL ?>/user_d_dashboard.php?filter=pending" class="tab-filter-btn <?= $filter==='pending'?'active':'' ?>">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                    Menunggu Persetujuan Kejelasan (<?= $totalPending ?>)
+                    Berita Dalam Proses (<?= $totalPending ?>)
                 </a>
                 <a href="<?= BASE_URL ?>/user_d_dashboard.php?filter=user_a" class="tab-filter-btn <?= $filter==='user_a'?'active':'' ?>">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
@@ -279,10 +289,21 @@ $newsList = $stmt->fetchAll();
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                     Berita Dipublikasikan (<?= $totalPublished ?>)
                 </a>
-            </div>
+                </div>
+                <form class="user-d-search" method="GET" action="<?= BASE_URL ?>/user_d_dashboard.php" role="search">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                    <input type="search" name="q" value="<?= e($search) ?>" placeholder="Cari judul, isi, atau reporter..." aria-label="Cari berita">
+                    <input type="hidden" name="filter" value="<?= e($filter) ?>">
+                </form>
+                </div>
+
+                <div class="user-d-table-title">
+                    <h2>Daftar Berita</h2>
+                    <span class="user-d-result-count"><?= count($newsList) ?> hasil ditampilkan</span>
+                </div>
 
             <!-- NEWS TABLE FOR USER D -->
-            <div class="news-table-wrap">
+            <div class="news-table-wrap user-d-table">
                 <div class="table-responsive">
                     <table class="news-table">
                         <thead>
@@ -336,13 +357,13 @@ $newsList = $stmt->fetchAll();
                                         <span class="pill <?= $cls ?>"><?= e($row['sentiment'] ?? 'Netral') ?></span>
                                     </td>
                                     <td style="text-align:center;" onclick="event.stopPropagation()">
-                                        <div class="action-group-d" style="justify-content:center;">
+                                        <div style="text-align:center;">
                                             <?php if ($row['status'] !== 'published'): ?>
-                                                <span style="font-size:11px; color:#e67e22; font-weight:700; padding:3px 12px; background:rgba(230,126,34,0.1); border-radius:12px; border:1px solid rgba(230,126,34,0.2);">
+                                                <span class="user-d-status-post" style="color:#b45309; padding:4px 9px; background:rgba(245,158,11,0.1); border-radius:7px; border:1px solid rgba(245,158,11,0.2);">
                                                     Dalam Proses
                                                 </span>
                                             <?php else: ?>
-                                                <span style="font-size:11px; color:#0f9b6e; font-weight:700; padding:3px 12px; background:rgba(15,155,110,0.1); border-radius:12px; border:1px solid rgba(15,155,110,0.2);">
+                                                <span class="user-d-status-post" style="color:#047857; padding:4px 9px; background:rgba(16,185,129,0.1); border-radius:7px; border:1px solid rgba(16,185,129,0.2);">
                                                     Posted
                                                 </span>
                                             <?php endif; ?>
@@ -355,6 +376,8 @@ $newsList = $stmt->fetchAll();
                     </table>
                 </div>
             </div>
+
+            </section>
 
         </div>
     </main>

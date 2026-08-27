@@ -28,7 +28,9 @@ $title = $news["title"];
 
 if ($news["status"] === "revision_b") {
     updateNewsStatus($newsId, "pending_b", $user["id"], "Reporter telah menyelesaikan revisi dan mengirim ulang ke Editor");
-    $targetUsers = $pdo->query("SELECT id FROM users WHERE role = 'B'")->fetchAll();
+    $targetStmt = $pdo->prepare("SELECT id FROM users WHERE role = 'B' AND lanud = ?");
+    $targetStmt->execute([$news['wilayah']]);
+    $targetUsers = $targetStmt->fetchAll();
     foreach ($targetUsers as $uTarget) {
         sendNotification($newsId, $uTarget["id"], "Berita \"$title\" telah direvisi oleh Reporter dan memerlukan review ulang Editor.");
     }

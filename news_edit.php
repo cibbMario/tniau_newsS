@@ -98,7 +98,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_news'])) {
                 $curStat = $news['status'];
                 if ($curStat === 'revision_b') {
                     updateNewsStatus($id, 'pending_b', $user['id'], 'Reporter telah menyelesaikan revisi dan mengirim ulang ke Editor');
-                    foreach ($pdo->query("SELECT id FROM users WHERE role = 'B'")->fetchAll() as $uTarget) {
+                    $editorStmt = $pdo->prepare("SELECT id FROM users WHERE role = 'B' AND lanud = ?");
+                    $editorStmt->execute([$news['wilayah']]);
+                    foreach ($editorStmt->fetchAll() as $uTarget) {
                         sendNotification($id, $uTarget['id'], "Berita \"$title\" telah direvisi oleh Reporter dan memerlukan review ulang Editor.");
                     }
                     $success = "Berita berhasil diperbarui dan dikirim ulang ke Editor.";
@@ -116,7 +118,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_news'])) {
                     $success = "Berita berhasil diperbarui dan dikirim ulang ke Peninjau Kejelasan.";
                 } elseif ($curStat === 'draft') {
                     updateNewsStatus($id, 'pending_b', $user['id'], 'Reporter telah menyelesaikan berita draft dan mengirim ke Editor untuk direview');
-                    foreach ($pdo->query("SELECT id FROM users WHERE role = 'B'")->fetchAll() as $uTarget) {
+                    $editorStmt = $pdo->prepare("SELECT id FROM users WHERE role = 'B' AND lanud = ?");
+                    $editorStmt->execute([$news['wilayah']]);
+                    foreach ($editorStmt->fetchAll() as $uTarget) {
                         sendNotification($id, $uTarget['id'], "Berita baru \"$title\" telah selesai dibuat dan dikirim oleh Reporter untuk direview.");
                     }
                     $_SESSION['flash_success'] = "Berita \"$title\" berhasil dikirim ke Editor untuk direview.";

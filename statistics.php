@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/includes/lanud_list.php';
 requireLogin();
 $user    = currentUser();
 $current = 'statistics';
@@ -800,26 +801,12 @@ $pageTitle = $pageTitles[$view] ?? 'Statistik';
 
             <?php if ($view === 'peta'): ?>
             <?php
-            $lanudsData = [
-                ['name' => 'Lanud Halim Perdanakusuma', 'city' => 'Jakarta Timur', 'lat' => -6.2655, 'lng' => 106.8906, 'koopsud' => 'Koopsud I'],
-                ['name' => 'Lanud Atang Sendjaja', 'city' => 'Bogor', 'lat' => -6.5414, 'lng' => 106.7515, 'koopsud' => 'Koopsud I'],
-                ['name' => 'Lanud Roesmin Nurjadin', 'city' => 'Pekanbaru', 'lat' => 0.4611, 'lng' => 101.4444, 'koopsud' => 'Koopsud I'],
-                ['name' => 'Lanud Supadio', 'city' => 'Pontianak', 'lat' => -0.1500, 'lng' => 109.4039, 'koopsud' => 'Koopsud I'],
-                ['name' => 'Lanud Soewondo', 'city' => 'Medan', 'lat' => 3.5583, 'lng' => 98.6750, 'koopsud' => 'Koopsud I'],
-                ['name' => 'Lanud Suryadarma', 'city' => 'Subang', 'lat' => -6.5392, 'lng' => 107.6719, 'koopsud' => 'Koopsud I'],
-                ['name' => 'Lanud Iswahjudi', 'city' => 'Madiun', 'lat' => -7.6167, 'lng' => 111.4333, 'koopsud' => 'Koopsud II'],
-                ['name' => 'Lanud Abdulrachman Saleh', 'city' => 'Malang', 'lat' => -7.9269, 'lng' => 112.7144, 'koopsud' => 'Koopsud II'],
-                ['name' => 'Lanud Sultan Hasanuddin', 'city' => 'Makassar', 'lat' => -5.0614, 'lng' => 119.5542, 'koopsud' => 'Koopsud II'],
-                ['name' => 'Lanud Sam Ratulangi', 'city' => 'Manado', 'lat' => 1.5494, 'lng' => 124.9264, 'koopsud' => 'Koopsud II'],
-                ['name' => 'Lanud Dhomber', 'city' => 'Balikpapan', 'lat' => -1.2683, 'lng' => 116.8944, 'koopsud' => 'Koopsud II'],
-                ['name' => 'Lanud El Tari', 'city' => 'Kupang', 'lat' => -10.1714, 'lng' => 123.6706, 'koopsud' => 'Koopsud II'],
-                ['name' => 'Lanud Adisutjipto', 'city' => 'Yogyakarta', 'lat' => -7.7881, 'lng' => 110.4319, 'koopsud' => 'Kodiklatau'],
-                ['name' => 'Lanud Adi Soemarmo', 'city' => 'Solo', 'lat' => -7.5161, 'lng' => 110.7567, 'koopsud' => 'Kodiklatau'],
-                ['name' => 'Lanud Silas Papare', 'city' => 'Jayapura', 'lat' => -2.5769, 'lng' => 140.5161, 'koopsud' => 'Koopsud III'],
-                ['name' => 'Lanud Manuhua', 'city' => 'Biak', 'lat' => -1.1903, 'lng' => 136.1083, 'koopsud' => 'Koopsud III'],
-                ['name' => 'Lanud Pattimura', 'city' => 'Ambon', 'lat' => -3.7103, 'lng' => 128.0894, 'koopsud' => 'Koopsud III'],
-                ['name' => 'Lanud Johanes Abraham Dimara', 'city' => 'Merauke', 'lat' => -8.5203, 'lng' => 140.4181, 'koopsud' => 'Koopsud III'],
-            ];
+            $lanudsData = [];
+            foreach ($LANUD_OPTIONS as $lanudName) {
+                if (isset($LANUD_LOCATIONS[$lanudName])) {
+                    $lanudsData[] = ['name' => $lanudName] + $LANUD_LOCATIONS[$lanudName];
+                }
+            }
 
             $geoJsonPoints = [];
             foreach ($lanudsData as $l) {

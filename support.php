@@ -214,11 +214,11 @@ $user = currentUser();
                             </li>
                             <li class="doc-item">
                                 <span class="num">2.</span>
-                                <span>Materi Pelatihan Teknis Profesi Penerangan - 10 Maret 2023</span>
+                                <span>Materi Pelatihan Teknis Profesi Penerangan - present</span>
                             </li>
                         </ul>
                         <div style="font-size:12.5px; color:#64748b;">
-                            Dapat diakses <a href="#" onclick="alert('Mengunduh dokumen panduan PDF...'); return false;" style="color:var(--teal-mid); font-weight:600; text-decoration:underline;">Disini</a>
+                            Panduan ringkas penggunaan tersedia pada bagian FAQ di bawah.
                         </div>
                     </div>
 
@@ -237,7 +237,7 @@ $user = currentUser();
                                     <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
                                 </div>
                                 <div class="faq-body">
-                                    <p>• Mohon dipastikan username dan password tidak terdapat spasi di depan/belakang.</p>
+                                    <p>Pastikan username dan password tidak memiliki spasi di awal atau akhir. Jika tetap gagal, hubungi support.</p>
                                 </div>
                             </div>
 
@@ -248,7 +248,7 @@ $user = currentUser();
                                     <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
                                 </div>
                                 <div class="faq-body">
-                                    <p>• List berita yang di tampilkan adalah default per hari ini</p>
+                                    <p>Gunakan filter status atau pencarian pada halaman Daftar Berita. Berita draft hanya dapat dilihat oleh pembuat dan pengguna yang berwenang.</p>
                                 </div>
                             </div>
 
@@ -276,15 +276,14 @@ $user = currentUser();
                                     <p style="font-weight:600; color:#1e293b; margin-bottom:8px;">Untuk input berita bisa dilakukan dengan cara :</p>
                                     <ol class="guide-steps">
                                         <li>Login aplikasi</li>
-                                        <li>Input user name</li>
-                                        <li>Input Password</li>
-                                        <li>Klik Menu Wilayah / Daftar Berita</li>
-                                        <li>Klik "Entry New" / "Buat Berita Baru"</li>
-                                        <li>Isi Judul Berita, Wilayah & Satuan, Sumber Media, dan Tanggal Terbit</li>
-                                        <li>Upload Gambar Utama Berita dan Gambar Pendukung (Galeri)</li>
-                                        <li>Tulis Isi Berita menggunakan Rich Text Editor (sesuai format font, warna, line height, dll.)</li>
-                                        <li>Tentukan Sentimen, Prioritas, Klasifikasi, Aktor, Tag & Topik</li>
-                                        <li>Klik "Simpan Draft" atau "Ajukan Review" untuk diverifikasi Editor</li>
+                                        <li>Login menggunakan akun yang telah diberikan Administrator.</li>
+                                        <li>Buka menu <strong>Daftar Berita</strong>, lalu pilih <strong>Buat Berita Baru</strong>.</li>
+                                        <li>Isi judul berita, wilayah atau satuan, sumber media, dan waktu terbit jika diperlukan.</li>
+                                        <li>Upload satu gambar utama. Gambar pendukung dapat dipilih lebih dari satu.</li>
+                                        <li>Tulis isi berita dengan editor, lalu lengkapi sentimen, prioritas, klasifikasi, tempat, aktor, tag, topik, dan keyword.</li>
+                                        <li>Pilih <strong>Simpan sebagai Draft</strong> jika belum siap dikirim.</li>
+                                        <li>Pilih <strong>Ajukan untuk Review</strong> agar berita masuk ke proses pemeriksaan Editor.</li>
+                                        <li>Setelah mengirim, tunggu proses review. Hindari menekan tombol kirim berulang kali.</li>
                                     </ol>
                                 </div>
                             </div>
@@ -297,13 +296,14 @@ $user = currentUser();
                     <div class="contact-box">
                         <h3 class="support-section-title">Kontak (informasi support)</h3>
                         <p style="font-size:13px; color:#475569; line-height:1.6;">
-                            Untuk Informasi, konsultasi penggunaan aplikasi single window silakan chat nomor support berikut :
+                            Untuk informasi dan konsultasi penggunaan aplikasi, silakan hubungi support melalui nomor berikut:
                         </p>
 
-                        <a href="https://wa.me/6281234567890?text=Halo%20Tim%20Support%20Portal%20Berita%20TNI%20AU" target="_blank" class="btn-whatsapp">
+                        <a href="https://wa.me/6281268687910?text=Halo%20Tim%20Support%20Portal%20Berita%20TNI%20AU" target="_blank" rel="noopener" class="btn-whatsapp">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
                             Chat on WhatsApp
                         </a>
+
 
                         <div style="margin-top:18px; font-size:12px; color:#64748b; text-align:center;">
                             waktu layanan : hari dan jam kerja (08.00 s.d 17.00 WIB)

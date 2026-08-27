@@ -23,8 +23,10 @@ function getNotifications($user_id, $onlyUnread = false) {
     global $pdo;
     $sql = "SELECT n.*, news.title AS news_title
             FROM notifications n
-            JOIN news ON news.id = n.news_id
-            WHERE n.user_id = ?";
+                        JOIN news ON news.id = n.news_id
+                        JOIN users ON users.id = n.user_id
+                        WHERE n.user_id = ?
+                            AND (users.role <> 'B' OR news.wilayah = users.lanud)";
     if ($onlyUnread) $sql .= " AND n.is_read = 0";
     $sql .= " ORDER BY n.created_at DESC";
     $stmt = $pdo->prepare($sql);
@@ -34,7 +36,12 @@ function getNotifications($user_id, $onlyUnread = false) {
 
 function countUnreadNotifications($user_id) {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0");
+    $stmt = $pdo->prepare("SELECT COUNT(*)
+        FROM notifications n
+        JOIN news ON news.id = n.news_id
+        JOIN users ON users.id = n.user_id
+        WHERE n.user_id = ? AND n.is_read = 0
+          AND (users.role <> 'B' OR news.wilayah = users.lanud)");
     $stmt->execute([$user_id]);
     return (int)$stmt->fetchColumn();
 }

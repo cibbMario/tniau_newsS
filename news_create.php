@@ -6,6 +6,9 @@ $user = currentUser();
 
 $error = '';
 $success = '';
+$newsInserted = false;
+$createToken = $_SESSION['news_create_token'] ?? bin2hex(random_bytes(32));
+$_SESSION['news_create_token'] = $createToken;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token = $_POST['csrf_token'] ?? '';
@@ -28,6 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $priority       = $_POST['priority'] ?? 'Medium';
     $classification = trim($_POST['classification'] ?? '9. Tni au');
     $tempat         = trim($_POST['tempat'] ?? '');
+    $submittedToken = $_POST['create_token'] ?? '';
+
+    if (!$submittedToken || !hash_equals($_SESSION['news_create_token'] ?? '', $submittedToken)) {
+        header("Location: " . BASE_URL . "/news_list.php");
+        exit;
+    }
 
     if (!$title) {
         $error = 'Judul berita wajib diisi.';
@@ -35,6 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Isi berita wajib diisi.';
     } else {
         try {
+            // Consume the token before inserting so repeated POST requests cannot create duplicates.
+            unset($_SESSION['news_create_token']);
             $imagePath = uploadNewsImage('image');
             $slug = generateSlug($title);
             $status = ($action === 'submit') ? 'pending_b' : 'draft';
@@ -56,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $classification, $wilayah, $tempat, $media, $aktor, $tag, $topik, $keyword, $author_label,
                 $user['id'], $published_at
             ]);
+            $newsInserted = true;
             $newsId = $pdo->lastInsertId();
 
             // Upload gambar tambahan
@@ -76,7 +88,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             updateNewsStatus($newsId, $status, $user['id'], 'Berita baru dibuat');
 
             if ($action === 'submit') {
-                $editors = $pdo->query("SELECT id FROM users WHERE role = 'B'")->fetchAll();
+                $editorStmt = $pdo->prepare("SELECT id FROM users WHERE role = 'B' AND lanud = ?");
+                $editorStmt->execute([$wilayah]);
+                $editors = $editorStmt->fetchAll();
                 foreach ($editors as $ed) {
                     sendNotification($newsId, $ed['id'], "Berita baru: \"$title\" menunggu review Anda.");
                 }
@@ -85,6 +99,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header("Location: " . BASE_URL . "/news_view.php?id=" . $newsId);
             exit;
         } catch (Exception $ex) {
+            if (!$newsInserted) {
+                $_SESSION['news_create_token'] = $submittedToken;
+            }
             $error = $ex->getMessage();
         }
     }
@@ -138,6 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <form method="POST" enctype="multipart/form-data" id="createForm" class="create-card">
                     <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
+                    <input type="hidden" name="create_token" value="<?= e($createToken) ?>">
                     <div class="create-layout-grid">
                         <div class="create-main">
                             <div class="form-group">
@@ -644,13 +662,24 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+var isSubmitting = false;
 function prepareSubmit() {
     document.getElementById('hiddenContent').value = document.getElementById('editorBody').innerHTML;
     localStorage.removeItem('tniau_draft_create_title');
     localStorage.removeItem('tniau_draft_create_content');
 }
-document.getElementById('createForm').addEventListener('submit', function() {
+document.getElementById('createForm').addEventListener('submit', function(event) {
+    if (isSubmitting) {
+        event.preventDefault();
+        return;
+    }
+    isSubmitting = true;
     prepareSubmit();
+    this.querySelectorAll('button[type="submit"]').forEach(function(button) {
+        button.disabled = true;
+        button.style.opacity = '0.65';
+        button.style.cursor = 'wait';
+    });
 });
 </script>
 </body>
