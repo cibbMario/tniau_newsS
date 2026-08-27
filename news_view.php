@@ -61,25 +61,12 @@ $commentsList = $comments->fetchAll();
                     <div class="detail-card">
                         <div class="detail-toolbar" style="border:none; margin-bottom:8px;">
                             <div class="detail-toolbar-left">
-                                <span class="btn-tool" style="border-radius:4px;">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                                    Ubah Ke Berita Utama
-                                </span>
                                 <?php if ($user['role'] === 'E' || $user['role'] === 'D' || ($user['role'] === 'A' && in_array($news['status'], ['draft','pending_b','revision_b','revision_c']))): ?>
                                 <a href="<?= BASE_URL ?>/news_edit.php?id=<?= $id ?>" class="btn-tool" style="border-radius:4px;">
                                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                                     Edit
                                 </a>
                                 <?php endif; ?>
-                                <span class="btn-tool" style="border-radius:4px;">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                                    Review
-                                </span>
-                                <span class="btn-tool" style="border-radius:4px;">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-                                    Ditandai Sebagai
-                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-                                </span>
                                 <a href="<?= BASE_URL ?>/news_history.php?news_id=<?= $id ?>" class="btn-tool active" style="border-radius:4px;background:var(--navy);color:#fff;border-color:var(--navy);text-decoration:none">
                                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><polyline points="12 8 8 12 12 16"></polyline><line x1="20" y1="12" x2="8" y2="12"></line></svg>
                                     Riwayat Catatan

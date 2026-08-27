@@ -329,7 +329,7 @@ $newsList = $stmt->fetchAll();
                                 <?php $isPublished = $row['status'] === 'published'; ?>
                                 <tr>
                                     <td class="col-subject <?= $isPublished ? 'subject-approved' : 'subject-unapproved' ?>">
-                                        <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>" style="font-weight:600;">
+                                        <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>">
                                             <?= e($row['title']) ?>
                                         </a>
                                     </td>
