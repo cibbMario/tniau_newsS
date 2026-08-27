@@ -910,8 +910,8 @@ input, button, select, textarea { font: inherit; }
 .news-table tr:hover td { background: rgba(10, 10, 107, 0.04); }
 
 .news-table .col-subject { color: var(--text); line-height: 1.45; max-width: 400px; }
-.news-table .col-subject.subject-approved { font-weight: 700; }
-.news-table .col-subject.subject-unapproved { font-weight: 400; }
+.news-table .col-subject.subject-approved { font-weight: 400; }
+.news-table .col-subject.subject-unapproved { font-weight: 700; }
 .news-table .col-subject a { color: var(--text); font-weight: inherit; transition: color var(--transition-fast); }
 .news-table .col-subject a:hover { color: var(--teal-mid); }
 .news-table .col-muted { color: var(--text-sec); }

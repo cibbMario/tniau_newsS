@@ -11,7 +11,7 @@ if (($_GET['mark_read'] ?? '') === '1') {
     exit;
 }
 
-$notifs = getNotifications($user['id']);
+$notifs = getNotifications($user['id'], true);
 ?>
 <!DOCTYPE html>
 <html lang="id">

@@ -5,7 +5,7 @@ requireLogin();
 header('Content-Type: application/json; charset=utf-8');
 
 $user = currentUser();
-$items = getNotifications($user['id']);
+$items = getNotifications($user['id'], true);
 $latestItems = array_slice($items, 0, 8);
 
 $output = [];
