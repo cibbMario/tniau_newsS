@@ -1295,7 +1295,18 @@ input, button, select, textarea { font: inherit; }
 }
 .form-input::placeholder { color: #aaa8a0; }
 .form-input:disabled { background: var(--bg-soft); color: var(--text-sec); cursor: not-allowed; }
-select.form-input { cursor: pointer; }
+select.form-input { 
+    cursor: pointer; 
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234a4a6a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 14px;
+    padding-right: 36px;
+    line-height: normal;
+}
 textarea.form-input { resize: vertical; min-height: 80px; }
 
 /* ============================================================
@@ -1377,7 +1388,7 @@ textarea.form-input { resize: vertical; min-height: 80px; }
 .alert-info    { background: var(--teal-pale); color: var(--teal-mid); border-color: var(--teal); }
 
 /* ============================================================
-   REVIEW ACTION CARD
+   REVIEW ACTION CARD & RELEVAN INFO
    ============================================================ */
 .review-card {
     border: 1px solid rgba(37, 99, 235, 0.25);
@@ -1387,6 +1398,71 @@ textarea.form-input { resize: vertical; min-height: 80px; }
 }
 .review-card h3 { font-size: 13px; color: var(--teal-mid); margin-bottom: 8px; }
 .review-card p { font-size: 12px; color: var(--text-sec); margin-bottom: 12px; }
+
+.relevan-section {
+    margin-top: 24px;
+    background: #fff;
+    border: 1px solid var(--border-cream);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow-sm);
+}
+.relevan-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-cream);
+}
+.relevan-card {
+    margin-bottom: 16px;
+}
+.relevan-card:last-child {
+    margin-bottom: 0;
+}
+.relevan-card-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-sec);
+    margin-bottom: 8px;
+}
+.relevan-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.relevan-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    background: var(--bg-soft);
+    border: 1px solid #ced4da;
+    border-radius: 20px;
+    font-size: 11.5px;
+    color: var(--text);
+    white-space: nowrap;
+}
+.relevan-tag-gold {
+    background: var(--gold-light);
+    border-color: rgba(201, 162, 39, 0.3);
+    color: var(--gold-dark);
+}
+.relevan-empty {
+    display: block;
+    font-size: 12px;
+    color: #999;
+    font-style: italic;
+    background: #fafafa;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px dashed #e0e0e0;
+}
 
 /* ============================================================
    DASHBOARD CARDS

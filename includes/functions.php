@@ -227,44 +227,7 @@ function verify_csrf_token($token) {
  * Generate Lanud initials for author_label
  */
 function getLanudInitials($lanudName) {
-    $name = trim(str_ireplace('Lanud', '', $lanudName));
-    
-    $known = [
-        'Atang Sendjaja' => 'ATS',
-        'Dhomber' => 'DMB',
-        'Halim Perdanakusuma' => 'HLM',
-        'Roesmin Nurjadin' => 'RSN',
-        'Supadio' => 'SPO',
-        'Suryadarma' => 'SDM',
-        'Adisutjipto' => 'ADI',
-        'Adi Soemarmo' => 'SMO',
-        'Sulaiman' => 'SLM',
-        'Sam Ratulangi' => 'SRI',
-        'El Tari' => 'ELI',
-    ];
-    
-    if (isset($known[$name])) {
-        return 'PEN ' . $known[$name];
-    }
-    
-    $words = explode(' ', $name);
-    $initials = '';
-    foreach ($words as $w) {
-        $w = trim($w);
-        if ($w !== '') {
-            $initials .= strtoupper($w[0]);
-        }
-    }
-    
-    if (strlen($initials) >= 3) {
-        return 'PEN ' . substr($initials, 0, 3);
-    } elseif (strlen($initials) > 0) {
-        $cleanName = preg_replace('/[^a-zA-Z]/', '', $name);
-        $rem = strtoupper(substr($cleanName, 1, 3 - strlen($initials)));
-        return 'PEN ' . substr($initials . $rem, 0, 3);
-    }
-    
-    return 'PEN ATS';
+    return 'Pusat';
 }
 
 /* =========================================================

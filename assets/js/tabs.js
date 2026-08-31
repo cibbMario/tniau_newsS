@@ -108,6 +108,12 @@
             }
             return { id: 'list', title: 'Daftar Berita', iconType: 'list', url: 'news_list.php' };
         }
+        if (currentPath.includes('news_edit.php')) {
+            return { id: 'edit-' + (params.get('id') || '0'), title: 'Edit Berita', iconType: 'list', url: window.location.search ? 'news_edit.php' + window.location.search : 'news_edit.php' };
+        }
+        if (currentPath.includes('news_create.php')) {
+            return { id: 'create', title: 'Buat Berita', iconType: 'list', url: 'news_create.php' };
+        }
 
         return { id: 'dashboard-harian', title: 'Semua Sumber', iconType: 'dashboard', url: 'dashboard.php?view=harian' };
     }

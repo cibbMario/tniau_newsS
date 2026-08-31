@@ -615,19 +615,13 @@ $gallery = $images->fetchAll();
                             </div>
                         </div>
 
-                        <div class="horizontal-group">
-                            <label>Tempat</label>
-                            <div class="input-wrapper">
-                                <input type="text" name="tempat" class="form-input" value="<?= e($news['tempat']) ?>">
-                            </div>
-                        </div>
-
                         <div class="content-tabs">
-                            <div class="content-tab active">Isi</div>
-                            <div class="content-tab">Tempat</div>
+                            <div class="content-tab active" id="tab-btn-isi" onclick="switchInnerTab('isi')">Isi</div>
+                            <div class="content-tab" id="tab-btn-tempat" onclick="switchInnerTab('tempat')">Tempat</div>
                         </div>
 
-                        <div class="rich-editor-container">
+                        <div id="pane-isi" style="display:block;">
+                            <div class="rich-editor-container">
                             <div class="rich-editor-toolbar" style="position:relative; flex-wrap:wrap; gap:4px;">
                                 <!-- Formatting Basics -->
                                 <button type="button" class="rich-editor-btn" onclick="fmt('bold')" title="Bold"><strong>B</strong></button>
@@ -795,9 +789,25 @@ $gallery = $images->fetchAll();
                                 <span style="font-size:24px;font-weight:300;margin-bottom:8px">+</span>
                                 Seret Dan Lepas atau Klik Untuk Menambahkan File
                             </div>
-                        </div>
+                        </div> <!-- End of gallery-grid-row -->
                         <input type="file" id="imageInput" name="image" accept="image/*" hidden>
                         <input type="file" id="galleryInput" name="gallery[]" accept="image/*" multiple hidden>
+
+                        </div> <!-- End of pane-isi -->
+
+                        <!-- PANE TEMPAT -->
+                        <div id="pane-tempat" style="display:none; padding:16px; border:1px solid #ced4da; border-radius:4px; margin-bottom:24px;">
+                            <div class="horizontal-group">
+                                <label>Lokasi / Tempat</label>
+                                <div class="input-wrapper">
+                                    <input type="text" name="tempat" class="form-input" value="<?= e($news['tempat']) ?>" placeholder="Masukkan lokasi kejadian">
+                                </div>
+                            </div>
+                            <div style="margin-top:16px; width:100%; height:250px; background:#e9ecef; border-radius:4px; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#6c757d;">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                <span>Preview Peta Lokasi (Placeholder)</span>
+                            </div>
+                        </div> <!-- End of pane-tempat -->
 
                     </div>
 
@@ -1101,6 +1111,22 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+</script>
+<script src="<?= BASE_URL ?>/assets/js/tabs.js"></script>
+<script>
+function switchInnerTab(tab) {
+    document.querySelectorAll('.content-tabs .content-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-btn-' + tab).classList.add('active');
+    
+    if (tab === 'isi') {
+        document.getElementById('pane-isi').style.display = 'block';
+        document.getElementById('pane-tempat').style.display = 'none';
+    } else {
+        document.getElementById('pane-isi').style.display = 'none';
+        document.getElementById('pane-tempat').style.display = 'display:flex';
+        document.getElementById('pane-tempat').style.display = 'block';
+    }
+}
 </script>
 </body>
 </html>

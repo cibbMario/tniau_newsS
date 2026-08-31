@@ -114,6 +114,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buat Berita Baru Portal Berita TNI AU</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css?v=<?= time() ?>">
+    <style>
+        .tags-input-container { display: flex; flex-direction: column; gap: 8px; }
+        .tag-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+        .tag-chip-ui { display: inline-flex; align-items: center; background: #f1f5f9; color: var(--navy); padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+        .tag-chip-remove { margin-left: 8px; color: #94a3b8; cursor: pointer; font-size: 16px; line-height: 1; }
+        .tag-chip-remove:hover { color: #ef4444; }
+    </style>
 </head>
 <body>
 <div class="app-layout">
@@ -415,7 +422,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </div>
                                 <div class="form-group">
                                     <label>Tag</label>
-                                    <input type="text" name="tag" class="form-input" value="<?= e($_POST['tag'] ?? '') ?>">
+                                    <div class="tags-input-container">
+                                        <div id="tagChips" class="tag-chips"></div>
+                                        <input type="text" id="tagInput" class="form-input" placeholder="Ketik tag & Enter...">
+                                    </div>
+                                    <input type="hidden" name="tag" id="hiddenTagInput" value="<?= e($_POST['tag'] ?? '') ?>">
                                 </div>
                                 <div class="form-group">
                                     <label>Topik</label>
@@ -659,6 +670,60 @@ window.addEventListener('DOMContentLoaded', function() {
     if (savedContent && !bodyContent) {
         var restoreBtn = document.getElementById('restoreDraftBtn');
         if (restoreBtn) restoreBtn.style.display = 'inline';
+    }
+
+    // Tag UI Logic
+    const tagInput = document.getElementById('tagInput');
+    const hiddenTagInput = document.getElementById('hiddenTagInput');
+    const tagChips = document.getElementById('tagChips');
+
+    if (tagInput && hiddenTagInput && tagChips) {
+        let tags = hiddenTagInput.value.split(',').map(t => t.trim()).filter(t => t);
+
+        function renderTags() {
+            tagChips.innerHTML = '';
+            tags.forEach((tag, index) => {
+                const chip = document.createElement('div');
+                chip.className = 'tag-chip-ui';
+                
+                // Format for display: ensure it starts with #
+                let displayTag = tag;
+                if (!displayTag.startsWith('#')) {
+                    displayTag = '# ' + displayTag;
+                } else if (!displayTag.startsWith('# ')) {
+                    displayTag = '# ' + displayTag.substring(1).trim();
+                }
+
+                chip.innerHTML = `
+                    <span>${displayTag}</span>
+                    <span class="tag-chip-remove" data-index="${index}">&times;</span>
+                `;
+                tagChips.appendChild(chip);
+            });
+            hiddenTagInput.value = tags.join(', ');
+        }
+
+        tagInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault();
+                let val = tagInput.value.trim().replace(/^#+/, '').trim();
+                if (val && !tags.includes(val)) {
+                    tags.push(val);
+                    tagInput.value = '';
+                    renderTags();
+                }
+            }
+        });
+
+        tagChips.addEventListener('click', function(e) {
+            if (e.target.classList.contains('tag-chip-remove')) {
+                const idx = e.target.getAttribute('data-index');
+                tags.splice(idx, 1);
+                renderTags();
+            }
+        });
+
+        renderTags();
     }
 });
 

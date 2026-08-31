@@ -253,7 +253,7 @@ $recentActivities = $activityStmt->fetchAll();
             border: 4px solid var(--white);
         }
 
-        .avatar-A { background: linear-gradient(135deg, var(--blue), var(--blue-soft)); }
+        .avatar-A { background: linear-gradient(135deg, var(--teal), var(--teal-light)); }
         .avatar-B { background: linear-gradient(135deg, #0f9b6e, #2ecc71); }
         .avatar-C { background: linear-gradient(135deg, var(--gold), var(--gold-dark)); }
         .avatar-D { background: linear-gradient(135deg, var(--yellow), #e67e22); }
@@ -289,7 +289,7 @@ $recentActivities = $activityStmt->fetchAll();
             letter-spacing: 0.5px;
         }
 
-        .badge-A { background: var(--blue-bg); color: var(--blue); border: 1px solid rgba(30,111,191,0.2); }
+        .badge-A { background: var(--teal-bg); color: var(--teal); border: 1px solid rgba(37,99,235,0.2); }
         .badge-B { background: var(--green-bg); color: var(--green); border: 1px solid rgba(15,155,110,0.2); }
         .badge-C { background: var(--gold-light); color: var(--gold-dark); border: 1px solid rgba(201,162,39,0.3); }
         .badge-D { background: var(--yellow-bg); color: var(--yellow); border: 1px solid rgba(212,133,10,0.2); }
@@ -350,8 +350,8 @@ $recentActivities = $activityStmt->fetchAll();
         }
 
         .btn-quick.password-btn:hover {
-            background: var(--blue-pale);
-            border-color: var(--blue);
+            background: var(--teal-pale);
+            border-color: var(--teal);
             color: var(--navy-light);
         }
 
@@ -390,7 +390,7 @@ $recentActivities = $activityStmt->fetchAll();
         }
 
         .card-header-styled svg {
-            color: var(--blue);
+            color: var(--teal);
         }
 
         .card-header-styled h3 {
@@ -400,79 +400,7 @@ $recentActivities = $activityStmt->fetchAll();
             margin: 0;
         }
 
-        /* Inputs */
-        .profile-form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-        }
 
-        @media (max-width: 600px) {
-            .profile-form-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .input-group label {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-sec);
-        }
-
-        .input-group input[type="text"],
-        .input-group select {
-            height: 40px;
-            border: 1px solid rgba(30,111,191,0.2);
-            border-radius: 8px;
-            padding: 0 12px;
-            font-size: 13px;
-            color: var(--text);
-            outline: none;
-            background: rgba(255,255,255,0.9);
-            transition: all var(--transition-fast);
-        }
-
-        .input-group input:focus:not([readonly]),
-        .input-group select:focus {
-            border-color: var(--blue);
-            box-shadow: 0 0 0 3px rgba(30,111,191,0.1);
-        }
-
-        .input-group input[readonly] {
-            background: #f1f5f9;
-            color: var(--text-muted);
-            border-color: #e2e8f0;
-            cursor: not-allowed;
-        }
-
-        .btn-submit-styled {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, var(--navy), var(--navy-mid));
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-size: 12.5px;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(11,37,69,0.12);
-            transition: all var(--transition-fast);
-            margin-top: 8px;
-        }
-
-        .btn-submit-styled:hover {
-            background: linear-gradient(135deg, var(--navy-mid), var(--blue));
-            transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(11,37,69,0.2);
-        }
 
         /* Stats Grid */
         .profile-stats-grid {
@@ -517,7 +445,7 @@ $recentActivities = $activityStmt->fetchAll();
             margin-bottom: 8px;
         }
 
-        .stat-box-icon.bg-blue { background: rgba(30,111,191,0.08); color: var(--blue); }
+        .stat-box-icon.bg-blue { background: rgba(30,111,191,0.08); color: var(--teal); }
         .stat-box-icon.bg-green { background: rgba(15,155,110,0.08); color: var(--green); }
         .stat-box-icon.bg-yellow { background: rgba(212,133,10,0.08); color: var(--yellow); }
         .stat-box-icon.bg-gold { background: rgba(201,162,39,0.08); color: var(--gold-dark); }
@@ -541,7 +469,7 @@ $recentActivities = $activityStmt->fetchAll();
         .activity-timeline {
             position: relative;
             padding-left: 20px;
-            border-left: 2px solid var(--blue-pale);
+            border-left: 2px solid var(--teal-pale);
             margin-left: 10px;
             margin-top: 10px;
         }
@@ -563,7 +491,7 @@ $recentActivities = $activityStmt->fetchAll();
             height: 14px;
             border-radius: 50%;
             background: #fff;
-            border: 3px solid var(--blue);
+            border: 3px solid var(--teal);
             box-shadow: var(--shadow-sm);
         }
 
@@ -593,17 +521,7 @@ $recentActivities = $activityStmt->fetchAll();
             font-style: italic;
         }
 
-        /* Admin Add Account style */
-        .admin-form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-        }
-        @media (max-width: 600px) {
-            .admin-form-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+
     </style>
 </head>
 <body>
@@ -696,30 +614,30 @@ $recentActivities = $activityStmt->fetchAll();
                                 <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
                                 <input type="hidden" name="form_type" value="update_profile">
                                 
-                                <div class="profile-form-grid">
+                                <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px;">
                                     <div class="input-group">
-                                        <label>Username</label>
-                                        <input type="text" name="username" value="<?= e($userDb['username']) ?>" required>
+                                        <label style="margin-bottom: 6px; display: block; font-size: 13px; font-weight: 600; color: var(--text-sec);">Username</label>
+                                        <input type="text" name="username" class="form-input" value="<?= e($userDb['username']) ?>" style="width: 100%; height: 40px; border-radius: 6px; border: 1px solid #ced4da; padding: 0 12px; font-size: 14px;" required>
                                     </div>
                                     <div class="input-group">
-                                        <label>Nama Tampilan</label>
-                                        <input type="text" name="full_name" value="<?= e($userDb['full_name']) ?>" required>
+                                        <label style="margin-bottom: 6px; display: block; font-size: 13px; font-weight: 600; color: var(--text-sec);">Nama Tampilan</label>
+                                        <input type="text" name="full_name" class="form-input" value="<?= e($userDb['full_name']) ?>" style="width: 100%; height: 40px; border-radius: 6px; border: 1px solid #ced4da; padding: 0 12px; font-size: 14px;" required>
                                     </div>
                                     <div class="input-group">
-                                        <label>Hak Akses</label>
-                                        <input type="text" value="<?= e(userDisplayName($userDb['role'])) ?>" readonly>
-                                    </div>
-                                    <div class="input-group" style="justify-content: flex-end;">
-                                        <div style="font-size: 11px; color: var(--text-sec); font-style: italic; margin-bottom: 6px;">
+                                        <label style="margin-bottom: 6px; display: block; font-size: 13px; font-weight: 600; color: var(--text-sec);">Hak Akses</label>
+                                        <input type="text" class="form-input" value="<?= e(userDisplayName($userDb['role'])) ?>" style="width: 100%; height: 40px; border-radius: 6px; border: 1px solid #ced4da; padding: 0 12px; font-size: 14px; background: #f8f9fa; color: #6c757d;" readonly>
+                                        <div style="font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 6px;">
                                             * Peran akun diatur secara terpusat oleh Administrator.
                                         </div>
                                     </div>
                                 </div>
 
-                                <button type="submit" class="btn-submit-styled">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-                                    Simpan Perubahan
-                                </button>
+                                <div style="display: flex; justify-content: flex-end;">
+                                    <button type="submit" class="btn btn-primary" style="padding: 10px 24px; font-size: 14px;">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                                        Simpan Perubahan
+                                    </button>
+                                </div>
                             </form>
                         </div>
 
@@ -843,20 +761,20 @@ $recentActivities = $activityStmt->fetchAll();
                                     <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
                                     <input type="hidden" name="form_type" value="add_account">
                                     
-                                    <div class="admin-form-grid">
+                                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 20px;">
                                         <div class="input-group">
-                                            <label>Username Baru</label>
-                                            <input type="text" name="new_username" placeholder="Masukkan username baru" required>
+                                            <label style="margin-bottom: 6px; display: block; font-size: 13px; font-weight: 600; color: var(--text-sec);">Username Baru</label>
+                                            <input type="text" name="new_username" class="form-input" placeholder="Masukkan username baru" style="width: 100%; height: 40px; border-radius: 6px; border: 1px solid #ced4da; padding: 0 12px; font-size: 14px;" required>
                                         </div>
                                         
                                         <div class="input-group">
-                                            <label>Nama Tampilan</label>
-                                            <input type="text" name="new_full_name" placeholder="Masukkan nama lengkap" required>
+                                            <label style="margin-bottom: 6px; display: block; font-size: 13px; font-weight: 600; color: var(--text-sec);">Nama Tampilan</label>
+                                            <input type="text" name="new_full_name" class="form-input" placeholder="Masukkan nama lengkap" style="width: 100%; height: 40px; border-radius: 6px; border: 1px solid #ced4da; padding: 0 12px; font-size: 14px;" required>
                                         </div>
                                         
                                         <div class="input-group">
-                                            <label>Hak Akses</label>
-                                            <select name="new_role" required>
+                                            <label style="margin-bottom: 6px; display: block; font-size: 13px; font-weight: 600; color: var(--text-sec);">Hak Akses</label>
+                                            <select name="new_role" class="form-input" style="width: 100%; height: 40px; border-radius: 6px; border: 1px solid #ced4da; padding: 0 12px; font-size: 14px;" required>
                                                 <option value="A">Reporter</option>
                                                 <option value="B">Editor</option>
                                                 <option value="C">Penyetuju (Approver)</option>
@@ -866,15 +784,17 @@ $recentActivities = $activityStmt->fetchAll();
                                         </div>
                                         
                                         <div class="input-group">
-                                            <label>Kata Sandi Akun</label>
-                                            <input type="password" style="height: 40px; border: 1px solid rgba(30,111,191,0.2); border-radius: 8px; padding: 0 12px; font-size: 13px;" name="new_password" placeholder="Masukkan password baru" required>
+                                            <label style="margin-bottom: 6px; display: block; font-size: 13px; font-weight: 600; color: var(--text-sec);">Kata Sandi Akun</label>
+                                            <input type="password" name="new_password" class="form-input" placeholder="Masukkan password baru" style="width: 100%; height: 40px; border-radius: 6px; border: 1px solid #ced4da; padding: 0 12px; font-size: 14px;" required>
                                         </div>
                                     </div>
 
-                                    <button type="submit" class="btn-submit-styled" style="background:var(--blue); margin-top:16px;">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                                        Daftarkan Akun Baru
-                                    </button>
+                                    <div style="display: flex; justify-content: flex-end;">
+                                        <button type="submit" class="btn btn-primary" style="padding: 10px 24px; font-size: 14px; background: var(--teal);">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                            Daftarkan Akun Baru
+                                        </button>
+                                    </div>
                                 </form>
                             </div>
                         <?php endif; ?>
