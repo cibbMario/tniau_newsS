@@ -115,11 +115,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Buat Berita Baru Portal Berita TNI AU</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css?v=<?= time() ?>">
     <style>
-        .tags-input-container { display: flex; flex-direction: column; gap: 8px; }
-        .tag-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-        .tag-chip-ui { display: inline-flex; align-items: center; background: #f1f5f9; color: var(--navy); padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; }
-        .tag-chip-remove { margin-left: 8px; color: #94a3b8; cursor: pointer; font-size: 16px; line-height: 1; }
-        .tag-chip-remove:hover { color: #ef4444; }
+        .tags-input-wrap {
+            border: 1px solid var(--border-cream);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.97);
+            padding: 8px 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+            cursor: text;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .tags-input-wrap:focus-within {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+        .tag-chip-ui {
+            display: inline-flex;
+            align-items: center;
+            background: #EFF6FF;
+            color: var(--navy);
+            border: 1px solid rgba(37,99,235,0.2);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12.5px;
+            font-weight: 600;
+            user-select: none;
+            white-space: nowrap;
+        }
+        .tag-chip-hash { color: var(--teal); margin-right: 2px; }
+        .tag-chip-remove {
+            margin-left: 6px;
+            color: #93c5fd;
+            cursor: pointer;
+            font-size: 15px;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            padding: 0 2px;
+            border-radius: 50%;
+        }
+        .tag-chip-remove:hover { color: #ef4444; background: rgba(239,68,68,0.1); }
+        .tag-text-input {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 13px;
+            color: var(--text);
+            min-width: 120px;
+            flex: 1;
+            padding: 4px 2px;
+        }
+        .tag-hint { font-size: 11px; color: #94a3b8; margin-top: 4px; }
     </style>
 </head>
 <body>
@@ -422,10 +470,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </div>
                                 <div class="form-group">
                                     <label>Tag</label>
-                                    <div class="tags-input-container">
-                                        <div id="tagChips" class="tag-chips"></div>
-                                        <input type="text" id="tagInput" class="form-input" placeholder="Ketik tag & Enter...">
+                                    <div class="tags-input-wrap" id="tagsWrap" onclick="document.getElementById('tagTextInput').focus()">
+                                        <!-- chips rendered here by JS -->
+                                        <input type="text" id="tagTextInput" class="tag-text-input" placeholder="Ketik tag, tekan Enter...">
                                     </div>
+                                    <span class="tag-hint">Tekan <strong>Enter</strong> atau <strong>,</strong> untuk menambah tag</span>
                                     <input type="hidden" name="tag" id="hiddenTagInput" value="<?= e($_POST['tag'] ?? '') ?>">
                                 </div>
                                 <div class="form-group">
@@ -673,53 +722,63 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 
     // Tag UI Logic
-    const tagInput = document.getElementById('tagInput');
+    const tagTextInput = document.getElementById('tagTextInput');
     const hiddenTagInput = document.getElementById('hiddenTagInput');
-    const tagChips = document.getElementById('tagChips');
+    const tagsWrap = document.getElementById('tagsWrap');
 
-    if (tagInput && hiddenTagInput && tagChips) {
-        let tags = hiddenTagInput.value.split(',').map(t => t.trim()).filter(t => t);
+    if (tagTextInput && hiddenTagInput && tagsWrap) {
+        let tags = hiddenTagInput.value.split(',').map(t => t.trim().replace(/^#+/, '').trim()).filter(t => t);
 
         function renderTags() {
-            tagChips.innerHTML = '';
-            tags.forEach((tag, index) => {
-                const chip = document.createElement('div');
-                chip.className = 'tag-chip-ui';
-                
-                // Format for display: ensure it starts with #
-                let displayTag = tag;
-                if (!displayTag.startsWith('#')) {
-                    displayTag = '# ' + displayTag;
-                } else if (!displayTag.startsWith('# ')) {
-                    displayTag = '# ' + displayTag.substring(1).trim();
-                }
+            // Remove existing chips (but keep the text input)
+            tagsWrap.querySelectorAll('.tag-chip-ui').forEach(el => el.remove());
 
-                chip.innerHTML = `
-                    <span>${displayTag}</span>
-                    <span class="tag-chip-remove" data-index="${index}">&times;</span>
-                `;
-                tagChips.appendChild(chip);
+            tags.forEach((tag, index) => {
+                const chip = document.createElement('span');
+                chip.className = 'tag-chip-ui';
+                chip.innerHTML =
+                    '<span class="tag-chip-hash">#</span>' +
+                    '<span>' + tag + '</span>' +
+                    '<span class="tag-chip-remove" data-index="' + index + '" title="Hapus">&#215;</span>';
+                tagsWrap.insertBefore(chip, tagTextInput);
             });
+
             hiddenTagInput.value = tags.join(', ');
+
+            // Show placeholder only when empty
+            tagTextInput.placeholder = tags.length === 0 ? 'Ketik tag, tekan Enter...' : '';
         }
 
-        tagInput.addEventListener('keydown', function(e) {
+        function addTag() {
+            let val = tagTextInput.value.trim().replace(/^#+/, '').trim();
+            if (val && !tags.includes(val)) {
+                tags.push(val);
+                tagTextInput.value = '';
+                renderTags();
+            } else {
+                tagTextInput.value = '';
+            }
+        }
+
+        tagTextInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' || e.key === ',') {
                 e.preventDefault();
-                let val = tagInput.value.trim().replace(/^#+/, '').trim();
-                if (val && !tags.includes(val)) {
-                    tags.push(val);
-                    tagInput.value = '';
-                    renderTags();
-                }
+                addTag();
+            } else if (e.key === 'Backspace' && tagTextInput.value === '' && tags.length > 0) {
+                tags.pop();
+                renderTags();
             }
         });
 
-        tagChips.addEventListener('click', function(e) {
-            if (e.target.classList.contains('tag-chip-remove')) {
-                const idx = e.target.getAttribute('data-index');
-                tags.splice(idx, 1);
-                renderTags();
+        // Use event delegation on the wrap so click on any part of × works
+        tagsWrap.addEventListener('click', function(e) {
+            const removeBtn = e.target.closest('.tag-chip-remove');
+            if (removeBtn) {
+                const idx = parseInt(removeBtn.getAttribute('data-index'), 10);
+                if (!isNaN(idx)) {
+                    tags.splice(idx, 1);
+                    renderTags();
+                }
             }
         });
 

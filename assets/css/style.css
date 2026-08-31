@@ -107,7 +107,7 @@ input, button, select, textarea { font: inherit; }
     box-shadow: 4px 0 32px rgba(0,0,0, 0.18);
     overflow-y: auto; overflow-x: hidden;
     border-right: 1px solid rgba(255,255,255,0.05);
-    transition: transform var(--transition);
+    transition: width 0.25s ease, transform var(--transition);
 }
 .sidebar::-webkit-scrollbar { width: 3px; }
 .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
@@ -223,6 +223,44 @@ input, button, select, textarea { font: inherit; }
 }
 .sidebar-mobile-backdrop.active { display: block; }
 
+/* ── Sidebar Collapsed (minimize) ── */
+body.sidebar-collapsed .sidebar {
+    width: 60px;
+}
+body.sidebar-collapsed .sidebar .brand-text,
+body.sidebar-collapsed .sidebar .sidebar-nav .label,
+body.sidebar-collapsed .sidebar .accordion-header .label,
+body.sidebar-collapsed .sidebar .chevron,
+body.sidebar-collapsed .sidebar .sidebar-section-label,
+body.sidebar-collapsed .sidebar .accordion-content,
+body.sidebar-collapsed .sidebar .badge {
+    display: none !important;
+    opacity: 0;
+}
+body.sidebar-collapsed .sidebar .sidebar-brand {
+    justify-content: center;
+    padding: 14px 8px;
+}
+body.sidebar-collapsed .sidebar .sidebar-nav a,
+body.sidebar-collapsed .sidebar .accordion-header {
+    justify-content: center;
+    padding: 10px;
+    border-left: 3px solid transparent;
+}
+body.sidebar-collapsed .sidebar .sidebar-nav a.active,
+body.sidebar-collapsed .sidebar .accordion-header.active {
+    border-left: 3px solid var(--gold);
+}
+body.sidebar-collapsed .sidebar .icon {
+    width: auto;
+    margin: 0;
+}
+body.sidebar-collapsed .main-content {
+    margin-left: 60px;
+    width: calc(100% - 60px);
+    max-width: calc(100vw - 60px);
+}
+
 /* ============================================================
    PAGE LOADER
    ============================================================ */
@@ -305,7 +343,7 @@ input, button, select, textarea { font: inherit; }
     margin-left: 252px; flex: 1;
     min-height: 100vh; display: flex; flex-direction: column;
     background: var(--bg);
-    transition: margin-left var(--transition);
+    transition: margin-left 0.25s ease, width 0.25s ease, max-width 0.25s ease;
     animation: page-enter 0.4s ease both;
     min-width: 0;
     overflow-x: hidden;
@@ -2196,10 +2234,39 @@ body.menu-open { overflow: hidden; }
     /* Sidebar: hidden off-screen, slides in */
     .sidebar {
         transform: translateX(-100%);
-        width: 240px;
+        width: 240px !important;
         z-index: 200;
     }
-    .sidebar.mobile-open { transform: translateX(0); }
+    .sidebar.mobile-open { transform: translateX(0) !important; }
+
+    /* Force override body.sidebar-collapsed on mobile — sidebar must be hidden */
+    body.sidebar-collapsed .sidebar {
+        width: 240px !important;
+        transform: translateX(-100%) !important;
+    }
+    body.sidebar-collapsed .sidebar .brand-text,
+    body.sidebar-collapsed .sidebar .sidebar-nav .label,
+    body.sidebar-collapsed .sidebar .accordion-header .label,
+    body.sidebar-collapsed .sidebar .chevron,
+    body.sidebar-collapsed .sidebar .sidebar-section-label {
+        display: flex !important;
+        opacity: 1 !important;
+    }
+    body.sidebar-collapsed .sidebar .accordion-content { display: none !important; }
+    body.sidebar-collapsed .sidebar .sidebar-brand {
+        justify-content: flex-start !important;
+        padding: 18px 16px !important;
+    }
+    body.sidebar-collapsed .sidebar .sidebar-nav a,
+    body.sidebar-collapsed .sidebar .accordion-header {
+        justify-content: flex-start !important;
+        padding: 9px 12px !important;
+    }
+    body.sidebar-collapsed .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+    }
     .main-content {
         margin-left: 0 !important;
         width: 100% !important;

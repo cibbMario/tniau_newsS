@@ -233,18 +233,50 @@ document.addEventListener('DOMContentLoaded', function () {
     const mobileBackdrop        = document.getElementById('sidebarMobileBackdrop');
     const mainContent           = document.querySelector('.main-content');
 
-    function toggleMobileSidebar() {
+    function isMobile() {
+        return window.innerWidth <= 768;
+    }
+
+    // Restore collapsed state from localStorage
+    const COLLAPSE_KEY = 'sidebar_collapsed';
+    if (!isMobile() && localStorage.getItem(COLLAPSE_KEY) === '1') {
+        document.body.classList.add('sidebar-collapsed');
+    }
+
+    function toggleSidebar() {
         if (!sidebar) return;
-        sidebar.classList.toggle('mobile-open');
-        if (mobileBackdrop) mobileBackdrop.classList.toggle('active');
+        if (isMobile()) {
+            sidebar.classList.toggle('mobile-open');
+            if (mobileBackdrop) mobileBackdrop.classList.toggle('active');
+        } else {
+            const isCollapsed = document.body.classList.toggle('sidebar-collapsed');
+            localStorage.setItem(COLLAPSE_KEY, isCollapsed ? '1' : '0');
+        }
     }
 
     hamburgerBtns.forEach(btn => {
-        btn.addEventListener('click', toggleMobileSidebar);
+        btn.addEventListener('click', toggleSidebar);
+    });
+
+    // On resize: if going to mobile, remove sidebar-collapsed; if going to desktop, close drawer
+    window.addEventListener('resize', function () {
+        if (isMobile()) {
+            // On mobile, sidebar-collapsed is irrelevant — drawer controls visibility
+            document.body.classList.remove('sidebar-collapsed');
+            if (mobileBackdrop) mobileBackdrop.classList.remove('active');
+        } else {
+            // On desktop, close any open mobile drawer
+            sidebar.classList.remove('mobile-open');
+            if (mobileBackdrop) mobileBackdrop.classList.remove('active');
+            // Restore collapsed state from localStorage for desktop
+            if (localStorage.getItem(COLLAPSE_KEY) === '1') {
+                document.body.classList.add('sidebar-collapsed');
+            }
+        }
     });
 
     if (mobileBackdrop) {
-        mobileBackdrop.addEventListener('click', toggleMobileSidebar);
+        mobileBackdrop.addEventListener('click', toggleSidebar);
     }
     
     // Logout Modal Logic
