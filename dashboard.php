@@ -716,6 +716,16 @@ function switchDashboardTab(tabId) {
         window.history.pushState({ view: effectiveTabId }, '', newUrl);
     }
 
+    // Sync sidebar active state
+    const sidebarDashLinks = document.querySelectorAll('.sidebar-accordion .accordion-content a[href*="dashboard.php"]');
+    sidebarDashLinks.forEach(link => {
+        if (link.getAttribute('href').includes('view=' + effectiveTabId)) {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+    });
+
     if (window.WorkspaceTabs && window.WorkspaceTabs.render) {
         window.WorkspaceTabs.render();
     }

@@ -29,7 +29,7 @@ $roleName = userDisplayName($user['role']);
 
 
         <!-- 1. Daftar Berita -->
-        <a href="<?= BASE_URL ?>/news_list.php" class="<?= in_array($current,['list','draft','view','edit']) ? 'active' : '' ?>">
+        <a href="<?= BASE_URL ?>/news_list.php" class="<?= in_array($current, ['list', 'view', 'edit']) ? 'active' : '' ?>">
             <span class="icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1m2 13a2 2 0 0 1-2-2V7m2 13a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2m-4-3H9M7 16h6M7 8h6m-6 4h6"></path></svg>
             </span>
@@ -50,8 +50,13 @@ $roleName = userDisplayName($user['role']);
         <?php endif; ?>
         
         <!-- 2. Accordion: Dashboard -->
-        <div class="sidebar-accordion <?= in_array($current, ['dashboard', 'dashboard_harian', 'berita_negatif', 'inspiratif', 'konten', 'sentimen']) ? 'open' : '' ?>">
-            <div class="accordion-header <?= in_array($current, ['dashboard', 'dashboard_harian', 'berita_negatif', 'inspiratif', 'konten', 'sentimen']) ? 'active' : '' ?>" onclick="toggleSidebarAccordion(this)">
+        <?php 
+        $isDashboardActive = ($current === 'dashboard' || in_array($current, ['dashboard_harian', 'berita_negatif', 'inspiratif', 'konten', 'sentimen']));
+        $dashView = $_GET['view'] ?? 'harian';
+        if ($dashView === 'dashboard' || $dashView === 'semua') $dashView = 'harian';
+        ?>
+        <div class="sidebar-accordion <?= $isDashboardActive ? 'open' : '' ?>">
+            <div class="accordion-header <?= $isDashboardActive ? 'active' : '' ?>" onclick="toggleSidebarAccordion(this)">
                 <span class="icon">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                 </span>
@@ -60,12 +65,12 @@ $roleName = userDisplayName($user['role']);
                     <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </span>
             </div>
-            <div class="accordion-content" style="<?= in_array($current, ['dashboard', 'dashboard_harian', 'berita_negatif', 'inspiratif', 'konten', 'sentimen']) ? 'display:block;' : '' ?>">
-                <a href="<?= BASE_URL ?>/dashboard.php?view=harian" class="<?= $current==='dashboard_harian' ? 'active' : '' ?>">Dashboard Harian</a>
-                <a href="<?= BASE_URL ?>/dashboard.php?view=negatif" class="<?= $current==='berita_negatif' ? 'active' : '' ?>">Berita Negatif</a>
-                <a href="<?= BASE_URL ?>/dashboard.php?view=inspiratif" class="<?= $current==='inspiratif' ? 'active' : '' ?>">Inspiratif</a>
-                <a href="<?= BASE_URL ?>/dashboard.php?view=konten" class="<?= $current==='konten' ? 'active' : '' ?>">Konten</a>
-                <a href="<?= BASE_URL ?>/dashboard.php?view=sentimen" class="<?= $current==='sentimen' ? 'active' : '' ?>">Sentimen</a>
+            <div class="accordion-content" style="<?= $isDashboardActive ? 'display:block;' : '' ?>">
+                <a href="<?= BASE_URL ?>/dashboard.php?view=harian" class="<?= ($isDashboardActive && ($dashView === 'harian' || $current === 'dashboard_harian')) ? 'active' : '' ?>">Dashboard Harian</a>
+                <a href="<?= BASE_URL ?>/dashboard.php?view=negatif" class="<?= ($isDashboardActive && ($dashView === 'negatif' || $current === 'berita_negatif')) ? 'active' : '' ?>">Berita Negatif</a>
+                <a href="<?= BASE_URL ?>/dashboard.php?view=inspiratif" class="<?= ($isDashboardActive && ($dashView === 'inspiratif' || $current === 'inspiratif')) ? 'active' : '' ?>">Inspiratif</a>
+                <a href="<?= BASE_URL ?>/dashboard.php?view=konten" class="<?= ($isDashboardActive && ($dashView === 'konten' || $current === 'konten')) ? 'active' : '' ?>">Konten</a>
+                <a href="<?= BASE_URL ?>/dashboard.php?view=sentimen" class="<?= ($isDashboardActive && ($dashView === 'sentimen' || $current === 'sentimen')) ? 'active' : '' ?>">Sentimen</a>
             </div>
         </div>
 
@@ -120,8 +125,8 @@ $roleName = userDisplayName($user['role']);
                 </span>
             </div>
             <div class="accordion-content" style="<?= $current==='report' ? 'display:block;' : '' ?>">
-                <a href="<?= BASE_URL ?>/report.php?view=kontributor" class="<?= ($_GET['view']??'')==='kontributor' ? 'active' : '' ?>">Kontributor Informasi</a>
-                <a href="<?= BASE_URL ?>/report.php?view=reviewer" class="<?= ($_GET['view']??'')==='reviewer' ? 'active' : '' ?>">Reviewer</a>
+                <a href="<?= BASE_URL ?>/report.php?view=kontributor" class="<?= ($current==='report' && ($_GET['view']??'kontributor')==='kontributor') ? 'active' : '' ?>">Kontributor Informasi</a>
+                <a href="<?= BASE_URL ?>/report.php?view=reviewer" class="<?= ($current==='report' && ($_GET['view']??'')==='reviewer') ? 'active' : '' ?>">Reviewer</a>
             </div>
         </div>
 
