@@ -165,7 +165,7 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                                                         <button type="submit" class="btn btn-success btn-sm" style="background:#27ae60;color:#fff;" title="Kirim ulang hasil revisi">Selesai Revisi</button>
                                                     </form>
                                                 <?php endif; ?>
-                                                <form method="POST" action="<?= BASE_URL ?>/news_delete.php" onsubmit="return confirm('Yakin ingin menghapus berita ini?');" style="display:inline;margin:0;">
+                                                <form method="POST" action="<?= BASE_URL ?>/news_delete.php" onsubmit="return showConfirmModal(this, 'Hapus Berita', 'Yakin ingin menghapus berita ini?', 'Hapus');" style="display:inline;margin:0;">
                                                     <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
                                                     <input type="hidden" name="id" value="<?= $row['id'] ?>">
                                                     <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
@@ -178,7 +178,7 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
 
                                             <?php if (($user['role'] === 'C' || $user['role'] === 'E') && $row['status'] === 'pending_c'): ?>
                                                 <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>" class="btn btn-success btn-sm" style="background:#27ae60;color:#fff;">Setujui</a>
-                                                <form method="POST" action="<?= BASE_URL ?>/review_action.php" onsubmit="return confirm('Minta revisi dari Reporter?');" style="display:inline;margin:0;">
+                                                <form method="POST" action="<?= BASE_URL ?>/review_action.php" onsubmit="return showConfirmModal(this, 'Tolak Berita', 'Minta revisi dari Reporter?', 'Tolak');" style="display:inline;margin:0;">
                                                     <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
                                                     <input type="hidden" name="news_id" value="<?= $row['id'] ?>">
                                                     <input type="hidden" name="action" value="reject">
@@ -201,7 +201,49 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                 </table>
             </div>
         </div>
+        </div>
     </main>
 </div>
+
+<!-- Custom Confirm Modal -->
+<div id="customConfirmModal" class="modal-overlay">
+    <div class="modal-backdrop" onclick="closeConfirmModal()"></div>
+    <div class="modal-box">
+        <button class="modal-close-icon" onclick="closeConfirmModal()">&times;</button>
+        <div class="modal-icon-badge" style="color: #ff4757; background: rgba(255, 71, 87, 0.1); margin: 0 auto 16px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        </div>
+        <h3 class="modal-title" id="confirmModalTitle">Konfirmasi</h3>
+        <p class="modal-desc" id="confirmModalDesc">Apakah Anda yakin?</p>
+        <div class="modal-actions" style="margin-top: 24px; display: flex; gap: 12px; justify-content: center;">
+            <button class="modal-btn cancel" onclick="closeConfirmModal()">Batal</button>
+            <button class="modal-btn confirm" style="background:#ff4757;border-color:#ff4757;color:#fff;" id="confirmModalActionBtn" onclick="executeConfirm()">Ya</button>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentForm = null;
+
+function showConfirmModal(form, title, desc, btnText) {
+    currentForm = form;
+    document.getElementById('confirmModalTitle').innerText = title;
+    document.getElementById('confirmModalDesc').innerText = desc;
+    document.getElementById('confirmModalActionBtn').innerText = btnText;
+    document.getElementById('customConfirmModal').classList.add('active');
+    return false;
+}
+
+function closeConfirmModal() {
+    currentForm = null;
+    document.getElementById('customConfirmModal').classList.remove('active');
+}
+
+function executeConfirm() {
+    if (currentForm) {
+        currentForm.submit();
+    }
+}
+</script>
 </body>
 </html>

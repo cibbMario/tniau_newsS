@@ -453,7 +453,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <div class="form-group">
                                     <label>Klasifikasi</label>
                                     <select name="classification" class="form-input">
-                                        <option value="9. Tni au" <?= (($_POST['classification'] ?? '9. Tni au') === '9. Tni au') ? 'selected' : '' ?>>Tni au</option>
+                                        <option value="">Pilih Klasifikasi</option>
+                                        <?php
+                                        $classifications = [
+                                            'Yayasan TNI AU', 'Gangguan Penyakit /Pandemi/Wabah', 'Prestasi Jajaran TNI AU', 
+                                            'Kerjasama jajaran TNI AU', 'Peran Positif TNI AU', 'Kegiatan Inspiratif', 
+                                            'Spam Bukan Berita TNI', 'SPAM Sosial Media', 'Tni au', 'Masalah anggota TNI AU', 
+                                            'Info Operasi dan Latihan', 'Federasi Aero Sport Indonesia', 
+                                            'Satuan Karya Dirgantara - Pramuka', 'Komite Olahraga Militer Indonesia (komi)', 
+                                            'Upacara', 'Sertijab', 'Potensi Kedirgantaraan', 'Kegiatan Kedirgantaraan', 
+                                            'Agenda TNI', 'Agenda TNI AU', 'Latihan TNI AU', 'Latihan TNI', 'Operasi TNI', 
+                                            'Operasi TNI AU', 'Agenda PIA Ardhya Garini', 'Agenda Yasarini', 'Politik', 
+                                            'Bukan Berita TNI AU', 'Akademik', 'Organisasi TNI', 'SPAM', 'Agenda KASAU', 
+                                            'Agenda Presiden', 'Agenda Kabupaten/Kota', 'Gangguan bandara', 
+                                            'Kecelakaan pesawat TNI', 'Kecelakaan pesawat swasta', 'Bencana Alam', 
+                                            'Gangguan KAMTIBMAS'
+                                        ];
+                                        $currentClassification = $_POST['classification'] ?? '';
+                                        foreach ($classifications as $cls) {
+                                            $selected = ($currentClassification === $cls) ? 'selected' : '';
+                                            echo "<option value=\"".e($cls)."\" $selected>".e($cls)."</option>";
+                                        }
+                                        ?>
                                     </select>
                                 </div>
                                 <div class="form-group">
