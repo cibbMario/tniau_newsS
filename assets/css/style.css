@@ -1669,12 +1669,6 @@ textarea.form-input { resize: vertical; min-height: 80px; }
 .indicator-dot {
     width: 8px; height: 8px;
     background: var(--teal); border-radius: 50%;
-    box-shadow: 0 0 8px rgba(37, 99, 235, 0.6);
-    animation: dot-glow 2s ease-in-out infinite;
-}
-@keyframes dot-glow {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.45; }
 }
 .notif-content { flex: 1; }
 .notif-message { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 4px; line-height: 1.4; }
@@ -1800,24 +1794,22 @@ textarea.form-input { resize: vertical; min-height: 80px; }
     position: absolute;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: rgba(5, 5, 50, 0.70);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(15, 23, 42, 0.65);
 }
 .modal-box {
     position: relative;
     z-index: 2;
-    background: linear-gradient(145deg, #0c0d45 0%, #121358 100%);
-    border: 1px solid rgba(37, 99, 235, 0.28);
-    border-radius: 16px;
+    background: #121358;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
     padding: 28px 24px 22px;
     max-width: 380px;
     width: 100%;
     text-align: center;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 0 24px rgba(37, 99, 235, 0.10);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
     color: #ffffff;
-    transform: scale(0.92) translateY(12px);
-    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform: scale(0.95) translateY(8px);
+    transition: transform 0.2s ease, opacity 0.2s ease;
 }
 .modal-overlay.active .modal-box { transform: scale(1) translateY(0); }
 
@@ -1838,15 +1830,9 @@ textarea.form-input { resize: vertical; min-height: 80px; }
     width: 48px; height: 48px;
     margin: 0 auto 14px;
     border-radius: 50%;
-    background: rgba(192, 57, 43, 0.14);
-    border: 1px solid rgba(192, 57, 43, 0.28);
+    background: rgba(192, 57, 43, 0.15);
+    border: 1px solid rgba(192, 57, 43, 0.3);
     display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 16px rgba(192, 57, 43, 0.22);
-    animation: pulse-glow 2s infinite alternate;
-}
-@keyframes pulse-glow {
-    from { box-shadow: 0 0 10px rgba(192, 57, 43, 0.18); }
-    to   { box-shadow: 0 0 22px rgba(192, 57, 43, 0.42); }
 }
 .modal-title {
     font-size: 16.5px; font-weight: 700; color: #ffffff;
@@ -2364,9 +2350,6 @@ body.menu-open { overflow: hidden; }
 
     /* Workspace tabs */
     .workspace-tab .tab-title { max-width: 60px; }
-
-    /* DAM grid */
-    .dam-grid { grid-template-columns: 1fr !important; }
 }
 
 /* ── 400px: Small phone ── */

@@ -413,9 +413,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             <span><strong>Karakter:</strong> <span id="charCount">0</span></span>
                                             <span><strong>Waktu Baca:</strong> ~<span id="readTime">0</span> mnt</span>
                                         </div>
-                                        <div>
-                                            <a href="<?= BASE_URL ?>/media_library.php" target="_blank" style="color:#2563eb; text-decoration:none; font-size:11px; display:inline-flex; align-items:center; gap:4px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg> Buka Media Library (DAM)</a>
-                                        </div>
                                     </div>
                                 </div>
                                 <textarea name="content" id="hiddenContent" hidden></textarea>

@@ -418,8 +418,19 @@ $gallery = $images->fetchAll();
             border: 1px solid #ced4da;
             border-radius: 4px;
             padding: 6px 8px;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             background: #fff;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
+            cursor: text;
+            min-height: 38px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .chip-input-container:focus-within {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
         }
         .chip-item {
             display: inline-flex;
@@ -428,27 +439,35 @@ $gallery = $images->fetchAll();
             background: #eaf2f8;
             color: var(--blue);
             font-size: 11.5px;
-            padding: 4px 8px;
+            padding: 3px 8px;
             border-radius: 4px;
-            margin-bottom: 6px;
+            margin-bottom: 0;
             border: 1px solid rgba(41, 128, 185, 0.2);
             word-break: break-word;
+            user-select: none;
         }
         .chip-item .chip-close {
             cursor: pointer;
             font-weight: bold;
             opacity: 0.6;
+            font-size: 13px;
+            line-height: 1;
+            margin-left: 2px;
+            transition: opacity 0.15s, color 0.15s;
         }
         .chip-item .chip-close:hover {
             opacity: 1;
+            color: #ef4444;
         }
         .chip-input-field {
             border: none;
             outline: none;
             font-size: 12px;
-            width: 100%;
+            flex: 1;
+            min-width: 90px;
             background: transparent;
             color: var(--text-sec);
+            padding: 2px 0;
         }
 
         .btn-save-blue {
@@ -877,40 +896,36 @@ $gallery = $images->fetchAll();
                             <input type="text" class="sidebar-select" value="<?= e($news['author_label'] ?? 'PEN ATS') ?>" readonly>
 
                             <!-- CHIP INPUTS -->
-                            <div class="chip-input-container">
-                                <?php if(!empty($news['aktor'])): ?>
-                                    <div class="chip-item">
-                                        <?= e($news['aktor']) ?> <span class="chip-close">×</span>
-                                    </div>
-                                <?php endif; ?>
-                                <input type="text" name="aktor" class="chip-input-field" placeholder="Aktor" value="<?= e($news['aktor'] ?? '') ?>">
+                            <div class="form-group" style="margin-bottom:10px;">
+                                <label class="sidebar-label" style="font-weight:600;font-size:12px;margin-bottom:4px;display:block;">Aktor</label>
+                                <div class="chip-input-container" data-field="aktor">
+                                    <input type="text" class="chip-input-field" placeholder="Ketik Aktor, tekan Enter/koma...">
+                                    <input type="hidden" name="aktor" class="chip-hidden-value" value="<?= e($news['aktor'] ?? '') ?>">
+                                </div>
                             </div>
 
-                            <div class="chip-input-container">
-                                <?php if(!empty($news['tag'])): ?>
-                                    <div class="chip-item">
-                                        <?= e($news['tag']) ?> <span class="chip-close">×</span>
-                                    </div>
-                                <?php endif; ?>
-                                <input type="text" name="tag" class="chip-input-field" placeholder="Tag" value="<?= e($news['tag'] ?? '') ?>">
+                            <div class="form-group" style="margin-bottom:10px;">
+                                <label class="sidebar-label" style="font-weight:600;font-size:12px;margin-bottom:4px;display:block;">Tag</label>
+                                <div class="chip-input-container" data-field="tag">
+                                    <input type="text" class="chip-input-field" placeholder="Ketik Tag, tekan Enter/koma...">
+                                    <input type="hidden" name="tag" class="chip-hidden-value" value="<?= e($news['tag'] ?? '') ?>">
+                                </div>
                             </div>
 
-                            <div class="chip-input-container">
-                                <?php if(!empty($news['topik'])): ?>
-                                    <div class="chip-item">
-                                        <?= e($news['topik']) ?> <span class="chip-close">×</span>
-                                    </div>
-                                <?php endif; ?>
-                                <input type="text" name="topik" class="chip-input-field" placeholder="Topik" value="<?= e($news['topik'] ?? '') ?>">
+                            <div class="form-group" style="margin-bottom:10px;">
+                                <label class="sidebar-label" style="font-weight:600;font-size:12px;margin-bottom:4px;display:block;">Topik</label>
+                                <div class="chip-input-container" data-field="topik">
+                                    <input type="text" class="chip-input-field" placeholder="Ketik Topik, tekan Enter/koma...">
+                                    <input type="hidden" name="topik" class="chip-hidden-value" value="<?= e($news['topik'] ?? '') ?>">
+                                </div>
                             </div>
 
-                            <div class="chip-input-container">
-                                <?php if(!empty($news['keyword'])): ?>
-                                    <div class="chip-item">
-                                        <?= e($news['keyword']) ?> <span class="chip-close">×</span>
-                                    </div>
-                                <?php endif; ?>
-                                <input type="text" name="keyword" class="chip-input-field" placeholder="Keyword" value="<?= e($news['keyword'] ?? '') ?>">
+                            <div class="form-group" style="margin-bottom:16px;">
+                                <label class="sidebar-label" style="font-weight:600;font-size:12px;margin-bottom:4px;display:block;">Keyword</label>
+                                <div class="chip-input-container" data-field="keyword">
+                                    <input type="text" class="chip-input-field" placeholder="Ketik Keyword, tekan Enter/koma...">
+                                    <input type="hidden" name="keyword" class="chip-hidden-value" value="<?= e($news['keyword'] ?? '') ?>">
+                                </div>
                             </div>
 
                             <button type="submit" name="update_news" value="1" class="btn-save-blue" onclick="prepareSubmit()">
@@ -1127,6 +1142,84 @@ function prepareSubmit() {
     }
     return true;
 }
+
+function initChipContainers() {
+    document.querySelectorAll('.chip-input-container').forEach(function(container) {
+        var inputField = container.querySelector('.chip-input-field');
+        var hiddenValue = container.querySelector('.chip-hidden-value');
+        if (!inputField || !hiddenValue) return;
+
+        var items = hiddenValue.value
+            ? hiddenValue.value.split(',').map(function(s) { return s.trim().replace(/^#+/, '').trim(); }).filter(Boolean)
+            : [];
+
+        var origPlaceholder = inputField.getAttribute('placeholder') || '';
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function render() {
+            container.querySelectorAll('.chip-item').forEach(function(el) { el.remove(); });
+            items.forEach(function(item, index) {
+                var chip = document.createElement('div');
+                chip.className = 'chip-item';
+                chip.innerHTML = '<span>' + escapeHtml(item) + '</span><span class="chip-close" data-index="' + index + '" title="Hapus">&times;</span>';
+                container.insertBefore(chip, inputField);
+            });
+            hiddenValue.value = items.join(', ');
+            inputField.placeholder = items.length === 0 ? origPlaceholder : '';
+        }
+
+        function addItem() {
+            var val = inputField.value.trim().replace(/^#+/, '').trim();
+            if (val && !items.includes(val)) {
+                items.push(val);
+                inputField.value = '';
+                render();
+            } else {
+                inputField.value = '';
+            }
+        }
+
+        container.addEventListener('click', function(e) {
+            var closeBtn = e.target.closest('.chip-close');
+            if (closeBtn) {
+                e.stopPropagation();
+                var idx = parseInt(closeBtn.getAttribute('data-index'), 10);
+                if (!isNaN(idx)) {
+                    items.splice(idx, 1);
+                    render();
+                }
+                return;
+            }
+            inputField.focus();
+        });
+
+        inputField.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault();
+                addItem();
+            } else if (e.key === 'Backspace' && inputField.value === '' && items.length > 0) {
+                items.pop();
+                render();
+            }
+        });
+
+        inputField.addEventListener('blur', function() {
+            if (inputField.value.trim() !== '') {
+                addItem();
+            }
+        });
+
+        render();
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     var editForm = document.getElementById('editForm');
     if (editForm) {
@@ -1134,6 +1227,7 @@ document.addEventListener('DOMContentLoaded', function() {
             prepareSubmit();
         });
     }
+    initChipContainers();
 });
 </script>
 <script src="<?= BASE_URL ?>/assets/js/tabs.js"></script>
