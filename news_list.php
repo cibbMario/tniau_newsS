@@ -158,6 +158,13 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                                                 <?php if (in_array($row['status'], ['draft','pending_b','pending_c','pending_d','revision_b','revision_c','revision_d','published'])): ?>
                                                     <a href="<?= BASE_URL ?>/news_edit.php?id=<?= $row['id'] ?>" class="btn btn-primary btn-sm">Edit</a>
                                                 <?php endif; ?>
+                                                <?php if ($row['status'] === 'draft' && $user['role'] === 'A' && $row['created_by'] === $user['id']): ?>
+                                                    <form method="POST" action="<?= BASE_URL ?>/resubmit_action.php" style="display:inline;margin:0;">
+                                                        <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
+                                                        <input type="hidden" name="news_id" value="<?= $row['id'] ?>">
+                                                        <button type="submit" class="btn btn-success btn-sm" style="background:#27ae60;color:#fff;" title="Kirim berita draft ke Editor">Kirim ke Editor</button>
+                                                    </form>
+                                                <?php endif; ?>
                                                 <?php if (in_array($row['status'], ['revision_b','revision_c','revision_d'])): ?>
                                                     <form method="POST" action="<?= BASE_URL ?>/resubmit_action.php" style="display:inline;margin:0;">
                                                         <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">

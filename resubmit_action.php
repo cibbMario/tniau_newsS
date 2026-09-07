@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . "/config/config.php";
-requireRole(["A", "E"]);
+requireRole(["A"]);
 $user = currentUser();
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
@@ -26,7 +26,18 @@ if (!$news) {
 
 $title = $news["title"];
 
-if ($news["status"] === "revision_b") {
+if ($news["status"] === "draft") {
+    updateNewsStatus($newsId, "pending_b", $user["id"], "Reporter telah menyelesaikan berita draft dan mengirim ke Editor untuk direview");
+    $targetStmt = $pdo->prepare("SELECT id FROM users WHERE role = 'B' AND lanud = ?");
+    $targetStmt->execute([$news['wilayah']]);
+    $targetUsers = $targetStmt->fetchAll();
+    foreach ($targetUsers as $uTarget) {
+        sendNotification($newsId, $uTarget["id"], "Berita baru \"$title\" telah selesai dibuat dan dikirim oleh Reporter untuk direview.");
+    }
+    $_SESSION['flash_success'] = "Berita \"$title\" berhasil dikirim ke Editor untuk direview.";
+    header("Location: " . BASE_URL . "/news_list.php");
+    exit;
+} elseif ($news["status"] === "revision_b") {
     updateNewsStatus($newsId, "pending_b", $user["id"], "Reporter telah menyelesaikan revisi dan mengirim ulang ke Editor");
     $targetStmt = $pdo->prepare("SELECT id FROM users WHERE role = 'B' AND lanud = ?");
     $targetStmt->execute([$news['wilayah']]);
