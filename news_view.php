@@ -54,6 +54,12 @@ $commentsList = $comments->fetchAll();
         <?php include __DIR__ . '/includes/topbar.php'; ?>
 
         <div class="page-container">
+            <?php if (!empty($_SESSION['flash_success'])): ?>
+                <div style="background:#e8f5e9;border:1px solid rgba(46,125,50,.2);color:#2e7d32;padding:12px 16px;border-radius:6px;font-size:13px;font-weight:500;margin-bottom:16px">
+                    <?= e($_SESSION['flash_success']) ?>
+                </div>
+                <?php unset($_SESSION['flash_success']); ?>
+            <?php endif; ?>
             <div class="detail-grid">
                 
                 <!-- MAIN CONTENT -->
@@ -217,6 +223,21 @@ $commentsList = $comments->fetchAll();
 
                 <!-- RIGHT SIDEBAR (REVIEW ACTIONS) -->
                 <div class="detail-sidebar">
+                    <?php if ($user['role'] === 'A' && $news['created_by'] == $user['id'] && $news['status'] === 'draft'): ?>
+                        <div class="review-card" style="border-color:#27ae60; background:rgba(39,174,96,0.05);">
+                            <h3 style="color:#27ae60;">Kirim ke Editor</h3>
+                            <p>Berita ini masih berstatus <strong>Draft</strong>. Jika sudah selesai dan siap diperiksa, klik tombol di bawah untuk meneruskan ke Editor.</p>
+                            <form action="<?= BASE_URL ?>/resubmit_action.php" method="POST">
+                                <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
+                                <input type="hidden" name="news_id" value="<?= $id ?>">
+                                <button type="submit" class="btn btn-success btn-block" style="background:#27ae60; border-color:#27ae60; color:#fff; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                                    Kirim ke Editor
+                                </button>
+                            </form>
+                        </div>
+                    <?php endif; ?>
+
                     <?php if ($user['role'] === 'A' && $news['created_by'] == $user['id'] && in_array($news['status'], ['revision_b', 'revision_c', 'revision_d'])): ?>
                         <?php
                         $targetRole = match($news['status']) {

@@ -94,6 +94,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 foreach ($editors as $ed) {
                     sendNotification($newsId, $ed['id'], "Berita baru: \"$title\" menunggu review Anda.");
                 }
+                $_SESSION['flash_success'] = "Berita berhasil dibuat dan dikirim langsung ke Editor untuk direview.";
+            } else {
+                $_SESSION['flash_success'] = "Berita berhasil disimpan sebagai Draft.";
             }
 
             header("Location: " . BASE_URL . "/news_view.php?id=" . $newsId);
@@ -211,6 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <form method="POST" enctype="multipart/form-data" id="createForm" class="create-card">
                     <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
                     <input type="hidden" name="create_token" value="<?= e($createToken) ?>">
+                    <input type="hidden" name="action" id="newsFormAction" value="submit">
                     <div class="create-layout-grid">
                         <div class="create-main">
                             <div class="form-group">
@@ -418,12 +422,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <textarea name="content" id="hiddenContent" hidden></textarea>
                             </div>
 
-                            <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid #e2e6ea">
-                                <button type="submit" name="action" value="draft" class="btn btn-outline" onclick="prepareSubmit()">
+                            <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:20px;padding-top:16px;border-top:1px solid #e2e6ea;flex-wrap:wrap;">
+                                <button type="submit" class="btn btn-outline" onclick="setFormAction('draft')" style="display:inline-flex;align-items:center;gap:6px;">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
                                     Simpan sebagai Draft
                                 </button>
-                                <button type="submit" name="action" value="submit" class="btn btn-primary" onclick="prepareSubmit()">
-                                    Ajukan untuk Review
+                                <button type="submit" class="btn btn-primary" style="background:#27ae60;border-color:#27ae60;display:inline-flex;align-items:center;gap:6px;" onclick="setFormAction('submit')">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                                    Kirim Langsung ke Editor
                                 </button>
                             </div>
                         </div>
@@ -804,9 +810,19 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+function setFormAction(actionVal) {
+    var actionInput = document.getElementById('newsFormAction');
+    if (actionInput) {
+        actionInput.value = actionVal;
+    }
+}
+
 var isSubmitting = false;
 function prepareSubmit() {
-    document.getElementById('hiddenContent').value = document.getElementById('editorBody').innerHTML;
+    var editorBody = document.getElementById('editorBody');
+    if (editorBody) {
+        document.getElementById('hiddenContent').value = editorBody.innerHTML;
+    }
     localStorage.removeItem('tniau_draft_create_title');
     localStorage.removeItem('tniau_draft_create_content');
 }
@@ -815,13 +831,16 @@ document.getElementById('createForm').addEventListener('submit', function(event)
         event.preventDefault();
         return;
     }
-    isSubmitting = true;
     prepareSubmit();
-    this.querySelectorAll('button[type="submit"]').forEach(function(button) {
-        button.disabled = true;
-        button.style.opacity = '0.65';
-        button.style.cursor = 'wait';
-    });
+    isSubmitting = true;
+    var form = this;
+    setTimeout(function() {
+        form.querySelectorAll('button[type="submit"]').forEach(function(button) {
+            button.disabled = true;
+            button.style.opacity = '0.65';
+            button.style.cursor = 'wait';
+        });
+    }, 10);
 });
 </script>
 </body>
