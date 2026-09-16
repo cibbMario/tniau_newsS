@@ -96,6 +96,22 @@ $roleName = userDisplayName($user['role']);
 
 
 
+        <!-- Bank Aset Foto Resmi Alutsista -->
+        <a href="<?= BASE_URL ?>/alutsista_assets.php" class="<?= $current==='alutsista_assets' ? 'active' : '' ?>">
+            <span class="icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+            </span>
+            <span class="label">Bank Aset Alutsista</span>
+        </a>
+
+        <!-- Kamus & Korektor Militer -->
+        <a href="<?= BASE_URL ?>/military_dictionary.php" class="<?= $current==='military_dictionary' ? 'active' : '' ?>">
+            <span class="icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            </span>
+            <span class="label">Kamus Istilah Militer</span>
+        </a>
+
         <!-- 4. Profile -->
         <a href="<?= BASE_URL ?>/profile.php" class="<?= $current==='profile' ? 'active' : '' ?>">
             <span class="icon">

@@ -162,6 +162,17 @@ function uploadNewsImage($fileInputName) {
     return $filename;
 }
 
+function news_image_url($path) {
+    if (empty($path)) return '';
+    if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+        return $path;
+    }
+    if (str_starts_with($path, 'assets/')) {
+        return BASE_URL . '/' . $path;
+    }
+    return UPLOAD_URL . $path;
+}
+
 /* =========================================================
    UTIL
    ========================================================= */

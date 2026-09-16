@@ -137,7 +137,7 @@ $commentsList = $comments->fetchAll();
                         </div>
 
                         <?php if (!empty($news['image_path'] ?? '')): ?>
-                            <img src="<?= UPLOAD_URL . e($news['image_path']) ?>" alt="Gambar Berita" class="detail-img">
+                            <img src="<?= e(news_image_url($news['image_path'])) ?>" alt="Gambar Berita" class="detail-img">
                         <?php endif; ?>
 
                         <div class="detail-body">

@@ -46,7 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             // Consume the token before inserting so repeated POST requests cannot create duplicates.
             unset($_SESSION['news_create_token']);
+            $selectedAssetUrl = trim($_POST['selected_asset_url'] ?? '');
             $imagePath = uploadNewsImage('image');
+            if ($imagePath === null && $selectedAssetUrl) {
+                $imagePath = $selectedAssetUrl;
+            }
             $slug = generateSlug($title);
             $status = ($action === 'submit') ? 'pending_b' : 'draft';
             $author_label = getLanudInitials($wilayah);
@@ -246,11 +250,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
 
                             <div class="form-group">
-                                <label>Gambar Utama Berita</label>
-                                <div class="upload-dropzone" onclick="document.getElementById('imageInput').click()">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                                    <label style="margin:0;">Gambar Utama Berita</label>
+                                    <button type="button" class="btn btn-outline btn-sm" onclick="openAssetPickerModal()" style="font-size:11.5px; padding:4px 10px; display:inline-flex; align-items:center; gap:5px; color:#1e3a8a; border-color:#93c5fd; background:#eff6ff;">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                                        Pilih dari Bank Aset Alutsista
+                                    </button>
+                                </div>
+                                <div class="upload-dropzone" onclick="document.getElementById('imageInput').click()" id="mainDropzone">
                                     <span class="plus-icon">Upload</span>
-                                    <span id="fileLabel">Klik untuk memilih gambar (JPG, PNG, WEBP, maks 5MB)</span>
-                                    <input type="file" id="imageInput" name="image" accept="image/*" hidden onchange="document.getElementById('fileLabel').textContent = this.files[0]?.name || 'Pilih gambar...'">
+                                    <span id="fileLabel"><?= !empty($_GET['asset_image']) ? 'Aset Terpilih: ' . e($_GET['asset_title'] ?? 'Foto Resmi') : 'Klik untuk memilih gambar lokal (JPG, PNG, WEBP, maks 5MB)' ?></span>
+                                    <input type="file" id="imageInput" name="image" accept="image/*" hidden onchange="handleImageSelected(this)">
+                                </div>
+                                <input type="hidden" name="selected_asset_url" id="selectedAssetUrl" value="<?= e($_GET['asset_image'] ?? ($_POST['selected_asset_url'] ?? '')) ?>">
+
+                                <div id="assetPreviewCard" style="<?= !empty($_GET['asset_image']) ? 'display:flex;' : 'display:none;' ?> align-items:center; gap:12px; margin-top:10px; padding:8px 12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px;">
+                                    <img id="assetPreviewImg" src="<?= e($_GET['asset_image'] ?? '') ?>" style="width:64px; height:48px; object-fit:cover; border-radius:6px; border:1px solid #cbd5e1;">
+                                    <div style="flex:1;">
+                                        <div id="assetPreviewTitle" style="font-size:12px; font-weight:700; color:#0f172a;"><?= e($_GET['asset_title'] ?? 'Aset Alutsista Resmi') ?></div>
+                                        <div style="font-size:11px; color:#059669; font-weight:600;">✓ Foto Resmi Terpilih dari Bank Media</div>
+                                    </div>
+                                    <button type="button" onclick="clearSelectedAsset()" style="background:none; border:none; color:#ef4444; font-size:12px; cursor:pointer; font-weight:600;">Hapus</button>
                                 </div>
                             </div>
 
@@ -274,6 +294,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </div>
                                 <div class="editor-wrap" id="mainEditorWrap">
                                     <div class="editor-toolbar" style="position:relative; flex-wrap:wrap; gap:4px;">
+                                        <!-- Korektor Militer Button -->
+                                        <button type="button" class="editor-btn" onclick="openMilitaryCheckerModal()" title="Kamus & Korektor Singkatan Militer" style="display:inline-flex; align-items:center; gap:4px; font-weight:600; background:#ecfdf5; color:#065f46; border-color:#a7f3d0; margin-right:4px;">
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                                            <span>Korektor Militer</span>
+                                        </button>
+
+                                        <div style="width:1px;height:20px;background:#ced4da;margin:0 2px;"></div>
+
                                         <!-- Formatting Basics -->
                                         <button type="button" class="editor-btn" onclick="fmt('bold')" title="Bold"><strong>B</strong></button>
                                         <button type="button" class="editor-btn" onclick="fmt('italic')" title="Italic"><em>I</em></button>
@@ -842,6 +870,351 @@ document.getElementById('createForm').addEventListener('submit', function(event)
         });
     }, 10);
 });
+
+// ==========================================
+// ASSET PICKER & MILITARY CHECKER MODALS
+// ==========================================
+
+function handleImageSelected(input) {
+    if (input.files && input.files[0]) {
+        document.getElementById('fileLabel').textContent = input.files[0].name;
+        // If file selected, clear asset url so local upload takes precedence
+        document.getElementById('selectedAssetUrl').value = '';
+        document.getElementById('assetPreviewCard').style.display = 'none';
+    }
+}
+
+function clearSelectedAsset() {
+    document.getElementById('selectedAssetUrl').value = '';
+    document.getElementById('assetPreviewCard').style.display = 'none';
+    document.getElementById('fileLabel').textContent = 'Klik untuk memilih gambar lokal (JPG, PNG, WEBP, maks 5MB)';
+}
+
+function openAssetPickerModal() {
+    document.getElementById('assetPickerModal').style.display = 'flex';
+    loadAssetBank('');
+}
+function closeAssetPickerModal() {
+    document.getElementById('assetPickerModal').style.display = 'none';
+}
+
+let currentAssetCat = '';
+function filterAssetCategory(cat, btn) {
+    currentAssetCat = cat;
+    document.querySelectorAll('#assetPickerCatTabs button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    loadAssetBank(document.getElementById('assetPickerSearch').value);
+}
+
+function searchAssetBank(query) {
+    loadAssetBank(query);
+}
+
+function loadAssetBank(query) {
+    const grid = document.getElementById('assetPickerGrid');
+    grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px; color:#64748b;">Memuat data aset resmi...</div>';
+    
+    fetch('<?= BASE_URL ?>/api_alutsista_assets.php?cat=' + encodeURIComponent(currentAssetCat) + '&q=' + encodeURIComponent(query))
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success || !data.data.length) {
+                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px; color:#64748b;">Tidak ada aset alutsista yang cocok.</div>';
+                return;
+            }
+            let html = '';
+            data.data.forEach(item => {
+                html += `
+                    <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                        <div style="height:120px; background:#0f172a; overflow:hidden; position:relative;">
+                            <img src="${item.image_url}" style="width:100%; height:100%; object-fit:cover;" alt="${item.name}">
+                            <span style="position:absolute; top:6px; left:6px; font-size:9.5px; font-weight:700; background:rgba(30,58,138,0.85); color:#fff; padding:2px 6px; border-radius:4px;">${item.category}</span>
+                        </div>
+                        <div style="padding:10px; display:flex; flex-direction:column; flex:1;">
+                            <div style="font-size:12px; font-weight:700; color:#0f172a; line-height:1.3; margin-bottom:2px;">${item.name}</div>
+                            <div style="font-size:10.5px; color:#64748b; margin-bottom:8px;">${item.unit_assignment || 'TNI AU'}</div>
+                            <div style="margin-top:auto; display:flex; gap:6px;">
+                                <button type="button" class="btn btn-primary btn-sm" onclick="selectAssetForMain('${item.image_url}', '${item.name.replace(/'/g, "\\'")}')" style="flex:1; font-size:11px; padding:5px 8px; background:#1e3a8a; border-color:#1e3a8a;">
+                                    Jadikan Foto Utama
+                                </button>
+                                <button type="button" class="btn btn-outline btn-sm" onclick="insertAssetInEditor('${item.image_url}', '${item.name.replace(/'/g, "\\'")}')" title="Sisipkan di dalam artikel" style="font-size:11px; padding:5px 8px;">
+                                    + Sisip
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            grid.innerHTML = html;
+        })
+        .catch(err => {
+            grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:30px; color:#ef4444;">Gagal memuat aset alutsista.</div>';
+        });
+}
+
+function selectAssetForMain(imgUrl, title) {
+    document.getElementById('selectedAssetUrl').value = imgUrl;
+    document.getElementById('assetPreviewImg').src = imgUrl;
+    document.getElementById('assetPreviewTitle').textContent = title;
+    document.getElementById('assetPreviewCard').style.display = 'flex';
+    document.getElementById('fileLabel').textContent = 'Aset Terpilih: ' + title;
+    // reset file input
+    document.getElementById('imageInput').value = '';
+    closeAssetPickerModal();
+}
+
+function insertAssetInEditor(imgUrl, title) {
+    document.getElementById('editorBody').focus();
+    const html = `<figure style="margin:16px 0; text-align:center;"><img src="${imgUrl}" alt="${title}" style="max-width:100%; border-radius:8px; display:block; margin:0 auto;"><figcaption style="font-size:12px; color:#64748b; margin-top:6px; font-style:italic;">Foto: Dokumentasi Resmi TNI AU - ${title}</figcaption></figure><p></p>`;
+    document.execCommand('insertHTML', false, html);
+    updateStatsAndAutoSave();
+    closeAssetPickerModal();
+}
+
+// ==========================================
+// MILITARY CHECKER MODAL LOGIC
+// ==========================================
+let militaryTermsCache = [];
+
+function openMilitaryCheckerModal() {
+    document.getElementById('militaryCheckerModal').style.display = 'flex';
+    switchDictTab('checker');
+    
+    if (militaryTermsCache.length === 0) {
+        fetch('<?= BASE_URL ?>/api_military_check.php')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    militaryTermsCache = data.data;
+                    scanEditorText();
+                    renderGlossaryList(militaryTermsCache);
+                }
+            });
+    } else {
+        scanEditorText();
+    }
+}
+
+function closeMilitaryCheckerModal() {
+    document.getElementById('militaryCheckerModal').style.display = 'none';
+}
+
+function switchDictTab(tab) {
+    document.getElementById('tabPaneChecker').style.display = (tab === 'checker') ? 'block' : 'none';
+    document.getElementById('tabPaneGlossary').style.display = (tab === 'glossary') ? 'block' : 'none';
+    document.getElementById('dictTabCheckerBtn').classList.toggle('active', tab === 'checker');
+    document.getElementById('dictTabGlossaryBtn').classList.toggle('active', tab === 'glossary');
+}
+
+let detectedCorrections = [];
+
+function scanEditorText() {
+    const titleEl = document.getElementById('title');
+    const editorBody = document.getElementById('editorBody');
+    const titleText = titleEl ? titleEl.value : '';
+    const bodyText = editorBody ? editorBody.innerText : '';
+    const fullText = titleText + "\n" + bodyText;
+
+    const listContainer = document.getElementById('checkerResultsList');
+    const fixAllBtn = document.getElementById('fixAllBtn');
+    
+    detectedCorrections = [];
+    let detectedStandards = [];
+
+    militaryTermsCache.forEach(item => {
+        const regex = new RegExp('\\b' + item.term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'gi');
+        if (regex.test(fullText)) {
+            if (item.is_outdated == 1) {
+                detectedCorrections.push(item);
+            } else {
+                detectedStandards.push(item);
+            }
+        }
+    });
+
+    if (detectedCorrections.length === 0 && detectedStandards.length === 0) {
+        listContainer.innerHTML = `
+            <div style="background:#ecfdf5; border:1px solid #a7f3d0; color:#065f46; padding:16px; border-radius:10px; text-align:center;">
+                <div style="font-size:24px; margin-bottom:4px;">✓</div>
+                <div style="font-weight:700; font-size:14px; margin-bottom:2px;">Teks Sesuai Standar Minu TNI AU</div>
+                <div style="font-size:12px; color:#047857;">Tidak ditemukan singkatan militer usang atau kesalahan penulisan dalam judul maupun isi berita.</div>
+            </div>
+        `;
+        fixAllBtn.style.display = 'none';
+    } else {
+        fixAllBtn.style.display = detectedCorrections.length > 0 ? 'inline-flex' : 'none';
+        
+        let html = '';
+        if (detectedCorrections.length > 0) {
+            html += `<div style="font-size:12.5px; font-weight:700; color:#92400e; margin-bottom:8px;">⚠️ Perlu Koreksi (${detectedCorrections.length} istilah ditemukan):</div>`;
+            detectedCorrections.forEach(item => {
+                html += `
+                    <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:10px 14px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:10px;">
+                        <div>
+                            <span style="color:#b45309; font-weight:700; text-decoration:line-through;">${item.term}</span> 
+                            ➔ <strong style="color:#059669; font-weight:700;">${item.correct_standard}</strong>
+                            <div style="font-size:11px; color:#78350f; margin-top:2px;">${item.notes || item.expansion}</div>
+                        </div>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="applySingleCorrection('${item.term}', '${item.correct_standard}')" style="background:#ffffff; border-color:#d97706; color:#b45309; font-size:11px; white-space:nowrap;">
+                            Perbaiki
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        if (detectedStandards.length > 0) {
+            html += `<div style="font-size:12.5px; font-weight:700; color:#065f46; margin-top:14px; margin-bottom:8px;">✓ Istilah Baku Resmi Teridentifikasi (${detectedStandards.length}):</div>`;
+            html += `<div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">`;
+            detectedStandards.forEach(item => {
+                html += `
+                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:6px 10px; font-size:11.5px;">
+                        <strong style="color:#0f172a;">${item.term}</strong>: <span style="color:#64748b;">${item.expansion}</span>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+        }
+
+        listContainer.innerHTML = html;
+    }
+}
+
+function applySingleCorrection(fromTerm, toTerm) {
+    const titleEl = document.getElementById('title');
+    const editorBody = document.getElementById('editorBody');
+    const regex = new RegExp('\\b' + fromTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'gi');
+
+    if (titleEl) {
+        titleEl.value = titleEl.value.replace(regex, toTerm);
+    }
+    if (editorBody) {
+        editorBody.innerHTML = editorBody.innerHTML.replace(regex, toTerm);
+    }
+    updateStatsAndAutoSave();
+    scanEditorText();
+}
+
+function fixAllMilitaryCorrections() {
+    detectedCorrections.forEach(item => {
+        applySingleCorrection(item.term, item.correct_standard);
+    });
+    alert('Seluruh istilah militer yang tidak baku telah diperbaiki secara otomatis!');
+}
+
+function renderGlossaryList(terms) {
+    const listEl = document.getElementById('glossaryItemsList');
+    if (!terms.length) {
+        listEl.innerHTML = '<div style="text-align:center; padding:20px; color:#64748b;">Tidak ada istilah yang cocok.</div>';
+        return;
+    }
+    let html = '';
+    terms.forEach(t => {
+        html += `
+            <div style="padding:8px 12px; border-bottom:1px solid #f1f5f9; display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+                <div>
+                    <strong style="font-size:13px; color:#0f172a;">${t.term}</strong>
+                    <span style="font-size:11px; color:#64748b; margin-left:4px;">(${t.category})</span>
+                    <div style="font-size:12px; color:#334155;">${t.expansion}</div>
+                    ${t.is_outdated == 1 ? `<div style="font-size:11px; color:#b45309; margin-top:2px;">⚠️ Resmi: <strong>${t.correct_standard}</strong></div>` : ''}
+                </div>
+                <button type="button" class="btn btn-outline btn-sm" onclick="insertTermToEditor('${t.is_outdated == 1 ? t.correct_standard : t.term}')" style="font-size:10.5px; padding:3px 7px;">
+                    + Sisip
+                </button>
+            </div>
+        `;
+    });
+    listEl.innerHTML = html;
+}
+
+function searchGlossary(q) {
+    const filtered = militaryTermsCache.filter(t => 
+        t.term.toLowerCase().includes(q.toLowerCase()) || 
+        t.expansion.toLowerCase().includes(q.toLowerCase()) || 
+        t.category.toLowerCase().includes(q.toLowerCase())
+    );
+    renderGlossaryList(filtered);
+}
+
+function insertTermToEditor(text) {
+    document.getElementById('editorBody').focus();
+    document.execCommand('insertText', false, text);
+    updateStatsAndAutoSave();
+}
 </script>
+
+<!-- MODAL ASSET PICKER -->
+<div id="assetPickerModal" class="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.65); z-index:9999; backdrop-filter:blur(4px); align-items:center; justify-content:center;">
+    <div class="modal-box" style="background:#ffffff; border-radius:14px; max-width:760px; width:94%; max-height:88vh; display:flex; flex-direction:column; padding:0; box-shadow:0 25px 50px -12px rgba(0,0,0,0.25); overflow:hidden;">
+        <div style="padding:16px 20px; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; background:#f8fafc;">
+            <div>
+                <h3 style="font-size:15px; font-weight:700; color:#0f172a; margin:0; display:flex; align-items:center; gap:8px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                    Pilih Foto dari Bank Aset Alutsista Resmi
+                </h3>
+            </div>
+            <button type="button" onclick="closeAssetPickerModal()" style="background:none; border:none; font-size:20px; cursor:pointer; color:#64748b;">✕</button>
+        </div>
+
+        <div style="padding:12px 20px; border-bottom:1px solid #f1f5f9; display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;">
+            <div id="assetPickerCatTabs" style="display:flex; gap:6px; overflow-x:auto; padding-bottom:2px;">
+                <button type="button" class="btn btn-sm btn-outline active" onclick="filterAssetCategory('', this)" style="font-size:11px; border-radius:14px;">Semua</button>
+                <button type="button" class="btn btn-sm btn-outline" onclick="filterAssetCategory('Pesawat Tempur', this)" style="font-size:11px; border-radius:14px;">Pesawat Tempur</button>
+                <button type="button" class="btn btn-sm btn-outline" onclick="filterAssetCategory('Pesawat Angkut', this)" style="font-size:11px; border-radius:14px;">Pesawat Angkut</button>
+                <button type="button" class="btn btn-sm btn-outline" onclick="filterAssetCategory('Helikopter', this)" style="font-size:11px; border-radius:14px;">Helikopter</button>
+                <button type="button" class="btn btn-sm btn-outline" onclick="filterAssetCategory('Lambang & Logo', this)" style="font-size:11px; border-radius:14px;">Lambang & Logo</button>
+            </div>
+            <input type="text" id="assetPickerSearch" class="form-input" placeholder="Cari aset..." style="width:200px; font-size:12px; padding:5px 10px;" oninput="searchAssetBank(this.value)">
+        </div>
+
+        <div id="assetPickerGrid" style="padding:16px 20px; overflow-y:auto; flex:1; display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:12px; max-height:450px;">
+            <!-- Rendered by JS -->
+        </div>
+    </div>
+</div>
+
+<!-- MODAL MILITARY CHECKER & GLOSSARY -->
+<div id="militaryCheckerModal" class="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.65); z-index:9999; backdrop-filter:blur(4px); align-items:center; justify-content:center;">
+    <div class="modal-box" style="background:#ffffff; border-radius:14px; max-width:640px; width:92%; max-height:88vh; display:flex; flex-direction:column; padding:0; box-shadow:0 25px 50px -12px rgba(0,0,0,0.25); overflow:hidden;">
+        <div style="padding:16px 20px; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; background:#f8fafc;">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <h3 style="font-size:15px; font-weight:700; color:#0f172a; margin:0; display:flex; align-items:center; gap:6px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                    Kamus & Korektor Singkatan Militer
+                </h3>
+            </div>
+            <button type="button" onclick="closeMilitaryCheckerModal()" style="background:none; border:none; font-size:20px; cursor:pointer; color:#64748b;">✕</button>
+        </div>
+
+        <div style="padding:10px 20px; border-bottom:1px solid #e2e8f0; display:flex; gap:10px; background:#ffffff;">
+            <button type="button" id="dictTabCheckerBtn" class="btn btn-sm btn-primary active" onclick="switchDictTab('checker')" style="font-size:12px;">
+                🔍 Hasil Pemindaian Berita Ini
+            </button>
+            <button type="button" id="dictTabGlossaryBtn" class="btn btn-sm btn-outline" onclick="switchDictTab('glossary')" style="font-size:12px;">
+                📖 Cari Kamus Singkatan
+            </button>
+        </div>
+
+        <!-- TAB 1: SCANNER RESULTS -->
+        <div id="tabPaneChecker" style="padding:16px 20px; overflow-y:auto; flex:1; max-height:420px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <span style="font-size:12px; color:#64748b;">Hasil analisa otomatis terhadap judul dan isi naskah:</span>
+                <button type="button" id="fixAllBtn" class="btn btn-sm btn-primary" onclick="fixAllMilitaryCorrections()" style="background:#059669; border-color:#059669; font-size:11.5px; display:none;">
+                    ⚡ Perbaiki Semua Istilah Otomatis
+                </button>
+            </div>
+            <div id="checkerResultsList"></div>
+        </div>
+
+        <!-- TAB 2: GLOSSARY LOOKUP -->
+        <div id="tabPaneGlossary" style="padding:16px 20px; overflow-y:auto; flex:1; max-height:420px; display:none;">
+            <input type="text" class="form-input" placeholder="Ketik singkatan atau nama satuan/pangkat..." style="font-size:13px; margin-bottom:12px;" oninput="searchGlossary(this.value)">
+            <div id="glossaryItemsList" style="border:1px solid #e2e8f0; border-radius:8px; max-height:300px; overflow-y:auto;"></div>
+        </div>
+
+        <div style="padding:12px 20px; border-top:1px solid #e2e8f0; background:#f8fafc; display:flex; justify-content:flex-end;">
+            <button type="button" class="btn btn-outline btn-sm" onclick="closeMilitaryCheckerModal()">Tutup</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>
