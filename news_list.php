@@ -109,19 +109,21 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                 <table class="news-table">
                     <thead>
                         <tr>
-                            <th style="width:30%">Subjek</th>
+                            <th style="width:<?= $user['role'] === 'E' ? '35%' : '30%' ?>">Subjek</th>
                             <th>Media</th>
                             <th>Author</th>
                             <th>Wilayah</th>
                             <th>Waktu Terbit</th>
                             <th>Status</th>
                             <th>Sentimen</th>
-                            <th>Aksi</th>
+                            <?php if ($user['role'] !== 'E'): ?>
+                                <th>Aksi</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if (empty($newsList)): ?>
-                            <tr><td colspan="8" class="empty-state">Belum ada berita yang tersedia.</td></tr>
+                            <tr><td colspan="<?= $user['role'] === 'E' ? '7' : '8' ?>" class="empty-state">Belum ada berita yang tersedia.</td></tr>
                         <?php else: ?>
                             <?php foreach ($newsList as $row): ?>
                             <?php $isPublished = $row['status'] === 'published'; ?>
@@ -149,14 +151,15 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                                     ?>
                                     <span class="pill <?= $cls ?>"><?= e($row['sentiment'] ?? 'Netral') ?></span>
                                 </td>
+                                <?php if ($user['role'] !== 'E'): ?>
                                 <td onclick="event.stopPropagation()">
-                                    <?php if (in_array($user['role'], ['A','B','C','D','E'])): ?>
+                                    <?php if (in_array($user['role'], ['A','B','C','D'])): ?>
                                         <div style="display:inline-flex;gap:6px;flex-wrap:wrap;align-items:center;">
-                                            <?php if (($user['role'] === 'A' && $row['created_by'] === $user['id']) || $user['role'] === 'E'): ?>
+                                            <?php if ($user['role'] === 'A' && $row['created_by'] === $user['id']): ?>
                                                 <?php if (in_array($row['status'], ['draft','pending_b','pending_c','pending_d','revision_b','revision_c','revision_d','published'])): ?>
                                                     <a href="<?= BASE_URL ?>/news_edit.php?id=<?= $row['id'] ?>" class="btn btn-primary btn-sm">Edit</a>
                                                 <?php endif; ?>
-                                                <?php if ($row['status'] === 'draft' && $user['role'] === 'A' && $row['created_by'] === $user['id']): ?>
+                                                <?php if ($row['status'] === 'draft'): ?>
                                                     <form method="POST" action="<?= BASE_URL ?>/resubmit_action.php" style="display:inline;margin:0;">
                                                         <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
                                                         <input type="hidden" name="news_id" value="<?= $row['id'] ?>">
@@ -177,11 +180,11 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                                                 </form>
                                             <?php endif; ?>
 
-                                            <?php if (($user['role'] === 'B' || $user['role'] === 'E') && $row['status'] === 'pending_b'): ?>
+                                            <?php if ($user['role'] === 'B' && $row['status'] === 'pending_b'): ?>
                                                 <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>" class="btn btn-success btn-sm" style="background:#27ae60;color:#fff;">Review Editor</a>
                                             <?php endif; ?>
 
-                                            <?php if (($user['role'] === 'C' || $user['role'] === 'E') && $row['status'] === 'pending_c'): ?>
+                                            <?php if ($user['role'] === 'C' && $row['status'] === 'pending_c'): ?>
                                                 <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>" class="btn btn-success btn-sm" style="background:#27ae60;color:#fff;">Setujui</a>
                                                 <form method="POST" action="<?= BASE_URL ?>/review_action.php" onsubmit="return showConfirmModal(this, 'Tolak Berita', 'Minta revisi dari Reporter?', 'Tolak');" style="display:inline;margin:0;">
                                                     <input type="hidden" name="csrf_token" value="<?= e(generate_csrf_token()) ?>">
@@ -191,7 +194,7 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                                                 </form>
                                             <?php endif; ?>
 
-                                            <?php if (($user['role'] === 'D' || $user['role'] === 'E') && in_array($row['status'], ['pending_d', 'pending_c'], true)): ?>
+                                            <?php if ($user['role'] === 'D' && in_array($row['status'], ['pending_d', 'pending_c'], true)): ?>
                                                 <a href="<?= BASE_URL ?>/news_view.php?id=<?= $row['id'] ?>" class="btn btn-success btn-sm" style="background:#27ae60;color:#fff;">Setujui</a>
                                             <?php endif; ?>
                                         </div>
@@ -199,6 +202,7 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
                                         -
                                     <?php endif; ?>
                                 </td>
+                                <?php endif; ?>
                             </tr>
                             <?php endforeach; ?>
                         <?php endif; ?>
