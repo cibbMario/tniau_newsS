@@ -19,11 +19,9 @@ $sql = "SELECT n.*, u.full_name AS author_name, n.created_by
 $where = [];
 $params = [];
 
-if ($statusFilter === 'draft' && in_array($user['role'], ['A','E'])) {
-    if ($user['role'] === 'A') {
-        $where[] = "n.created_by = ?";
-        $params[] = $user['id'];
-    }
+if ($statusFilter === 'draft' && $user['role'] === 'A') {
+    $where[] = "n.created_by = ?";
+    $params[] = $user['id'];
     $where[] = "n.status = 'draft'";
 } elseif ($user['role'] === 'A') {
     $where[] = "(n.created_by = ? OR n.status = 'published')";
@@ -78,7 +76,7 @@ $pctNe = $total ? round($netral / $total * 100) : 0;
             <!-- ACTION BAR -->
             <div class="action-bar">
                 <div class="action-bar-left">
-                    <?php if ($statusFilter !== 'draft' && in_array($user['role'], ['A','E'])): ?>
+                    <?php if ($statusFilter !== 'draft' && $user['role'] === 'A'): ?>
                         <a href="<?= BASE_URL ?>/news_create.php" class="btn-entry-new">Buat Berita Baru</a>
                     <?php endif; ?>
                     <span class="pagination-info"><?= $total ?> berita ditemukan</span>

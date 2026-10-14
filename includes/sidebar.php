@@ -35,7 +35,7 @@ $roleName = userDisplayName($user['role']);
             </span>
             <span class="label">Daftar Berita</span>
         </a>
-        <?php if (in_array($user['role'], ['A','E'])):
+        <?php if ($user['role'] === 'A'):
             $draftCount = countDraftsForUser($user['id']);
         ?>
         <a href="<?= BASE_URL ?>/news_list.php?status=draft" class="<?= $current === 'draft' ? 'active' : '' ?>">
@@ -104,13 +104,6 @@ $roleName = userDisplayName($user['role']);
             <span class="label">Bank Aset Alutsista</span>
         </a>
 
-        <!-- Kamus & Korektor Militer -->
-        <a href="<?= BASE_URL ?>/military_dictionary.php" class="<?= $current==='military_dictionary' ? 'active' : '' ?>">
-            <span class="icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-            </span>
-            <span class="label">Kamus Istilah Militer</span>
-        </a>
 
         <!-- 4. Profile -->
         <a href="<?= BASE_URL ?>/profile.php" class="<?= $current==='profile' ? 'active' : '' ?>">

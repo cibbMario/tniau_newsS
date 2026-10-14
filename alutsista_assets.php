@@ -436,10 +436,12 @@ $categories = [
                                 </div>
                                 <div class="asset-card-desc"><?= e($a['description']) ?></div>
                                 <div class="asset-card-actions">
+                                    <?php if ($user['role'] === 'A'): ?>
                                     <a href="<?= BASE_URL ?>/news_create.php?asset_image=<?= urlencode($imgSrc) ?>&asset_title=<?= urlencode($a['name']) ?>" class="btn-use-asset" title="Buat berita menggunakan foto ini">
                                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                                         Pakai di Berita
                                     </a>
+                                    <?php endif; ?>
                                     <button type="button" class="btn-copy-url" onclick="copyAssetUrl('<?= e($imgSrc) ?>')" title="Salin tautan gambar">
                                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                                     </button>
@@ -544,7 +546,9 @@ $categories = [
 
             <div style="display:flex; justify-content:flex-end; gap:10px; border-top:1px solid #f1f5f9; padding-top:14px;">
                 <button type="button" class="btn btn-outline" id="previewModalCopyBtn">Salin Tautan Foto</button>
+                <?php if ($user['role'] === 'A'): ?>
                 <a href="#" id="previewModalUseBtn" class="btn btn-primary" style="background:#1e3a8a; border-color:#1e3a8a;">Gunakan di Berita Baru</a>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -568,7 +572,10 @@ function viewFullAsset(asset) {
     document.getElementById('previewModalDesc').textContent = asset.description || '';
     document.getElementById('previewModalTags').innerHTML = asset.tags ? '🏷️ <strong>Tags:</strong> ' + asset.tags : '';
     
-    document.getElementById('previewModalUseBtn').href = '<?= BASE_URL ?>/news_create.php?asset_image=' + encodeURIComponent(asset.imgSrc) + '&asset_title=' + encodeURIComponent(asset.name);
+    const useBtn = document.getElementById('previewModalUseBtn');
+    if (useBtn) {
+        useBtn.href = '<?= BASE_URL ?>/news_create.php?asset_image=' + encodeURIComponent(asset.imgSrc) + '&asset_title=' + encodeURIComponent(asset.name);
+    }
     document.getElementById('previewModalCopyBtn').onclick = function() {
         copyAssetUrl(asset.imgSrc);
     };
